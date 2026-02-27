@@ -17,8 +17,8 @@ export default async function ChefDashboardLayout({ children }: { children: Reac
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (!profile) redirect('/login')
+  // Only redirect admins — clients who have applied can access this dashboard to track their status
   if (profile.role === 'admin') redirect('/dashboard/admin')
-  if (profile.role === 'client') redirect('/dashboard/client')
 
   return (
     <DashboardShell user={profile} items={NAV_ITEMS}>

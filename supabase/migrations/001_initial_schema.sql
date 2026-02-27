@@ -29,11 +29,15 @@ CREATE POLICY "profiles_update_own" ON profiles
 CREATE POLICY "profiles_insert_own" ON profiles
   FOR INSERT WITH CHECK (auth.uid() = id);
 
--- Admin can read all profiles
+-- Security-definer helper — bypasses RLS to avoid infinite recursion
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN LANGUAGE sql SECURITY DEFINER STABLE AS $$
+  SELECT EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
+$$;
+
+-- Admin can read all profiles (uses helper to avoid self-referential recursion)
 CREATE POLICY "profiles_admin_select" ON profiles
-  FOR SELECT USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR SELECT USING (is_admin());
 
 -- ============================================================
 -- CHEF APPLICATIONS
@@ -70,9 +74,7 @@ CREATE POLICY "applications_insert_own" ON chef_applications
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "applications_admin_all" ON chef_applications
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- INTERVIEWS
@@ -103,9 +105,7 @@ CREATE POLICY "interviews_select_chef" ON interviews
   );
 
 CREATE POLICY "interviews_admin_all" ON interviews
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- CHEFS (approved profiles)
@@ -144,9 +144,7 @@ CREATE POLICY "chefs_update_own" ON chefs
   FOR UPDATE USING (auth.uid() = user_id);
 
 CREATE POLICY "chefs_admin_all" ON chefs
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- EVENTS
@@ -182,9 +180,7 @@ CREATE POLICY "events_update_client" ON events
   FOR UPDATE USING (auth.uid() = client_id);
 
 CREATE POLICY "events_admin_all" ON events
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- EVENT APPLICATIONS
@@ -225,9 +221,7 @@ CREATE POLICY "event_apps_client_update" ON event_applications
   );
 
 CREATE POLICY "event_apps_admin_all" ON event_applications
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- BOOKINGS
@@ -269,9 +263,7 @@ CREATE POLICY "bookings_update_chef" ON bookings
   );
 
 CREATE POLICY "bookings_admin_all" ON bookings
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- REVIEWS
@@ -295,9 +287,7 @@ CREATE POLICY "reviews_insert_client" ON reviews
   FOR INSERT WITH CHECK (auth.uid() = client_id);
 
 CREATE POLICY "reviews_admin_all" ON reviews
-  FOR ALL USING (
-    EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin')
-  );
+  FOR ALL USING (is_admin());
 
 -- ============================================================
 -- FUNCTIONS & TRIGGERS
