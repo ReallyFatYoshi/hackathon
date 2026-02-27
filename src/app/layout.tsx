@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
@@ -7,10 +7,13 @@ const inter = Inter({ subsets: ["latin"] });
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mychef.com";
 
+export const viewport: Viewport = {
+  themeColor: "#d97706",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   manifest: "/manifest.json",
-  themeColor: "#d97706",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
