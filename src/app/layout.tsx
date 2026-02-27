@@ -9,6 +9,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mychef.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  manifest: "/manifest.json",
+  themeColor: "#d97706",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "MyChef",
+  },
   title: {
     default: "MyChef — Professional Chef Marketplace",
     template: "%s | MyChef",

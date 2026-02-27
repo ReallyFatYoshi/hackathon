@@ -7,6 +7,7 @@ import { ChefHat, LogOut, Menu, X } from 'lucide-react'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import type { UserProfile } from '@/types'
+import { InstallPWA } from './InstallPWA'
 
 interface NavbarProps {
   user?: UserProfile | null
@@ -66,6 +67,7 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <InstallPWA />
             {user ? (
               <>
                 <Link href={dashboardHref}>
@@ -137,6 +139,7 @@ export function Navbar({ user }: NavbarProps) {
                 </Link>
               </>
             )}
+            <InstallPWA className="w-full justify-start px-2" />
           </div>
         )}
       </div>
