@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
-import { ChefHat, LogOut, Menu, X } from 'lucide-react'
+import { LogOut, Menu, X } from 'lucide-react'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import type { UserProfile } from '@/types'
@@ -42,9 +42,7 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex h-16 items-center justify-between gap-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--ink)' }}>
-              <ChefHat className="h-4 w-4 text-white" />
-            </div>
+            <img src="/icon.png" alt="MyChef" className="w-8 h-8 rounded-lg" />
             <span className="font-display text-xl font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>MyChef</span>
           </Link>
 

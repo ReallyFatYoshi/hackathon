@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { ChefHat } from 'lucide-react'
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,9 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <div className="relative flex flex-col h-full p-12">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 w-fit group">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center border" style={{ borderColor: 'rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.07)' }}>
-              <ChefHat className="h-5 w-5" style={{ color: 'var(--gold)' }} />
-            </div>
+            <img src="/icon.png" alt="MyChef" className="w-9 h-9 rounded-xl" />
             <span className="font-display text-xl font-semibold text-white tracking-tight">MyChef</span>
           </Link>
 
@@ -55,9 +52,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {/* Mobile logo */}
         <div className="lg:hidden flex items-center gap-2.5 p-5 border-b" style={{ borderColor: 'var(--border)' }}>
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--ink)' }}>
-              <ChefHat className="h-4 w-4 text-white" />
-            </div>
+            <img src="/icon.png" alt="MyChef" className="w-8 h-8 rounded-lg" />
             <span className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>MyChef</span>
           </Link>
         </div>

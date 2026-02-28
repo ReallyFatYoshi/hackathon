@@ -53,9 +53,7 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
         {/* Logo */}
         <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--ink)' }}>
-              <ChefHat className="h-4 w-4 text-white" />
-            </div>
+            <img src="/icon.png" alt="MyChef" className="w-8 h-8 rounded-lg" />
             <span className="font-display text-lg font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>MyChef</span>
           </Link>
         </div>
@@ -111,9 +109,7 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
         {/* Mobile header */}
         <header className="md:hidden flex items-center justify-between px-4 h-14 border-b" style={{ background: 'white', borderColor: 'var(--border)' }}>
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--ink)' }}>
-              <ChefHat className="h-4 w-4 text-white" />
-            </div>
+            <img src="/icon.png" alt="MyChef" className="w-7 h-7 rounded-lg" />
             <span className="font-display text-base font-semibold" style={{ color: 'var(--ink)' }}>MyChef</span>
           </Link>
           <div className="flex gap-1">
