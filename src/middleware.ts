@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { headers } from 'next/headers'
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -10,12 +8,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Check session via better-auth
-  const session = await auth.api.getSession({ headers: request.headers })
+  // Check for better-auth session cookie
+  const sessionToken = request.cookies.get('better-auth.session_token')?.value
 
   // Protected routes
   if (pathname.startsWith('/dashboard')) {
-    if (!session) {
+    if (!sessionToken) {
       const url = request.nextUrl.clone()
       url.pathname = '/login'
       url.searchParams.set('redirectTo', pathname)
@@ -25,10 +23,9 @@ export async function middleware(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (['/login', '/register'].includes(pathname)) {
-    if (session) {
-      const role = (session.user as any).role || 'client'
+    if (sessionToken) {
       const url = request.nextUrl.clone()
-      url.pathname = `/dashboard/${role === 'admin' ? 'admin' : role === 'chef' ? 'chef' : 'client'}`
+      url.pathname = '/dashboard'
       return NextResponse.redirect(url)
     }
   }
