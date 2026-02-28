@@ -17,7 +17,15 @@ const ICE_SERVERS: RTCConfiguration = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
+    ...(process.env.NEXT_PUBLIC_TURN_URL
+      ? [{
+          urls: process.env.NEXT_PUBLIC_TURN_URL,
+          username: process.env.NEXT_PUBLIC_TURN_USERNAME || '',
+          credential: process.env.NEXT_PUBLIC_TURN_CREDENTIAL || '',
+        }]
+      : []),
   ],
+  iceTransportPolicy: process.env.NEXT_PUBLIC_TURN_URL ? 'all' : undefined as any,
 }
 
 export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWebRTCOptions) {
