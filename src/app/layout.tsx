@@ -69,6 +69,14 @@ export const metadata: Metadata = {
     title: "MyChef — Professional Chef Marketplace",
     description:
       "Connect with verified professional chefs for catering and event services. Post your event, book a chef, and enjoy exceptional culinary experiences.",
+    images: [
+      {
+        url: "/og_image.png",
+        width: 1200,
+        height: 630,
+        alt: "MyChef — Professional Chef Marketplace",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -77,6 +85,7 @@ export const metadata: Metadata = {
     title: "MyChef — Professional Chef Marketplace",
     description:
       "Connect with verified professional chefs for catering and event services. Post your event, book a chef, and enjoy exceptional culinary experiences.",
+    images: ["/og_image.png"],
   },
   alternates: {
     canonical: BASE_URL,
