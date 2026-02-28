@@ -2,7 +2,6 @@
 
 import { useWebRTC } from '@/components/chat/use-webrtc'
 import { VideoCallOverlay } from '@/components/chat/video-call-overlay'
-import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Video, Phone } from 'lucide-react'
 
@@ -17,14 +16,6 @@ export function InterviewCall({ roomId, currentUserId, participantName }: Interv
     bookingId: roomId,
     currentUserId,
   })
-
-  // Auto-start with video when entering the call page
-  useEffect(() => {
-    if (webrtc.callState === 'idle') {
-      webrtc.startCall(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6">

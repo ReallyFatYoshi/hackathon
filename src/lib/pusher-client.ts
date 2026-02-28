@@ -11,6 +11,10 @@ export function getPusherClient() {
       disableStats: true,
       enabledTransports: ['ws', 'wss'],
       cluster: '',
+      channelAuthorization: {
+        endpoint: '/api/pusher/auth',
+        transport: 'ajax',
+      },
     })
   }
   return pusherInstance

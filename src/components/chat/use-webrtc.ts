@@ -242,7 +242,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
   // Subscribe to Pusher channel for signaling
   useEffect(() => {
     const pusher = getPusherClient()
-    const channel = pusher.subscribe(`call-${bookingId}`)
+    const channel = pusher.subscribe(`private-call-${bookingId}`)
 
     channel.bind('client-webrtc', (data: CallSignal) => {
       handleSignal(data)
@@ -252,7 +252,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
 
     return () => {
       channel.unbind_all()
-      pusher.unsubscribe(`call-${bookingId}`)
+      pusher.unsubscribe(`private-call-${bookingId}`)
       cleanup()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
