@@ -1,14 +1,13 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { DashboardShell } from '@/components/shared/dashboard-shell'
-import { Home, Users, FileText, Video, BookOpen, AlertCircle } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { label: 'Overview', href: '/dashboard/admin', icon: Home },
-  { label: 'Applications', href: '/dashboard/admin/applications', icon: FileText },
-  { label: 'Interviews', href: '/dashboard/admin/interviews', icon: Video },
-  { label: 'Bookings', href: '/dashboard/admin/bookings', icon: BookOpen },
-  { label: 'Users', href: '/dashboard/admin/users', icon: Users },
+  { label: 'Overview', href: '/dashboard/admin', icon: 'Home' },
+  { label: 'Applications', href: '/dashboard/admin/applications', icon: 'FileText' },
+  { label: 'Interviews', href: '/dashboard/admin/interviews', icon: 'Video' },
+  { label: 'Bookings', href: '/dashboard/admin/bookings', icon: 'BookOpen' },
+  { label: 'Users', href: '/dashboard/admin/users', icon: 'Users' },
 ]
 
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {

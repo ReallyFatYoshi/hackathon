@@ -27,10 +27,14 @@ export interface UserProfile {
   created_at: string
 }
 
+export type ApplicantType = 'individual' | 'company'
+
 export interface ChefApplication {
   id: string
   user_id: string
   status: ApplicationStatus
+  applicant_type: ApplicantType
+  company_name?: string
   first_name: string
   last_name: string
   email: string
@@ -62,6 +66,8 @@ export interface Chef {
   id: string
   user_id: string
   application_id: string
+  applicant_type: ApplicantType
+  company_name?: string
   first_name: string
   last_name: string
   bio: string

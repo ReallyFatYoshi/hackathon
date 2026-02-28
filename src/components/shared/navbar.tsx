@@ -38,42 +38,45 @@ export function Navbar({ user }: NavbarProps) {
   ]
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/80" style={{ borderColor: 'var(--border)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-6">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 text-stone-900 hover:opacity-80 transition-opacity">
-            <ChefHat className="h-7 w-7 text-amber-600" />
-            <span className="text-xl font-bold tracking-tight">MyChef</span>
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'var(--ink)' }}>
+              <ChefHat className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-display text-xl font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>MyChef</span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
             {publicLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'text-sm font-medium transition-colors',
+                  'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                   pathname === link.href
-                    ? 'text-amber-600'
-                    : 'text-stone-600 hover:text-stone-900'
+                    ? 'text-[#C8892A] bg-[#C8892A08]'
+                    : 'hover:bg-stone-50'
                 )}
+                style={{ color: pathname === link.href ? 'var(--gold)' : 'var(--warm-stone)' }}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center gap-2 shrink-0">
             <InstallPWA />
             {user ? (
               <>
                 <Link href={dashboardHref}>
-                  <Button variant="outline" size="sm">Dashboard</Button>
+                  <Button variant="outline" size="sm" className="text-sm" style={{ borderColor: 'var(--border)' }}>Dashboard</Button>
                 </Link>
-                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-sm" style={{ color: 'var(--warm-stone)' }}>
                   <LogOut className="h-4 w-4" />
                   Sign Out
                 </Button>
@@ -81,10 +84,10 @@ export function Navbar({ user }: NavbarProps) {
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="outline" size="sm">Sign In</Button>
+                  <Button variant="ghost" size="sm" className="text-sm" style={{ color: 'var(--warm-stone)' }}>Sign In</Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm">Get Started</Button>
+                  <Button size="sm" className="text-sm bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">Get Started</Button>
                 </Link>
               </>
             )}
@@ -92,7 +95,8 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden p-2 rounded-lg text-stone-600 hover:bg-stone-100"
+            className="md:hidden p-2 rounded-lg transition-colors"
+            style={{ color: 'var(--warm-stone)' }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -102,12 +106,15 @@ export function Navbar({ user }: NavbarProps) {
 
         {/* Mobile menu */}
         {mobileOpen && (
-          <div className="md:hidden py-4 space-y-3 border-t border-stone-100">
+          <div className="md:hidden py-4 space-y-1 border-t" style={{ borderColor: 'var(--border)' }}>
             {publicLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="block px-2 py-1.5 text-sm font-medium text-stone-700 hover:text-amber-600"
+                className={cn(
+                  'block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                  pathname === link.href ? 'bg-[#C8892A10] text-[#C8892A]' : 'text-stone-700 hover:bg-stone-50'
+                )}
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
@@ -117,29 +124,31 @@ export function Navbar({ user }: NavbarProps) {
               <>
                 <Link
                   href={dashboardHref}
-                  className="block px-2 py-1.5 text-sm font-medium text-stone-700"
+                  className="block px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50"
                   onClick={() => setMobileOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <button
                   onClick={() => { handleSignOut(); setMobileOpen(false) }}
-                  className="block w-full text-left px-2 py-1.5 text-sm font-medium text-stone-700"
+                  className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50"
                 >
                   Sign Out
                 </button>
               </>
             ) : (
               <>
-                <Link href="/login" className="block px-2 py-1.5 text-sm font-medium text-stone-700" onClick={() => setMobileOpen(false)}>
+                <Link href="/login" className="block px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50" onClick={() => setMobileOpen(false)}>
                   Sign In
                 </Link>
-                <Link href="/register" className="block px-2 py-1.5 text-sm font-semibold text-amber-600" onClick={() => setMobileOpen(false)}>
+                <Link href="/register" className="block px-3 py-2.5 rounded-lg text-sm font-semibold" style={{ color: 'var(--gold)' }} onClick={() => setMobileOpen(false)}>
                   Get Started
                 </Link>
               </>
             )}
-            <InstallPWA className="w-full justify-start px-2" />
+            <div className="px-1 pt-1">
+              <InstallPWA className="w-full justify-start" />
+            </div>
           </div>
         )}
       </div>

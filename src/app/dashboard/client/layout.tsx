@@ -1,13 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { DashboardShell } from '@/components/shared/dashboard-shell'
-import { Calendar, ChefHat, BookOpen, Star, Home } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { label: 'Overview', href: '/dashboard/client', icon: Home },
-  { label: 'My Events', href: '/dashboard/client/events', icon: Calendar },
-  { label: 'Find Chefs', href: '/dashboard/client/chefs', icon: ChefHat },
-  { label: 'My Bookings', href: '/dashboard/client/bookings', icon: BookOpen },
+  { label: 'Overview', href: '/dashboard/client', icon: 'Home' },
+  { label: 'My Events', href: '/dashboard/client/events', icon: 'Calendar' },
+  { label: 'Find Chefs', href: '/dashboard/client/chefs', icon: 'ChefHat' },
+  { label: 'My Bookings', href: '/dashboard/client/bookings', icon: 'BookOpen' },
 ]
 
 export default async function ClientDashboardLayout({ children }: { children: React.ReactNode }) {

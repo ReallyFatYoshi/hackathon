@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatDateTime } from '@/lib/utils'
-import { ChefHat, Calendar, Clock, BookOpen, Video } from 'lucide-react'
+import { ChefHat, Calendar, Clock, BookOpen, Video, Star } from 'lucide-react'
 
 export default async function ChefOverviewPage() {
   const supabase = await createClient()
@@ -60,8 +60,8 @@ export default async function ChefOverviewPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">Chef Dashboard</h1>
-        <p className="text-stone-500 mt-1">Your culinary career hub</p>
+        <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>Chef Dashboard</h1>
+        <p className="mt-1" style={{ color: 'var(--warm-stone)' }}>Your culinary career hub</p>
       </div>
 
       {/* Application Status Banner */}
@@ -133,26 +133,29 @@ export default async function ChefOverviewPage() {
         <>
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="pt-5">
-                <p className="text-2xl font-bold text-stone-900">{chef.total_events}</p>
-                <p className="text-sm text-stone-500">Events Completed</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-5">
-                <p className="text-2xl font-bold text-stone-900">⭐ {Number(chef.avg_rating).toFixed(1)}</p>
-                <p className="text-sm text-stone-500">Average Rating</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-5">
-                <p className="text-2xl font-bold text-stone-900">
-                  {bookings.filter((b) => b.booking_status === 'confirmed').length}
-                </p>
-                <p className="text-sm text-stone-500">Active Bookings</p>
-              </CardContent>
-            </Card>
+            <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#C8892A10' }}>
+                <Calendar className="h-5 w-5" style={{ color: '#C8892A' }} />
+              </div>
+              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{chef.total_events}</p>
+              <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Events Completed</p>
+            </div>
+            <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#EEF2FF' }}>
+                <Star className="h-5 w-5" style={{ color: '#4F46E5' }} />
+              </div>
+              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{Number(chef.avg_rating).toFixed(1)}</p>
+              <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Average Rating</p>
+            </div>
+            <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#ECFDF5' }}>
+                <BookOpen className="h-5 w-5" style={{ color: '#059669' }} />
+              </div>
+              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>
+                {bookings.filter((b) => b.booking_status === 'confirmed').length}
+              </p>
+              <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Active Bookings</p>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -160,12 +163,12 @@ export default async function ChefOverviewPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Recent Bookings</CardTitle>
-                  <Link href="/dashboard/chef/bookings" className="text-xs text-amber-600 hover:underline">View all</Link>
+                  <Link href="/dashboard/chef/bookings" className="text-xs hover:underline" style={{ color: 'var(--gold)' }}>View all</Link>
                 </div>
               </CardHeader>
               <CardContent>
                 {bookings.length === 0 ? (
-                  <div className="text-center py-8 text-stone-400">
+                  <div className="text-center py-8" style={{ color: 'var(--muted)' }}>
                     <BookOpen className="h-8 w-8 mx-auto mb-2 opacity-30" />
                     <p className="text-sm">No bookings yet</p>
                     <Link href="/dashboard/chef/events">
@@ -175,10 +178,10 @@ export default async function ChefOverviewPage() {
                 ) : (
                   <div className="space-y-3">
                     {bookings.map((b) => (
-                      <div key={b.id} className="flex items-center justify-between p-3 rounded-lg bg-stone-50">
+                      <div key={b.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--parchment)' }}>
                         <div>
-                          <p className="text-sm font-medium text-stone-900">{(b.events as any)?.title}</p>
-                          <p className="text-xs text-stone-500">{formatDate((b.events as any)?.date)}</p>
+                          <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{(b.events as any)?.title}</p>
+                          <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate((b.events as any)?.date)}</p>
                         </div>
                         {statusBadge(b.booking_status)}
                       </div>
@@ -192,20 +195,20 @@ export default async function ChefOverviewPage() {
               <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
               <CardContent className="space-y-3">
                 <Link href="/dashboard/chef/events" className="block">
-                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 border border-stone-200 transition-colors">
-                    <Calendar className="h-5 w-5 text-amber-600" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 border transition-colors" style={{ borderColor: 'var(--border)' }}>
+                    <Calendar className="h-5 w-5" style={{ color: 'var(--gold)' }} />
                     <div>
-                      <p className="text-sm font-medium text-stone-900">Browse Open Events</p>
-                      <p className="text-xs text-stone-500">Find events to apply for</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>Browse Open Events</p>
+                      <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>Find events to apply for</p>
                     </div>
                   </div>
                 </Link>
                 <Link href="/dashboard/chef/profile" className="block">
-                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 border border-stone-200 transition-colors">
-                    <ChefHat className="h-5 w-5 text-amber-600" />
+                  <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-stone-50 border transition-colors" style={{ borderColor: 'var(--border)' }}>
+                    <ChefHat className="h-5 w-5" style={{ color: 'var(--gold)' }} />
                     <div>
-                      <p className="text-sm font-medium text-stone-900">Update Profile</p>
-                      <p className="text-xs text-stone-500">Keep your profile fresh</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>Update Profile</p>
+                      <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>Keep your profile fresh</p>
                     </div>
                   </div>
                 </Link>

@@ -1,47 +1,159 @@
 @import "tailwindcss";
 
+/* ─── Brand Tokens ────────────────────────────────────── */
+:root {
+  --ink:        #0C0907;
+  --mahogany:   #1A1208;
+  --canvas:     #FAF8F4;
+  --parchment:  #F0E8D8;
+  --gold:       #C8892A;
+  --gold-light: #E8A83E;
+  --copper:     #A0621A;
+  --warm-stone: #6B6358;
+  --muted:      #A89E94;
+  --border:     #E5DDD0;
+  --ease-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Base Styles ─────────────────────────────────────── */
 @layer base {
   html {
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply bg-stone-50 text-stone-900 min-h-screen;
+    background-color: var(--canvas);
+    color: var(--ink);
+    min-height: 100vh;
+    font-family: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+    font-family: var(--font-cormorant), Georgia, 'Times New Roman', serif;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background: #C8892A33;
+    color: var(--ink);
   }
 }
 
+/* ─── Utilities ───────────────────────────────────────── */
 @layer utilities {
   .container-page {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-}
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  .font-display {
+    font-family: var(--font-cormorant), Georgia, serif;
+  }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  .text-gold {
+    color: var(--gold);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  .bg-ink {
+    background-color: var(--ink);
+  }
+
+  .bg-canvas {
+    background-color: var(--canvas);
+  }
+
+  .border-gold {
+    border-color: var(--gold);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Animations ──────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes line-grow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease-expo) forwards;
+}
+
+.animate-fade-in {
+  opacity: 0;
+  animation: fade-in 0.6s ease forwards;
+}
+
+.animate-scale-in {
+  opacity: 0;
+  animation: scale-in 0.5s var(--ease-expo) forwards;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* ─── Decorative ──────────────────────────────────────── */
+.decor-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gold);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.decor-line::before,
+.decor-line::after {
+  content: '';
+  display: block;
+  height: 1px;
+  width: 2rem;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.decor-line--left::before  { display: none; }
+.decor-line--right::after  { display: none; }
+
+/* Dark section grain */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+}
+
+/* Gold shimmer text */
+.text-shimmer {
+  background: linear-gradient(90deg, #C8892A 0%, #E8A83E 40%, #C8892A 80%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

@@ -5,9 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/components/ui/toast'
-import { ChefHat } from 'lucide-react'
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ full_name: '', email: '', password: '', confirm: '' })
@@ -47,80 +45,38 @@ export default function RegisterPage() {
       return
     }
 
-    toast({
-      title: 'Account created!',
-      description: 'Welcome to MyChef.',
-      variant: 'success',
-    })
+    toast({ title: 'Account created!', description: 'Welcome to MyChef.', variant: 'success' })
     router.push('/dashboard/client')
     router.refresh()
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <ChefHat className="h-8 w-8 text-amber-600" />
-          <span className="text-2xl font-bold">MyChef</span>
-        </div>
-        <h1 className="text-2xl font-bold text-stone-900">Create your account</h1>
-        <p className="text-stone-500 mt-1">Start posting events and booking chefs</p>
+    <div className="w-full max-w-sm">
+      <div className="mb-8">
+        <h1 className="font-display text-3xl font-semibold mb-1" style={{ color: 'var(--ink)' }}>Create your account</h1>
+        <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Start posting events and booking chefs</p>
       </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Full name"
-              value={form.full_name}
-              onChange={updateField('full_name')}
-              placeholder="Jane Smith"
-              required
-            />
-            <Input
-              label="Email address"
-              type="email"
-              value={form.email}
-              onChange={updateField('email')}
-              placeholder="you@example.com"
-              required
-            />
-            <Input
-              label="Password"
-              type="password"
-              value={form.password}
-              onChange={updateField('password')}
-              placeholder="Min. 8 characters"
-              required
-              hint="At least 8 characters"
-            />
-            <Input
-              label="Confirm password"
-              type="password"
-              value={form.confirm}
-              onChange={updateField('confirm')}
-              placeholder="Repeat password"
-              required
-            />
-            <Button type="submit" className="w-full mt-2" size="lg" loading={loading}>
-              Create Account
-            </Button>
-          </form>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input label="Full name" value={form.full_name} onChange={updateField('full_name')} placeholder="Jane Smith" required />
+        <Input label="Email address" type="email" value={form.email} onChange={updateField('email')} placeholder="you@example.com" required />
+        <Input label="Password" type="password" value={form.password} onChange={updateField('password')} placeholder="Min. 8 characters" required hint="At least 8 characters" />
+        <Input label="Confirm password" type="password" value={form.confirm} onChange={updateField('confirm')} placeholder="Repeat password" required />
+        <Button type="submit" className="w-full bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 mt-2" size="lg" loading={loading}>
+          Create Account
+        </Button>
+      </form>
 
-          <div className="mt-6 text-center text-sm text-stone-500">
-            Already have an account?{' '}
-            <Link href="/login" className="text-amber-600 font-semibold hover:underline">
-              Sign in
-            </Link>
-          </div>
-          <div className="mt-2 text-center text-sm text-stone-500">
-            Want to cook, not book?{' '}
-            <Link href="/apply" className="text-amber-600 font-semibold hover:underline">
-              Apply as a chef
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mt-6 pt-6 border-t space-y-2 text-sm text-center" style={{ borderColor: 'var(--border)' }}>
+        <p style={{ color: 'var(--warm-stone)' }}>
+          Already have an account?{' '}
+          <Link href="/login" className="font-semibold hover:underline" style={{ color: 'var(--gold)' }}>Sign in</Link>
+        </p>
+        <p style={{ color: 'var(--warm-stone)' }}>
+          Want to cook, not book?{' '}
+          <Link href="/apply" className="font-semibold hover:underline" style={{ color: 'var(--gold)' }}>Apply as a chef</Link>
+        </p>
+      </div>
     </div>
   )
 }

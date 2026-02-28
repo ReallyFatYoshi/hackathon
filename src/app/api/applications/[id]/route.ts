@@ -104,6 +104,8 @@ export async function POST(
       const { error: chefError } = await adminClient.from('chefs').upsert({
         user_id: application.user_id,
         application_id: id,
+        applicant_type: application.applicant_type ?? 'individual',
+        company_name: application.company_name ?? null,
         first_name: application.first_name,
         last_name: application.last_name,
         bio: application.bio,

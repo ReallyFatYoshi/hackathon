@@ -2,19 +2,21 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { useToast } from '@/components/ui/toast'
-import { ChefHat, Upload, X, CheckCircle, ChevronRight, ChevronLeft } from 'lucide-react'
+import { ChefHat, Building2, Upload, X, ArrowRight, ArrowLeft } from 'lucide-react'
 import { CUISINE_OPTIONS, EVENT_TYPE_OPTIONS, cn } from '@/lib/utils'
 import Link from 'next/link'
-import { Navbar } from '@/components/shared/navbar'
 
-const STEPS = ['Personal Info', 'Experience', 'Portfolio', 'Review & Submit']
+const STEPS = [
+  { num: '01', label: 'Personal Info' },
+  { num: '02', label: 'Experience'    },
+  { num: '03', label: 'Portfolio'     },
+  { num: '04', label: 'Review'        },
+]
 
 interface FormData {
+  applicant_type: 'individual' | 'company'
+  company_name: string
   first_name: string
   last_name: string
   email: string
@@ -29,12 +31,43 @@ interface FormData {
   website: string
 }
 
+const fieldCls =
+  'w-full bg-transparent border-0 border-b border-stone-200 pb-2 pt-1 text-stone-900 text-sm placeholder:text-stone-300 focus:outline-none focus:border-amber-500 transition-colors duration-200'
+
+function Label({ children, required }: { children: React.ReactNode; required?: boolean }) {
+  return (
+    <p className="text-[10px] font-semibold tracking-[0.15em] uppercase text-stone-400 mb-2">
+      {children}{required && <span className="text-amber-500 ml-1">*</span>}
+    </p>
+  )
+}
+
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div>
+      <Label required={required}>{label}</Label>
+      {children}
+    </div>
+  )
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between items-baseline gap-4 py-1.5 border-b border-stone-50 last:border-0">
+      <span className="text-xs text-stone-400 shrink-0">{label}</span>
+      <span className="text-sm text-stone-800 font-medium text-right">{value}</span>
+    </div>
+  )
+}
+
 export default function ApplyPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState<FormData>({
+    applicant_type: 'individual',
+    company_name: '',
     first_name: '',
     last_name: '',
     email: '',
@@ -57,30 +90,22 @@ export default function ApplyPage() {
   function toggleSpecialty(field: 'cuisine_specialties' | 'event_specialties', val: string) {
     setData((prev) => {
       const arr = prev[field] as string[]
-      return {
-        ...prev,
-        [field]: arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val],
-      }
+      return { ...prev, [field]: arr.includes(val) ? arr.filter((v) => v !== val) : [...arr, val] }
     })
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || [])
-    const total = data.portfolio_images.length + files.length
-    if (total > 5) {
+    if (data.portfolio_images.length + files.length > 5) {
       toast({ title: 'Maximum 5 images allowed', variant: 'error' })
       return
     }
-    const newPreviews = files.map((f) => URL.createObjectURL(f))
     setData((prev) => ({ ...prev, portfolio_images: [...prev.portfolio_images, ...files] }))
-    setPreviewUrls((prev) => [...prev, ...newPreviews])
+    setPreviewUrls((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))])
   }
 
   function removeImage(index: number) {
-    setData((prev) => ({
-      ...prev,
-      portfolio_images: prev.portfolio_images.filter((_, i) => i !== index),
-    }))
+    setData((prev) => ({ ...prev, portfolio_images: prev.portfolio_images.filter((_, i) => i !== index) }))
     setPreviewUrls((prev) => prev.filter((_, i) => i !== index))
   }
 
@@ -88,6 +113,10 @@ export default function ApplyPage() {
     if (step === 0) {
       if (!data.first_name || !data.last_name || !data.email || !data.phone) {
         toast({ title: 'Please fill in all required fields', variant: 'error' })
+        return false
+      }
+      if (data.applicant_type === 'company' && !data.company_name) {
+        toast({ title: 'Please enter your company name', variant: 'error' })
         return false
       }
     }
@@ -109,22 +138,14 @@ export default function ApplyPage() {
   async function handleSubmit() {
     setLoading(true)
     const supabase = createClient()
-
-    // Get or create user
     const { data: { user } } = await supabase.auth.getUser()
 
     let userId: string
     if (!user) {
-      // Auto-create chef account
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: Math.random().toString(36).slice(-12) + 'Aa1!',
-        options: {
-          data: {
-            full_name: `${data.first_name} ${data.last_name}`,
-            role: 'chef',
-          },
-        },
+        options: { data: { full_name: `${data.first_name} ${data.last_name}`, role: 'chef' } },
       })
       if (authError || !authData.user) {
         toast({ title: 'Failed to create account', description: authError?.message, variant: 'error' })
@@ -134,18 +155,14 @@ export default function ApplyPage() {
       userId = authData.user.id
     } else {
       userId = user.id
-      // Update role to chef if needed
       await supabase.from('profiles').update({ role: 'chef' }).eq('id', userId)
     }
 
-    // Upload images
     const imageUrls: string[] = []
     for (const file of data.portfolio_images) {
       const ext = file.name.split('.').pop()
       const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(-6)}.${ext}`
-      const { error: uploadError } = await supabase.storage
-        .from('chef-portfolio')
-        .upload(path, file)
+      const { error: uploadError } = await supabase.storage.from('chef-portfolio').upload(path, file)
       if (uploadError) {
         toast({ title: 'Image upload failed', description: uploadError.message, variant: 'error' })
         setLoading(false)
@@ -155,7 +172,6 @@ export default function ApplyPage() {
       imageUrls.push(urlData.publicUrl)
     }
 
-    // Submit application
     const social_links: Record<string, string> = {}
     if (data.instagram) social_links.instagram = data.instagram
     if (data.linkedin) social_links.linkedin = data.linkedin
@@ -164,6 +180,8 @@ export default function ApplyPage() {
     const { error: appError } = await supabase.from('chef_applications').insert({
       user_id: userId,
       status: 'pending_review',
+      applicant_type: data.applicant_type,
+      company_name: data.applicant_type === 'company' ? data.company_name : null,
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,
@@ -182,265 +200,352 @@ export default function ApplyPage() {
       return
     }
 
-    toast({
-      title: 'Application submitted!',
-      description: 'We\'ll review your application and be in touch within 3-5 business days.',
-      variant: 'success',
-    })
+    toast({ title: 'Application submitted!', description: "We'll be in touch within 3–5 business days.", variant: 'success' })
     router.push('/dashboard/chef')
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-      <main className="flex-1 bg-stone-50 py-12">
-        <div className="max-w-2xl mx-auto px-4">
-          {/* Header */}
-          <div className="text-center mb-10">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <ChefHat className="h-8 w-8 text-amber-600" />
-            </div>
-            <h1 className="text-3xl font-extrabold text-stone-900">Apply as a Chef</h1>
-            <p className="text-stone-500 mt-2">Join our vetted network of professional culinary experts</p>
-          </div>
+    <>
+      <style>{`
+        @keyframes applyIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .apply-step { animation: applyIn 0.25s ease forwards; }
+      `}</style>
 
-          {/* Progress */}
-          <div className="flex items-center gap-2 mb-8">
+      <div className="w-full max-w-lg">
+
+        {/* ── HEADER ── */}
+        <div className="mb-8">
+          {/* Step counter */}
+          <div className="flex items-center gap-3 mb-5">
             {STEPS.map((s, i) => (
-              <div key={s} className="flex items-center gap-2 flex-1">
-                <div className={cn(
-                  'flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold shrink-0',
-                  i < step ? 'bg-amber-600 text-white' :
-                  i === step ? 'bg-amber-600 text-white ring-4 ring-amber-100' :
-                  'bg-stone-200 text-stone-500'
-                )}>
-                  {i < step ? <CheckCircle className="h-4 w-4" /> : i + 1}
+              <div key={s.num} className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    'w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center transition-all duration-300 shrink-0',
+                    i === step ? 'bg-amber-500 text-white shadow-sm shadow-amber-200' :
+                    i < step  ? 'bg-stone-800 text-white' :
+                                'bg-stone-100 text-stone-400'
+                  )}>
+                    {i < step ? '✓' : i + 1}
+                  </div>
+                  <span className={cn(
+                    'text-[10px] font-semibold tracking-widest uppercase transition-colors duration-300 hidden sm:block',
+                    i === step ? 'text-amber-600' : i < step ? 'text-stone-500' : 'text-stone-300'
+                  )}>
+                    {s.label}
+                  </span>
                 </div>
-                <span className={cn(
-                  'text-xs font-medium hidden sm:block',
-                  i === step ? 'text-amber-600' : 'text-stone-400'
-                )}>{s}</span>
                 {i < STEPS.length - 1 && (
-                  <div className={cn('flex-1 h-0.5', i < step ? 'bg-amber-600' : 'bg-stone-200')} />
+                  <div className={cn('w-6 h-px transition-colors duration-500', i < step ? 'bg-stone-600' : 'bg-stone-200')} />
                 )}
               </div>
             ))}
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{STEPS[step]}</CardTitle>
-              <CardDescription>
-                {step === 0 && 'Tell us about yourself'}
-                {step === 1 && 'Share your culinary background'}
-                {step === 2 && 'Show us your best work (3–5 photos required)'}
-                {step === 3 && 'Review your application before submitting'}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Step 0: Personal Info */}
-              {step === 0 && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <Input label="First name" value={data.first_name} onChange={(e) => update('first_name', e.target.value)} required />
-                    <Input label="Last name" value={data.last_name} onChange={(e) => update('last_name', e.target.value)} required />
-                  </div>
-                  <Input label="Email address" type="email" value={data.email} onChange={(e) => update('email', e.target.value)} required />
-                  <Input label="Phone number" type="tel" value={data.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+1 (555) 000-0000" required />
+          {/* Step heading */}
+          <div key={`h-${step}`} className="apply-step">
+            <div className="flex items-baseline gap-3">
+              <span
+                style={{ fontFamily: 'var(--font-cormorant)', fontSize: '2.5rem', fontWeight: 600, lineHeight: 1, color: '#1c1917' }}
+              >
+                {STEPS[step].label}
+              </span>
+              <span className="text-stone-300 text-sm font-light">{STEPS[step].num}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ── FORM STEPS ── */}
+        <div key={step} className="apply-step space-y-6">
+
+          {/* STEP 0 — Personal Info */}
+          {step === 0 && (
+            <>
+              <Field label="Applying as" required>
+                <div className="grid grid-cols-2 gap-2.5 mt-1">
+                  {([
+                    { val: 'individual' as const, Icon: ChefHat,   label: 'Individual Chef',  sub: 'Solo professional' },
+                    { val: 'company'    as const, Icon: Building2, label: 'Catering Company', sub: 'Business or team' },
+                  ] as const).map(({ val, Icon, label, sub }) => (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => update('applicant_type', val)}
+                      className={cn(
+                        'p-3.5 rounded-xl border text-left transition-all duration-200',
+                        data.applicant_type === val
+                          ? 'border-amber-400 bg-amber-50/70 shadow-sm'
+                          : 'border-stone-200 bg-white hover:border-stone-300'
+                      )}
+                    >
+                      <Icon className={cn('h-4 w-4 mb-2 transition-colors', data.applicant_type === val ? 'text-amber-500' : 'text-stone-300')} />
+                      <div className={cn('text-xs font-semibold leading-tight', data.applicant_type === val ? 'text-stone-800' : 'text-stone-600')}>{label}</div>
+                      <div className="text-[10px] text-stone-400 mt-0.5">{sub}</div>
+                    </button>
+                  ))}
                 </div>
+              </Field>
+
+              {data.applicant_type === 'company' && (
+                <Field label="Company name" required>
+                  <input className={fieldCls} value={data.company_name} onChange={(e) => update('company_name', e.target.value)} placeholder="e.g. Rossi Catering Co." />
+                </Field>
               )}
 
-              {/* Step 1: Experience */}
-              {step === 1 && (
-                <div className="space-y-6">
-                  <Input
-                    label="Years of professional experience"
-                    type="number"
-                    min="0"
-                    max="50"
-                    value={data.years_experience}
-                    onChange={(e) => update('years_experience', e.target.value)}
-                    required
-                  />
-                  <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">
-                      Cuisine Specialties <span className="text-red-500">*</span>
-                    </label>
-                    <div className="flex flex-wrap gap-2">
-                      {CUISINE_OPTIONS.map((c) => (
-                        <button
-                          key={c}
-                          type="button"
-                          onClick={() => toggleSpecialty('cuisine_specialties', c)}
-                          className={cn(
-                            'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
-                            data.cuisine_specialties.includes(c)
-                              ? 'bg-amber-600 text-white border-amber-600'
-                              : 'bg-white text-stone-600 border-stone-300 hover:border-amber-400'
-                          )}
-                        >
-                          {c}
-                        </button>
+              <div className="grid grid-cols-2 gap-5">
+                <Field label={data.applicant_type === 'company' ? 'Contact first name' : 'First name'} required>
+                  <input className={fieldCls} value={data.first_name} onChange={(e) => update('first_name', e.target.value)} />
+                </Field>
+                <Field label={data.applicant_type === 'company' ? 'Contact last name' : 'Last name'} required>
+                  <input className={fieldCls} value={data.last_name} onChange={(e) => update('last_name', e.target.value)} />
+                </Field>
+              </div>
+
+              <Field label="Email address" required>
+                <input className={fieldCls} type="email" value={data.email} onChange={(e) => update('email', e.target.value)} placeholder="you@example.com" />
+              </Field>
+
+              <Field label="Phone number" required>
+                <input className={fieldCls} type="tel" value={data.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+1 (555) 000-0000" />
+              </Field>
+            </>
+          )}
+
+          {/* STEP 1 — Experience */}
+          {step === 1 && (
+            <>
+              <Field label="Years of professional experience" required>
+                <input className={fieldCls} type="number" min="0" max="50" value={data.years_experience} onChange={(e) => update('years_experience', e.target.value)} placeholder="e.g. 8" />
+              </Field>
+
+              <Field label="Cuisine Specialties" required>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {CUISINE_OPTIONS.map((c) => (
+                    <button
+                      key={c} type="button"
+                      onClick={() => toggleSpecialty('cuisine_specialties', c)}
+                      className={cn(
+                        'px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        data.cuisine_specialties.includes(c)
+                          ? 'bg-stone-900 text-white border-stone-900'
+                          : 'bg-white text-stone-500 border-stone-200 hover:border-stone-400'
+                      )}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
+              <Field label="Event Specialties">
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {EVENT_TYPE_OPTIONS.map((e) => (
+                    <button
+                      key={e} type="button"
+                      onClick={() => toggleSpecialty('event_specialties', e)}
+                      className={cn(
+                        'px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-150',
+                        data.event_specialties.includes(e)
+                          ? 'bg-amber-500 text-white border-amber-500'
+                          : 'bg-white text-stone-500 border-stone-200 hover:border-amber-300'
+                      )}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              </Field>
+
+              <Field label="Short bio" required>
+                <textarea
+                  className={cn(fieldCls, 'resize-none min-h-[96px] leading-relaxed')}
+                  value={data.bio}
+                  onChange={(e) => update('bio', e.target.value)}
+                  placeholder="Tell us about your culinary journey, training, signature style, and what makes your cooking unique..."
+                  rows={4}
+                />
+              </Field>
+
+              <div>
+                <Label>Social Links <span className="normal-case font-normal text-stone-300">(optional)</span></Label>
+                {([
+                  { key: 'instagram' as const, placeholder: 'Instagram URL' },
+                  { key: 'linkedin'  as const, placeholder: 'LinkedIn URL' },
+                  { key: 'website'   as const, placeholder: 'Website URL' },
+                ] as const).map(({ key, placeholder }) => (
+                  <div key={key} className="flex items-center gap-3 mb-3">
+                    <span className="text-[10px] uppercase tracking-widest text-stone-300 w-16 shrink-0 font-semibold">{key}</span>
+                    <input className={fieldCls} placeholder={placeholder} value={data[key]} onChange={(e) => update(key, e.target.value)} />
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* STEP 2 — Portfolio */}
+          {step === 2 && (
+            <>
+              <p className="text-sm text-stone-500 leading-relaxed">
+                Upload 3–5 high-quality photos of your work. These will be the first impression clients have of your cooking.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2.5">
+                {previewUrls.map((url, i) => (
+                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden bg-stone-100 group shadow-sm">
+                    <img src={url} alt="" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(i)}
+                      className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                {data.portfolio_images.length < 5 && (
+                  <label className="aspect-square rounded-xl border-2 border-dashed border-stone-200 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all duration-200">
+                    <Upload className="h-5 w-5 text-stone-300 mb-1.5" />
+                    <span className="text-[10px] text-stone-400 font-medium tracking-wide">Add photo</span>
+                    <input type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" />
+                  </label>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div key={i} className={cn(
+                    'h-1 rounded-full transition-all duration-300',
+                    i < data.portfolio_images.length ? 'w-7 bg-amber-500' : 'w-3 bg-stone-200'
+                  )} />
+                ))}
+                <span className="text-[11px] text-stone-400 ml-1">
+                  {data.portfolio_images.length}/5{data.portfolio_images.length < 3 && ' · 3 required'}
+                </span>
+              </div>
+            </>
+          )}
+
+          {/* STEP 3 — Review */}
+          {step === 3 && (
+            <>
+              <div className="rounded-2xl bg-white border border-stone-100 shadow-sm overflow-hidden">
+                <div className="px-5 py-3 bg-stone-50/80 border-b border-stone-100">
+                  <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-stone-400">Application Summary</span>
+                </div>
+                <div className="px-5 py-4">
+                  <SummaryRow label="Type" value={data.applicant_type === 'company' ? 'Catering Company' : 'Individual Chef'} />
+                  {data.company_name && <SummaryRow label="Company" value={data.company_name} />}
+                  <SummaryRow label="Name" value={`${data.first_name} ${data.last_name}`} />
+                  <SummaryRow label="Email" value={data.email} />
+                  <SummaryRow label="Phone" value={data.phone} />
+                  <SummaryRow label="Experience" value={`${data.years_experience} years`} />
+                  <div className="py-2 border-b border-stone-50">
+                    <span className="text-xs text-stone-400">Cuisine Specialties</span>
+                    <div className="flex flex-wrap gap-1.5 mt-1.5">
+                      {data.cuisine_specialties.map((c) => (
+                        <span key={c} className="bg-stone-100 text-stone-700 text-xs px-2.5 py-0.5 rounded-full">{c}</span>
                       ))}
                     </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Event Specialties</label>
-                    <div className="flex flex-wrap gap-2">
-                      {EVENT_TYPE_OPTIONS.map((e) => (
-                        <button
-                          key={e}
-                          type="button"
-                          onClick={() => toggleSpecialty('event_specialties', e)}
-                          className={cn(
-                            'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
-                            data.event_specialties.includes(e)
-                              ? 'bg-stone-800 text-white border-stone-800'
-                              : 'bg-white text-stone-600 border-stone-300 hover:border-stone-400'
-                          )}
-                        >
-                          {e}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <Textarea
-                    label="Short bio"
-                    value={data.bio}
-                    onChange={(e) => update('bio', e.target.value)}
-                    placeholder="Tell us about your culinary journey, training, signature style, and what makes your cooking unique..."
-                    required
-                    className="min-h-[120px]"
-                  />
-                  <div className="space-y-3">
-                    <label className="block text-sm font-medium text-stone-700">Social Links (optional)</label>
-                    <Input label="" placeholder="Instagram URL" value={data.instagram} onChange={(e) => update('instagram', e.target.value)} />
-                    <Input label="" placeholder="LinkedIn URL" value={data.linkedin} onChange={(e) => update('linkedin', e.target.value)} />
-                    <Input label="" placeholder="Website URL" value={data.website} onChange={(e) => update('website', e.target.value)} />
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2: Portfolio */}
-              {step === 2 && (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-3 gap-3">
-                    {previewUrls.map((url, i) => (
-                      <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-stone-200 bg-stone-100">
-                        <img src={url} alt="" className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => removeImage(i)}
-                          className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-600 text-white flex items-center justify-center hover:bg-red-700"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </div>
-                    ))}
-                    {data.portfolio_images.length < 5 && (
-                      <label className="aspect-square rounded-xl border-2 border-dashed border-stone-300 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/50 transition-colors">
-                        <Upload className="h-6 w-6 text-stone-400 mb-1" />
-                        <span className="text-xs text-stone-500">Add photo</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleImageChange}
-                          className="hidden"
-                        />
-                      </label>
-                    )}
-                  </div>
-                  <p className="text-xs text-stone-500">
-                    {data.portfolio_images.length}/5 images uploaded
-                    {data.portfolio_images.length < 3 && ' (minimum 3 required)'}
-                  </p>
-                </div>
-              )}
-
-              {/* Step 3: Review */}
-              {step === 3 && (
-                <div className="space-y-5">
-                  <div className="bg-stone-50 rounded-xl p-4 space-y-3 text-sm">
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <span className="text-stone-500">Name</span>
-                        <p className="font-medium text-stone-900">{data.first_name} {data.last_name}</p>
-                      </div>
-                      <div>
-                        <span className="text-stone-500">Email</span>
-                        <p className="font-medium text-stone-900">{data.email}</p>
-                      </div>
-                      <div>
-                        <span className="text-stone-500">Phone</span>
-                        <p className="font-medium text-stone-900">{data.phone}</p>
-                      </div>
-                      <div>
-                        <span className="text-stone-500">Experience</span>
-                        <p className="font-medium text-stone-900">{data.years_experience} years</p>
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-stone-500">Cuisine Specialties</span>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                        {data.cuisine_specialties.map((c) => (
-                          <span key={c} className="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">{c}</span>
+                  {data.event_specialties.length > 0 && (
+                    <div className="py-2 border-b border-stone-50">
+                      <span className="text-xs text-stone-400">Event Specialties</span>
+                      <div className="flex flex-wrap gap-1.5 mt-1.5">
+                        {data.event_specialties.map((e) => (
+                          <span key={e} className="bg-amber-50 text-amber-700 text-xs px-2.5 py-0.5 rounded-full">{e}</span>
                         ))}
                       </div>
                     </div>
-                    {data.event_specialties.length > 0 && (
-                      <div>
-                        <span className="text-stone-500">Event Specialties</span>
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {data.event_specialties.map((e) => (
-                            <span key={e} className="bg-stone-200 text-stone-700 text-xs px-2 py-0.5 rounded-full">{e}</span>
-                          ))}
-                        </div>
+                  )}
+                  <div className="pt-2">
+                    <span className="text-xs text-stone-400">Bio</span>
+                    <p className="text-sm text-stone-700 mt-1 leading-relaxed">{data.bio}</p>
+                  </div>
+                  {previewUrls.length > 0 && (
+                    <div className="pt-2">
+                      <span className="text-xs text-stone-400">Portfolio</span>
+                      <div className="flex gap-2 mt-1.5">
+                        {previewUrls.map((url, i) => (
+                          <img key={i} src={url} alt="" className="w-10 h-10 rounded-lg object-cover border border-stone-100" />
+                        ))}
                       </div>
-                    )}
-                    <div>
-                      <span className="text-stone-500">Bio</span>
-                      <p className="font-medium text-stone-900 mt-1 leading-relaxed">{data.bio}</p>
                     </div>
-                    <div>
-                      <span className="text-stone-500">Portfolio Images</span>
-                      <p className="font-medium text-stone-900">{data.portfolio_images.length} images uploaded</p>
-                    </div>
-                  </div>
-                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
-                    <strong>What happens next:</strong> Our team will review your application within 3–5 business days. If approved, we&apos;ll schedule a brief video interview through the platform.
-                  </div>
+                  )}
                 </div>
-              )}
-
-              {/* Navigation */}
-              <div className="flex justify-between mt-8 pt-6 border-t border-stone-100">
-                {step > 0 ? (
-                  <Button variant="outline" onClick={() => setStep(step - 1)}>
-                    <ChevronLeft className="h-4 w-4" /> Back
-                  </Button>
-                ) : (
-                  <div />
-                )}
-                {step < STEPS.length - 1 ? (
-                  <Button onClick={() => { if (validateStep()) setStep(step + 1) }}>
-                    Next <ChevronRight className="h-4 w-4" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleSubmit} loading={loading} className="min-w-[140px]">
-                    Submit Application
-                  </Button>
-                )}
               </div>
-            </CardContent>
-          </Card>
 
-          <p className="text-center text-sm text-stone-500 mt-6">
-            Already have an account?{' '}
-            <Link href="/login" className="text-amber-600 font-semibold hover:underline">Sign in</Link>
-          </p>
+              <div className="rounded-xl bg-amber-50 border border-amber-100 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-1">What happens next</p>
+                <p className="text-xs text-amber-800 leading-relaxed">
+                  Our team reviews your application within 3–5 business days. If approved, we&apos;ll schedule a brief video interview through the platform.
+                </p>
+              </div>
+            </>
+          )}
+
         </div>
-      </main>
-    </div>
+
+        {/* ── NAVIGATION ── */}
+        <div className="flex items-center justify-between mt-10 pt-6 border-t border-stone-100">
+          {step > 0 ? (
+            <button
+              type="button"
+              onClick={() => setStep(step - 1)}
+              className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors duration-200"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </button>
+          ) : (
+            <Link href="/" className="flex items-center gap-1.5 text-sm text-stone-300 hover:text-stone-500 transition-colors duration-200">
+              <ArrowLeft className="h-4 w-4" />
+              Cancel
+            </Link>
+          )}
+
+          {step < STEPS.length - 1 ? (
+            <button
+              type="button"
+              onClick={() => { if (validateStep()) setStep(step + 1) }}
+              className="flex items-center gap-2 bg-stone-900 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-stone-800 active:scale-[0.98] transition-all duration-150"
+            >
+              Continue
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="flex items-center gap-2 bg-amber-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-amber-700 active:scale-[0.98] transition-all duration-150 disabled:opacity-60 min-w-[160px] justify-center"
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Submitting…
+                </>
+              ) : (
+                <>Submit Application <ArrowRight className="h-4 w-4" /></>
+              )}
+            </button>
+          )}
+        </div>
+
+        {/* Sign-in hint */}
+        <p className="text-center text-xs text-stone-400 mt-6">
+          Already have an account?{' '}
+          <Link href="/login" className="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
+            Sign in
+          </Link>
+        </p>
+
+      </div>
+    </>
   )
 }
