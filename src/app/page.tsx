@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { getSession } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import { Navbar } from '@/components/shared/navbar'
 import { Footer } from '@/components/shared/footer'
 import { Button } from '@/components/ui/button'
@@ -15,21 +16,20 @@ import {
 } from 'lucide-react'
 
 export default async function HomePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const session = await getSession()
 
   let profile = null
-  if (user) {
-    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-    profile = data
+  if (session?.user) {
+    const u = session.user as any
+    profile = { id: u.id, role: u.role || 'client', full_name: u.name, email: u.email, phone: u.phone, created_at: '' }
   }
 
-  const { data: featuredChefs } = await supabase
-    .from('chefs')
-    .select('id, first_name, last_name, bio, cuisine_specialties, portfolio_images, avg_rating, total_events')
-    .eq('is_visible', true)
-    .order('avg_rating', { ascending: false })
-    .limit(3)
+  const featuredChefs = await db.chef.findMany({
+    where: { isVisible: true },
+    select: { id: true, firstName: true, lastName: true, bio: true, cuisineSpecialties: true, portfolioImages: true, avgRating: true, totalEvents: true },
+    orderBy: { avgRating: 'desc' },
+    take: 3,
+  })
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -170,10 +170,10 @@ export default async function HomePage() {
                 <Link key={chef.id} href={`/chefs/${chef.id}`} className="group">
                   <div className={`bg-white rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 animate-fade-up delay-${i * 150}`} style={{ borderColor: 'var(--border)' }}>
                     <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'var(--parchment)' }}>
-                      {chef.portfolio_images?.[0] ? (
+                      {chef.portfolioImages?.[0] ? (
                         <img
-                          src={chef.portfolio_images[0]}
-                          alt={`${chef.first_name}'s work`}
+                          src={chef.portfolioImages[0]}
+                          alt={`${chef.firstName}'s work`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
@@ -187,18 +187,18 @@ export default async function HomePage() {
                     <div className="p-6">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>
-                          {chef.first_name} {chef.last_name}
+                          {chef.firstName} {chef.lastName}
                         </h3>
-                        {chef.avg_rating > 0 && (
+                        {chef.avgRating > 0 && (
                           <div className="flex items-center gap-1 text-sm font-semibold" style={{ color: 'var(--gold)' }}>
                             <Star className="h-3.5 w-3.5 fill-[#C8892A] stroke-[#C8892A]" />
-                            {Number(chef.avg_rating).toFixed(1)}
+                            {Number(chef.avgRating).toFixed(1)}
                           </div>
                         )}
                       </div>
                       <p className="text-xs mb-4 line-clamp-2 leading-relaxed" style={{ color: 'var(--warm-stone)' }}>{chef.bio}</p>
                       <div className="flex flex-wrap gap-1.5">
-                        {chef.cuisine_specialties?.slice(0, 3).map((c: string) => (
+                        {chef.cuisineSpecialties?.slice(0, 3).map((c: string) => (
                           <span key={c} className="text-xs px-2.5 py-1 rounded-full border" style={{ background: '#C8892A10', color: 'var(--gold)', borderColor: '#C8892A30' }}>
                             {c}
                           </span>

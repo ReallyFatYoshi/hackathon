@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: mychef
+      POSTGRES_PASSWORD: mychef
+      POSTGRES_DB: mychef
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  soketi:
+    image: quay.io/soketi/soketi:1.6-16-debian
+    ports:
+      - "6001:6001"
+      - "9601:9601"
+    environment:
+      SOKETI_DEBUG: "1"
+      SOKETI_DEFAULT_APP_ID: "mychef"
+      SOKETI_DEFAULT_APP_KEY: "mychef-key"
+      SOKETI_DEFAULT_APP_SECRET: "mychef-secret"
+      SOKETI_DEFAULT_APP_ENABLE_CLIENT_MESSAGES: "true"
+
+volumes:
+  db_data:

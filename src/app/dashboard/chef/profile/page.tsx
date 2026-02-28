@@ -1,23 +1,21 @@
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChefHat, Star } from 'lucide-react'
 import { UpdateProfileForm } from './update-form'
 
 export default async function ChefProfilePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const { data: chef } = await supabase.from('chefs').select('*').eq('user_id', user.id).single()
+  const chef = await db.chef.findUnique({ where: { userId: user.id } })
   if (!chef) redirect('/dashboard/chef')
 
-  const { data: reviews } = await supabase
-    .from('reviews')
-    .select('*')
-    .eq('chef_id', chef.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
+  const reviews = await db.review.findMany({
+    where: { chefId: chef.id },
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+  })
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -29,19 +27,19 @@ export default async function ChefProfilePage() {
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4 text-center">
-            <p className="text-2xl font-bold">{chef.total_events}</p>
+            <p className="text-2xl font-bold">{chef.totalEvents}</p>
             <p className="text-xs text-stone-500">Events Done</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 text-center">
-            <p className="text-2xl font-bold">⭐ {Number(chef.avg_rating).toFixed(1)}</p>
+            <p className="text-2xl font-bold">⭐ {Number(chef.avgRating).toFixed(1)}</p>
             <p className="text-xs text-stone-500">Avg Rating</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 text-center">
-            <p className="text-2xl font-bold">{chef.years_experience}</p>
+            <p className="text-2xl font-bold">{chef.yearsExperience}</p>
             <p className="text-xs text-stone-500">Years Exp.</p>
           </CardContent>
         </Card>

@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 
 import { statusBadge } from '@/components/ui/badge'
@@ -7,18 +7,20 @@ import { formatDate } from '@/lib/utils'
 import { FileText, Users, BookOpen, Video } from 'lucide-react'
 
 export default async function AdminOverviewPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  await requireRole('admin')
 
-  const [appsRes, usersRes, bookingsRes, interviewsRes] = await Promise.all([
-    supabase.from('chef_applications').select('id, status, first_name, last_name, created_at').order('created_at', { ascending: false }).limit(5),
-    supabase.from('profiles').select('id', { count: 'exact', head: true }),
-    supabase.from('bookings').select('id', { count: 'exact', head: true }),
-    supabase.from('interviews').select('id', { count: 'exact', head: true }).eq('status', 'scheduled'),
+  const [recentApps, usersCount, bookingsCount, scheduledInterviewsCount] = await Promise.all([
+    db.chefApplication.findMany({
+      select: { id: true, status: true, firstName: true, lastName: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    }),
+    db.user.count(),
+    db.booking.count(),
+    db.interview.count({ where: { status: 'scheduled' } }),
   ])
 
-  const pendingApps = (appsRes.data || []).filter((a) => a.status === 'pending_review')
+  const pendingApps = recentApps.filter((a) => a.status === 'pending_review')
 
   return (
     <div className="space-y-8">
@@ -48,7 +50,7 @@ export default async function AdminOverviewPage() {
                   <Video className="h-5 w-5" style={{ color: '#2563EB' }} />
                 </div>
                 <div>
-                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{interviewsRes.count || 0}</p>
+                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{scheduledInterviewsCount}</p>
                   <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Scheduled Interviews</p>
                 </div>
               </div>
@@ -61,7 +63,7 @@ export default async function AdminOverviewPage() {
                   <Users className="h-5 w-5" style={{ color: '#7C3AED' }} />
                 </div>
                 <div>
-                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{usersRes.count || 0}</p>
+                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{usersCount}</p>
                   <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Total Users</p>
                 </div>
               </div>
@@ -74,7 +76,7 @@ export default async function AdminOverviewPage() {
                   <BookOpen className="h-5 w-5" style={{ color: '#059669' }} />
                 </div>
                 <div>
-                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{bookingsRes.count || 0}</p>
+                  <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{bookingsCount}</p>
                   <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Total Bookings</p>
                 </div>
               </div>
@@ -90,16 +92,16 @@ export default async function AdminOverviewPage() {
           </div>
         </div>
         <div className="p-6">
-          {!appsRes.data || appsRes.data.length === 0 ? (
+          {recentApps.length === 0 ? (
             <p className="text-sm py-4 text-center" style={{ color: 'var(--muted)' }}>No applications yet</p>
           ) : (
             <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
-              {appsRes.data.map((app) => (
+              {recentApps.map((app) => (
                 <Link key={app.id} href={`/dashboard/admin/applications/${app.id}`}>
                   <div className="flex items-center justify-between py-3 hover:bg-stone-50 px-2 rounded-lg transition-colors">
                     <div>
-                      <p className="font-medium text-sm" style={{ color: 'var(--ink)' }}>{app.first_name} {app.last_name}</p>
-                      <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate(app.created_at)}</p>
+                      <p className="font-medium text-sm" style={{ color: 'var(--ink)' }}>{app.firstName} {app.lastName}</p>
+                      <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate(app.createdAt.toISOString())}</p>
                     </div>
                     {statusBadge(app.status)}
                   </div>

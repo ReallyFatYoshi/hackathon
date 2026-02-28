@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,49 +8,35 @@ import { formatDate, formatDateTime } from '@/lib/utils'
 import { ChefHat, Calendar, Clock, BookOpen, Video, Star } from 'lucide-react'
 
 export default async function ChefOverviewPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
   // Get chef application
-  const { data: application } = await supabase
-    .from('chef_applications')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single()
+  const application = await db.chefApplication.findFirst({
+    where: { userId: user.id },
+    orderBy: { createdAt: 'desc' },
+  })
 
   // Get interview if scheduled
   let interview = null
   if (application) {
-    const { data: iv } = await supabase
-      .from('interviews')
-      .select('*')
-      .eq('application_id', application.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
-    interview = iv
+    interview = await db.interview.findFirst({
+      where: { applicationId: application.id },
+      orderBy: { createdAt: 'desc' },
+    })
   }
 
   // Get chef profile if approved
-  const { data: chef } = await supabase
-    .from('chefs')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
+  const chef = await db.chef.findUnique({ where: { userId: user.id } })
 
   // Get recent bookings
   let bookings: any[] = []
   if (chef) {
-    const { data } = await supabase
-      .from('bookings')
-      .select('*, events(*)')
-      .eq('chef_id', chef.id)
-      .order('created_at', { ascending: false })
-      .limit(5)
-    bookings = data || []
+    bookings = await db.booking.findMany({
+      where: { chefId: chef.id },
+      include: { event: true },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    })
   }
 
   const isApproved = application?.status === 'approved'
@@ -99,11 +85,11 @@ export default async function ChefOverviewPage() {
                   <p className="font-semibold text-blue-800">Interview Scheduled</p>
                 </div>
                 <p className="text-sm text-blue-700">
-                  {formatDateTime(interview.scheduled_at)}
+                  {formatDateTime(interview.scheduledAt.toISOString())}
                 </p>
                 <p className="text-xs text-blue-600 mt-0.5">Log in at the scheduled time and click Join Interview.</p>
               </div>
-              <a href={interview.daily_room_url} target="_blank" rel="noreferrer">
+              <a href={interview.dailyRoomUrl} target="_blank" rel="noreferrer">
                 <Button variant="outline" className="border-blue-400 text-blue-700 hover:bg-blue-100">
                   <Video className="h-4 w-4" />
                   Join Interview
@@ -120,7 +106,7 @@ export default async function ChefOverviewPage() {
             <p className="font-semibold text-red-800">Application Not Approved</p>
             <p className="text-sm text-red-700 mt-0.5">
               Unfortunately your application was not approved. You&apos;re welcome to reapply.
-              {application.admin_notes && ` Note: ${application.admin_notes}`}
+              {application.adminNotes && ` Note: ${application.adminNotes}`}
             </p>
             <Link href="/apply" className="mt-3 inline-block">
               <Button size="sm" variant="outline">Reapply</Button>
@@ -137,14 +123,14 @@ export default async function ChefOverviewPage() {
               <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#C8892A10' }}>
                 <Calendar className="h-5 w-5" style={{ color: '#C8892A' }} />
               </div>
-              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{chef.total_events}</p>
+              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{chef.totalEvents}</p>
               <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Events Completed</p>
             </div>
             <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
               <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#EEF2FF' }}>
                 <Star className="h-5 w-5" style={{ color: '#4F46E5' }} />
               </div>
-              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{Number(chef.avg_rating).toFixed(1)}</p>
+              <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{Number(chef.avgRating).toFixed(1)}</p>
               <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Average Rating</p>
             </div>
             <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
@@ -152,7 +138,7 @@ export default async function ChefOverviewPage() {
                 <BookOpen className="h-5 w-5" style={{ color: '#059669' }} />
               </div>
               <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>
-                {bookings.filter((b) => b.booking_status === 'confirmed').length}
+                {bookings.filter((b) => b.bookingStatus === 'confirmed').length}
               </p>
               <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Active Bookings</p>
             </div>
@@ -180,10 +166,10 @@ export default async function ChefOverviewPage() {
                     {bookings.map((b) => (
                       <div key={b.id} className="flex items-center justify-between p-3 rounded-lg" style={{ background: 'var(--parchment)' }}>
                         <div>
-                          <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{(b.events as any)?.title}</p>
-                          <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate((b.events as any)?.date)}</p>
+                          <p className="text-sm font-medium" style={{ color: 'var(--ink)' }}>{b.event?.title}</p>
+                          <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate(b.event?.date?.toISOString())}</p>
                         </div>
-                        {statusBadge(b.booking_status)}
+                        {statusBadge(b.bookingStatus)}
                       </div>
                     ))}
                   </div>

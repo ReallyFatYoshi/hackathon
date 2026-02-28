@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -16,12 +15,12 @@ export default function NewEventPage() {
   const [loading, setLoading] = useState(false)
   const [form, setForm] = useState({
     title: '',
-    event_type: '',
+    eventType: '',
     date: '',
     location: '',
-    guest_count: '',
-    budget_min: '',
-    budget_max: '',
+    guestCount: '',
+    budgetMin: '',
+    budgetMax: '',
     description: '',
   })
 
@@ -32,31 +31,30 @@ export default function NewEventPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.event_type) { toast({ title: 'Please select an event type', variant: 'error' }); return }
-    if (parseFloat(form.budget_min) > parseFloat(form.budget_max)) {
+    if (!form.eventType) { toast({ title: 'Please select an event type', variant: 'error' }); return }
+    if (parseFloat(form.budgetMin) > parseFloat(form.budgetMax)) {
       toast({ title: 'Minimum budget cannot exceed maximum budget', variant: 'error' }); return
     }
 
     setLoading(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/login'); return }
+    const res = await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: form.title,
+        eventType: form.eventType,
+        date: new Date(form.date).toISOString(),
+        location: form.location,
+        guestCount: parseInt(form.guestCount),
+        budgetMin: parseFloat(form.budgetMin),
+        budgetMax: parseFloat(form.budgetMax),
+        description: form.description,
+      }),
+    })
+    const data = await res.json()
 
-    const { data, error } = await supabase.from('events').insert({
-      client_id: user.id,
-      title: form.title,
-      event_type: form.event_type,
-      date: new Date(form.date).toISOString(),
-      location: form.location,
-      guest_count: parseInt(form.guest_count),
-      budget_min: parseFloat(form.budget_min),
-      budget_max: parseFloat(form.budget_max),
-      description: form.description,
-      status: 'open',
-    }).select().single()
-
-    if (error) {
-      toast({ title: 'Failed to create event', description: error.message, variant: 'error' })
+    if (!res.ok) {
+      toast({ title: 'Failed to create event', description: data.error, variant: 'error' })
       setLoading(false)
       return
     }
@@ -79,17 +77,17 @@ export default function NewEventPage() {
             <Select
               label="Event type"
               placeholder="Select event type"
-              value={form.event_type}
-              onValueChange={(v) => setForm((prev) => ({ ...prev, event_type: v }))}
+              value={form.eventType}
+              onValueChange={(v) => setForm((prev) => ({ ...prev, eventType: v }))}
               options={EVENT_TYPE_OPTIONS.map((t) => ({ value: t, label: t }))}
               required
             />
             <Input label="Event date & time" type="datetime-local" value={form.date} onChange={update('date')} required />
             <Input label="Location" value={form.location} onChange={update('location')} placeholder="City, Venue Name" required />
-            <Input label="Estimated guest count" type="number" min="1" value={form.guest_count} onChange={update('guest_count')} placeholder="50" required />
+            <Input label="Estimated guest count" type="number" min="1" value={form.guestCount} onChange={update('guestCount')} placeholder="50" required />
             <div className="grid grid-cols-2 gap-4">
-              <Input label="Budget minimum ($)" type="number" min="0" step="50" value={form.budget_min} onChange={update('budget_min')} placeholder="500" required />
-              <Input label="Budget maximum ($)" type="number" min="0" step="50" value={form.budget_max} onChange={update('budget_max')} placeholder="2000" required />
+              <Input label="Budget minimum ($)" type="number" min="0" step="50" value={form.budgetMin} onChange={update('budgetMin')} placeholder="500" required />
+              <Input label="Budget maximum ($)" type="number" min="0" step="50" value={form.budgetMax} onChange={update('budgetMax')} placeholder="2000" required />
             </div>
             <Textarea
               label="Event description"

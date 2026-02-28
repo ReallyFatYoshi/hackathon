@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/components/ui/toast'
@@ -16,15 +15,14 @@ export function ApplyToEventButton({ eventId, chefId }: { eventId: string; chefI
   async function handleApply() {
     if (!message.trim()) { toast({ title: 'Please write a message', variant: 'error' }); return }
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.from('event_applications').insert({
-      event_id: eventId,
-      chef_id: chefId,
-      message,
-      status: 'pending',
+    const res = await fetch('/api/events/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eventId, chefId, message }),
     })
-    if (error) {
-      toast({ title: 'Application failed', description: error.message, variant: 'error' })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      toast({ title: 'Application failed', description: data.error || 'Something went wrong', variant: 'error' })
       setLoading(false)
       return
     }

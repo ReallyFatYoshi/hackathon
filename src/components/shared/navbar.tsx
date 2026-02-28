@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { signOut } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { ChefHat, LogOut, Menu, X } from 'lucide-react'
 import React from 'react'
@@ -19,8 +19,7 @@ export function Navbar({ user }: NavbarProps) {
   const pathname = usePathname()
 
   async function handleSignOut() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await signOut()
     router.push('/')
     router.refresh()
   }
@@ -38,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
   ]
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/80" style={{ borderColor: 'var(--border)' }}>
+    <header className="sticky top-0 z-40 w-full border-b bg-white/95 backdrop-blur-md supports-backdrop-filter:bg-white/80" style={{ borderColor: 'var(--border)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-6">
           {/* Logo */}

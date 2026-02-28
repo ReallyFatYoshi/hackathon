@@ -1,22 +1,31 @@
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-helpers'
 import { redirect } from 'next/navigation'
 import { DashboardShell } from '@/components/shared/dashboard-shell'
+import type { UserProfile } from '@/types'
 
 const NAV_ITEMS = [
   { label: 'Overview', href: '/dashboard/client', icon: 'Home' },
   { label: 'My Events', href: '/dashboard/client/events', icon: 'Calendar' },
   { label: 'Find Chefs', href: '/dashboard/client/chefs', icon: 'ChefHat' },
   { label: 'My Bookings', href: '/dashboard/client/bookings', icon: 'BookOpen' },
+  { label: 'Messages', href: '/dashboard/client/messages', icon: 'MessageSquare' },
 ]
 
 export default async function ClientDashboardLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
-  if (!profile || profile.role === 'admin') redirect('/dashboard/admin')
-  if (profile.role === 'chef') redirect('/dashboard/chef')
+  const role = (user as any).role || 'client'
+  if (role === 'admin') redirect('/dashboard/admin')
+  if (role === 'chef') redirect('/dashboard/chef')
+
+  const profile: UserProfile = {
+    id: user.id,
+    role,
+    full_name: user.name,
+    email: user.email,
+    phone: (user as any).phone,
+    created_at: user.createdAt?.toISOString?.() || '',
+  }
 
   return (
     <DashboardShell user={profile} items={NAV_ITEMS}>

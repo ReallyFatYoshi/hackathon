@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { signUp } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
@@ -30,13 +30,10 @@ export default function RegisterPage() {
     }
 
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.auth.signUp({
+    const { error } = await signUp.email({
       email: form.email,
       password: form.password,
-      options: {
-        data: { full_name: form.full_name, role: 'client' },
-      },
+      name: form.full_name,
     })
 
     if (error) {

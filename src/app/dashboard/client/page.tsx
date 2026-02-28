@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,19 +8,15 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { Calendar, ChefHat, BookOpen, Plus, TrendingUp } from 'lucide-react'
 
 export default async function ClientOverviewPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const [eventsRes, bookingsRes] = await Promise.all([
-    supabase.from('events').select('*').eq('client_id', user.id).order('created_at', { ascending: false }).limit(5),
-    supabase.from('bookings').select('*, events(*), chefs(first_name, last_name)').eq('client_id', user.id).order('created_at', { ascending: false }).limit(5),
+  const [events, bookings] = await Promise.all([
+    db.event.findMany({ where: { clientId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 }),
+    db.booking.findMany({ where: { clientId: user.id }, orderBy: { createdAt: 'desc' }, take: 5, include: { event: true, chef: true } }),
   ])
 
-  const events = eventsRes.data || []
-  const bookings = bookingsRes.data || []
   const openEvents = events.filter((e) => e.status === 'open').length
-  const activeBookings = bookings.filter((b) => b.booking_status === 'confirmed').length
+  const activeBookings = bookings.filter((b) => b.bookingStatus === 'confirmed').length
 
   return (
     <div className="space-y-8">
@@ -86,7 +82,7 @@ export default async function ClientOverviewPage() {
                     <div className="flex items-center justify-between p-3 rounded-xl transition-colors hover:bg-stone-50">
                       <div className="min-w-0">
                         <p className="font-medium text-sm truncate" style={{ color: 'var(--ink)' }}>{event.title}</p>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>{formatDate(event.date)}</p>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>{formatDate(event.date.toISOString())}</p>
                       </div>
                       {statusBadge(event.status)}
                     </div>
@@ -119,11 +115,11 @@ export default async function ClientOverviewPage() {
                   <div key={booking.id} className="flex items-center justify-between p-3 rounded-xl" style={{ background: 'var(--parchment)' }}>
                     <div className="min-w-0">
                       <p className="font-medium text-sm truncate" style={{ color: 'var(--ink)' }}>
-                        {(booking.chefs as any)?.first_name} {(booking.chefs as any)?.last_name}
+                        {booking.chef?.firstName} {booking.chef?.lastName}
                       </p>
                       <p className="text-xs mt-0.5 font-medium" style={{ color: 'var(--gold)' }}>{formatCurrency(booking.amount)}</p>
                     </div>
-                    {statusBadge(booking.booking_status)}
+                    {statusBadge(booking.bookingStatus)}
                   </div>
                 ))}
               </div>

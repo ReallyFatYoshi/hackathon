@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,15 +8,13 @@ import { formatDate, formatCurrency, EVENT_TYPE_OPTIONS } from '@/lib/utils'
 import { Plus, Calendar } from 'lucide-react'
 
 export default async function ClientEventsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const { data: events } = await supabase
-    .from('events')
-    .select('*, event_applications(count)')
-    .eq('client_id', user.id)
-    .order('created_at', { ascending: false })
+  const events = await db.event.findMany({
+    where: { clientId: user.id },
+    orderBy: { createdAt: 'desc' },
+    include: { _count: { select: { eventApplications: true } } },
+  })
 
   return (
     <div className="space-y-6">
@@ -52,16 +50,16 @@ export default async function ClientEventsPage() {
                         {statusBadge(event.status)}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-stone-500">
-                        <span>{event.event_type}</span>
-                        <span>{formatDate(event.date)}</span>
+                        <span>{event.eventType}</span>
+                        <span>{formatDate(event.date.toISOString())}</span>
                         <span>{event.location}</span>
-                        <span>{event.guest_count} guests</span>
-                        <span>{formatCurrency(event.budget_min)} – {formatCurrency(event.budget_max)}</span>
+                        <span>{event.guestCount} guests</span>
+                        <span>{formatCurrency(event.budgetMin)} – {formatCurrency(event.budgetMax)}</span>
                       </div>
                     </div>
                     <div className="text-right shrink-0">
                       <p className="text-sm font-semibold text-stone-900">
-                        {(event.event_applications as any)?.[0]?.count || 0} applications
+                        {event._count.eventApplications} applications
                       </p>
                     </div>
                   </div>

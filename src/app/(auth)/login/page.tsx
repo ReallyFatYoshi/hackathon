@@ -2,7 +2,7 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { signIn } from '@/lib/auth-client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
@@ -19,24 +19,13 @@ function LoginForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { error } = await signIn.email({ email, password })
     if (error) {
       toast({ title: 'Sign in failed', description: error.message, variant: 'error' })
       setLoading(false)
       return
     }
-
-    // Get user role and redirect accordingly
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-      if (profile?.role === 'admin') router.push('/dashboard/admin')
-      else if (profile?.role === 'chef') router.push('/dashboard/chef')
-      else router.push('/dashboard/client')
-    } else {
-      router.push(redirectTo)
-    }
+    router.push(redirectTo)
     router.refresh()
   }
 

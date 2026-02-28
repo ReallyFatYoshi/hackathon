@@ -137,6 +137,23 @@ export interface Review {
   created_at: string
 }
 
+export type MessageType = 'text' | 'system' | 'call_started' | 'call_ended'
+
+export interface Message {
+  id: string
+  booking_id: string
+  sender_id: string
+  content: string
+  type: MessageType
+  created_at: string
+}
+
+export interface CallSignal {
+  type: 'offer' | 'answer' | 'ice-candidate' | 'call-request' | 'call-accept' | 'call-reject' | 'call-end'
+  sender_id: string
+  payload: Record<string, unknown>
+}
+
 export interface NavItem {
   label: string
   href: string

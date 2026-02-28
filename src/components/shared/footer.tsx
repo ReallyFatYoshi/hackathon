@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden" style={{ background: 'var(--ink)', color: 'var(--canvas)' }}>
       {/* Subtle glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_30%_0%,_#3d1f0033,_transparent)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_30%_0%,#3d1f0033,transparent)] pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top section */}

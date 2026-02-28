@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { auth } from '@/lib/auth'
+import { db } from '@/lib/db'
 import { sendInterviewScheduledEmail, sendApplicationStatusEmail } from '@/lib/email'
 
 export async function POST(
@@ -10,24 +11,15 @@ export async function POST(
   const body = await request.json()
   const { action, scheduled_at, notes } = body
 
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const session = await auth.api.getSession({ headers: request.headers })
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single()
-  if (!profile || profile.role !== 'admin') {
+  if (session.user.role !== 'admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const { data: application } = await supabase
-    .from('chef_applications')
-    .select('*')
-    .eq('id', id)
-    .single()
-
+  const application = await db.chefApplication.findUnique({ where: { id } })
   if (!application) return NextResponse.json({ error: 'Application not found' }, { status: 404 })
-
-  const adminClient = await createAdminClient()
 
   switch (action) {
     case 'schedule_interview': {
@@ -65,24 +57,24 @@ export async function POST(
       }
 
       // Create interview record
-      const { error: ivError } = await adminClient.from('interviews').insert({
-        application_id: id,
-        scheduled_at,
-        daily_room_url: dailyRoomUrl,
-        daily_room_name: dailyRoomName,
-        status: 'scheduled',
+      await db.interview.create({
+        data: {
+          applicationId: id,
+          scheduledAt: new Date(scheduled_at),
+          dailyRoomUrl,
+          dailyRoomName,
+          status: 'scheduled',
+        },
       })
 
-      if (ivError) return NextResponse.json({ error: ivError.message }, { status: 500 })
-
       // Update application status
-      await adminClient.from('chef_applications').update({ status: 'interview_scheduled' }).eq('id', id)
+      await db.chefApplication.update({ where: { id }, data: { status: 'interview_scheduled' } })
 
       // Send email notification
       try {
         await sendInterviewScheduledEmail(
           application.email,
-          `${application.first_name} ${application.last_name}`,
+          `${application.firstName} ${application.lastName}`,
           scheduled_at,
           dailyRoomUrl
         )
@@ -95,36 +87,53 @@ export async function POST(
 
     case 'approve': {
       // Update application
-      await adminClient.from('chef_applications').update({ status: 'approved' }).eq('id', id)
+      await db.chefApplication.update({ where: { id }, data: { status: 'approved' } })
 
       // Update user role to chef
-      await adminClient.from('profiles').update({ role: 'chef' }).eq('id', application.user_id)
+      if (application.userId) {
+        await db.user.update({ where: { id: application.userId }, data: { role: 'chef' } })
+      }
 
       // Create chef profile
-      const { error: chefError } = await adminClient.from('chefs').upsert({
-        user_id: application.user_id,
-        application_id: id,
-        applicant_type: application.applicant_type ?? 'individual',
-        company_name: application.company_name ?? null,
-        first_name: application.first_name,
-        last_name: application.last_name,
-        bio: application.bio,
-        years_experience: application.years_experience,
-        cuisine_specialties: application.cuisine_specialties,
-        event_specialties: application.event_specialties,
-        portfolio_images: application.portfolio_images,
-        social_links: application.social_links,
-        is_visible: true,
-      }, { onConflict: 'user_id' })
-
-      if (chefError) return NextResponse.json({ error: chefError.message }, { status: 500 })
+      await db.chef.upsert({
+        where: { userId: application.userId! },
+        update: {
+          applicationId: id,
+          applicantType: application.applicantType ?? 'individual',
+          companyName: application.companyName ?? null,
+          firstName: application.firstName,
+          lastName: application.lastName,
+          bio: application.bio,
+          yearsExperience: application.yearsExperience,
+          cuisineSpecialties: application.cuisineSpecialties,
+          eventSpecialties: application.eventSpecialties,
+          portfolioImages: application.portfolioImages,
+          socialLinks: application.socialLinks ?? undefined,
+          isVisible: true,
+        },
+        create: {
+          userId: application.userId!,
+          applicationId: id,
+          applicantType: application.applicantType ?? 'individual',
+          companyName: application.companyName ?? null,
+          firstName: application.firstName,
+          lastName: application.lastName,
+          bio: application.bio,
+          yearsExperience: application.yearsExperience,
+          cuisineSpecialties: application.cuisineSpecialties,
+          eventSpecialties: application.eventSpecialties,
+          portfolioImages: application.portfolioImages,
+          socialLinks: application.socialLinks ?? undefined,
+          isVisible: true,
+        },
+      })
 
       // Mark interview as completed
-      await adminClient.from('interviews').update({ status: 'completed' }).eq('application_id', id)
+      await db.interview.updateMany({ where: { applicationId: id }, data: { status: 'completed' } })
 
       // Send email
       try {
-        await sendApplicationStatusEmail(application.email, application.first_name, 'approved')
+        await sendApplicationStatusEmail(application.email, application.firstName, 'approved')
       } catch (e) {
         console.error('Email send failed:', e)
       }
@@ -133,21 +142,21 @@ export async function POST(
     }
 
     case 'reject': {
-      await adminClient.from('chef_applications').update({ status: 'rejected' }).eq('id', id)
+      await db.chefApplication.update({ where: { id }, data: { status: 'rejected' } })
       try {
-        await sendApplicationStatusEmail(application.email, application.first_name, 'rejected')
+        await sendApplicationStatusEmail(application.email, application.firstName, 'rejected')
       } catch (e) { console.error(e) }
       return NextResponse.json({ message: 'Application rejected' })
     }
 
     case 'no_show': {
-      await adminClient.from('chef_applications').update({ status: 'no_show' }).eq('id', id)
-      await adminClient.from('interviews').update({ status: 'no_show' }).eq('application_id', id)
+      await db.chefApplication.update({ where: { id }, data: { status: 'no_show' } })
+      await db.interview.updateMany({ where: { applicationId: id }, data: { status: 'no_show' } })
       return NextResponse.json({ message: 'Marked as no-show' })
     }
 
     case 'save_notes': {
-      await adminClient.from('chef_applications').update({ admin_notes: notes }).eq('id', id)
+      await db.chefApplication.update({ where: { id }, data: { adminNotes: notes } })
       return NextResponse.json({ message: 'Notes saved' })
     }
 

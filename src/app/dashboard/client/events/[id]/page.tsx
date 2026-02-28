@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect, notFound } from 'next/navigation'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
+import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
@@ -7,24 +8,19 @@ import { SelectChefButton } from './select-chef-button'
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const { data: event } = await supabase
-    .from('events')
-    .select('*')
-    .eq('id', id)
-    .eq('client_id', user.id)
-    .single()
+  const event = await db.event.findFirst({
+    where: { id, clientId: user.id },
+  })
 
   if (!event) notFound()
 
-  const { data: applications } = await supabase
-    .from('event_applications')
-    .select('*, chefs(*)')
-    .eq('event_id', id)
-    .order('created_at', { ascending: false })
+  const applications = await db.eventApplication.findMany({
+    where: { eventId: id },
+    orderBy: { createdAt: 'desc' },
+    include: { chef: true },
+  })
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -34,7 +30,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           {statusBadge(event.status)}
         </div>
         <p className="text-stone-500 text-sm">
-          {event.event_type} · {formatDate(event.date)} · {event.location} · {event.guest_count} guests
+          {event.eventType} · {formatDate(event.date.toISOString())} · {event.location} · {event.guestCount} guests
         </p>
       </div>
 
@@ -44,7 +40,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <div className="grid grid-cols-2 gap-4">
             <div>
               <span className="text-stone-500">Budget</span>
-              <p className="font-medium">{formatCurrency(event.budget_min)} – {formatCurrency(event.budget_max)}</p>
+              <p className="font-medium">{formatCurrency(event.budgetMin)} – {formatCurrency(event.budgetMax)}</p>
             </div>
             <div>
               <span className="text-stone-500">Status</span>
@@ -70,24 +66,24 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           ) : (
             <div className="space-y-4">
               {applications.map((app) => {
-                const chef = app.chefs as any
+                const chef = app.chef
                 return (
                   <div key={app.id} className="border border-stone-200 rounded-xl p-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <p className="font-semibold text-stone-900">
-                            {chef?.first_name} {chef?.last_name}
+                            {chef?.firstName} {chef?.lastName}
                           </p>
                           {statusBadge(app.status)}
                         </div>
                         <p className="text-xs text-stone-500 mb-1">
-                          {chef?.years_experience} years experience · ⭐ {Number(chef?.avg_rating || 0).toFixed(1)} · {chef?.total_events} events completed
+                          {chef?.yearsExperience} years experience · ⭐ {Number(chef?.avgRating || 0).toFixed(1)} · {chef?.totalEvents} events completed
                         </p>
                         <p className="text-sm text-stone-600">{app.message}</p>
-                        {chef?.cuisine_specialties?.length > 0 && (
+                        {chef?.cuisineSpecialties?.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
-                            {chef.cuisine_specialties.slice(0, 4).map((c: string) => (
+                            {chef.cuisineSpecialties.slice(0, 4).map((c: string) => (
                               <span key={c} className="bg-amber-50 text-amber-700 text-xs px-2 py-0.5 rounded-full">{c}</span>
                             ))}
                           </div>
@@ -98,7 +94,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                           applicationId={app.id}
                           eventId={event.id}
                           chefId={chef?.id}
-                          budgetMax={event.budget_max}
+                          budgetMax={event.budgetMax}
                         />
                       )}
                     </div>

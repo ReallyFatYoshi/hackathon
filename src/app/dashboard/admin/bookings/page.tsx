@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireRole } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import { Card, CardContent } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
@@ -7,14 +7,12 @@ import { BookOpen } from 'lucide-react'
 import { AdminBookingActions } from './actions'
 
 export default async function AdminBookingsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  await requireRole('admin')
 
-  const { data: bookings } = await supabase
-    .from('bookings')
-    .select('*, events(title, date, location), chefs(first_name, last_name), profiles(full_name, email)')
-    .order('created_at', { ascending: false })
+  const bookings = await db.booking.findMany({
+    include: { event: true, chef: true, client: true },
+    orderBy: { createdAt: 'desc' },
+  })
 
   return (
     <div className="space-y-6">
@@ -33,10 +31,10 @@ export default async function AdminBookingsPage() {
       ) : (
         <div className="space-y-4">
           {bookings.map((booking) => {
-            const event = booking.events as any
-            const chef = booking.chefs as any
-            const client = booking.profiles as any
-            const commission = (booking.amount * booking.commission_pct) / 100
+            const event = booking.event
+            const chef = booking.chef
+            const client = booking.client
+            const commission = (booking.amount * booking.commissionPct) / 100
 
             return (
               <Card key={booking.id}>
@@ -45,13 +43,13 @@ export default async function AdminBookingsPage() {
                     <div className="flex-1 min-w-0 space-y-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold text-stone-900 text-sm">{event?.title}</h3>
-                        {statusBadge(booking.booking_status)}
-                        {statusBadge(booking.payment_status)}
+                        {statusBadge(booking.bookingStatus)}
+                        {statusBadge(booking.paymentStatus)}
                       </div>
                       <p className="text-xs text-stone-500">
-                        Chef: {chef?.first_name} {chef?.last_name} · Client: {client?.full_name}
+                        Chef: {chef?.firstName} {chef?.lastName} · Client: {client?.name}
                       </p>
-                      <p className="text-xs text-stone-500">{formatDate(event?.date)}</p>
+                      <p className="text-xs text-stone-500">{formatDate(event?.date?.toISOString())}</p>
                       <div className="text-sm">
                         <span className="font-semibold text-stone-900">{formatCurrency(booking.amount)}</span>
                         <span className="text-stone-400 text-xs ml-2">
@@ -59,7 +57,7 @@ export default async function AdminBookingsPage() {
                         </span>
                       </div>
                     </div>
-                    {booking.booking_status === 'disputed' && (
+                    {booking.bookingStatus === 'disputed' && (
                       <AdminBookingActions bookingId={booking.id} />
                     )}
                   </div>

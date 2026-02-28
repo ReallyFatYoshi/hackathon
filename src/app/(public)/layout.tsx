@@ -1,19 +1,22 @@
 import { Navbar } from '@/components/shared/navbar'
 import { Footer } from '@/components/shared/footer'
-import { createClient } from '@/lib/supabase/server'
+import { getSession } from '@/lib/auth-helpers'
+import type { UserProfile } from '@/types'
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const session = await getSession()
 
-  let profile = null
-  if (user) {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single()
-    profile = data
+  let profile: UserProfile | null = null
+  if (session?.user) {
+    const user = session.user
+    profile = {
+      id: user.id,
+      role: (user as any).role || 'client',
+      full_name: user.name,
+      email: user.email,
+      phone: (user as any).phone,
+      created_at: user.createdAt?.toISOString?.() || '',
+    }
   }
 
   return (

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
-import { createAdminClient } from '@/lib/supabase/server'
+import { db } from '@/lib/db'
 import { COMMISSION_PCT } from '@/lib/stripe'
 import { headers } from 'next/headers'
 
@@ -18,8 +18,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Webhook Error' }, { status: 400 })
   }
 
-  const adminClient = await createAdminClient()
-
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object
@@ -27,13 +25,15 @@ export async function POST(request: NextRequest) {
 
       // Update booking with payment intent ID
       if (session.payment_intent) {
-        await adminClient
-          .from('bookings')
-          .update({ stripe_payment_intent_id: session.payment_intent })
-          .eq('event_id', eventId)
-          .eq('chef_id', chefId)
-          .eq('client_id', clientId)
-          .eq('payment_status', 'held')
+        await db.booking.updateMany({
+          where: {
+            eventId,
+            chefId,
+            clientId,
+            paymentStatus: 'held',
+          },
+          data: { stripePaymentIntentId: session.payment_intent },
+        })
       }
       break
     }
@@ -41,10 +41,10 @@ export async function POST(request: NextRequest) {
     case 'payment_intent.payment_failed': {
       const pi = event.data.object
       // Mark booking as cancelled if payment fails
-      await adminClient
-        .from('bookings')
-        .update({ booking_status: 'cancelled', payment_status: 'refunded' })
-        .eq('stripe_payment_intent_id', pi.id)
+      await db.booking.updateMany({
+        where: { stripePaymentIntentId: pi.id },
+        data: { bookingStatus: 'cancelled', paymentStatus: 'refunded' },
+      })
       break
     }
   }

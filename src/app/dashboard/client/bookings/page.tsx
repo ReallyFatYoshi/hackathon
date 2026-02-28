@@ -1,5 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
@@ -8,15 +8,13 @@ import { BookOpen } from 'lucide-react'
 import { ConfirmCompletionButton } from './confirm-button'
 
 export default async function ClientBookingsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
-  const { data: bookings } = await supabase
-    .from('bookings')
-    .select('*, events(*), chefs(first_name, last_name, avg_rating)')
-    .eq('client_id', user.id)
-    .order('created_at', { ascending: false })
+  const bookings = await db.booking.findMany({
+    where: { clientId: user.id },
+    orderBy: { createdAt: 'desc' },
+    include: { event: true, chef: { select: { firstName: true, lastName: true, avgRating: true } } },
+  })
 
   return (
     <div className="space-y-6">
@@ -36,8 +34,8 @@ export default async function ClientBookingsPage() {
       ) : (
         <div className="space-y-4">
           {bookings.map((booking) => {
-            const chef = booking.chefs as any
-            const event = booking.events as any
+            const chef = booking.chef
+            const event = booking.event
             return (
               <Card key={booking.id}>
                 <CardContent className="pt-5">
@@ -45,23 +43,23 @@ export default async function ClientBookingsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h3 className="font-semibold text-stone-900">{event?.title}</h3>
-                        {statusBadge(booking.booking_status)}
-                        {statusBadge(booking.payment_status)}
+                        {statusBadge(booking.bookingStatus)}
+                        {statusBadge(booking.paymentStatus)}
                       </div>
                       <p className="text-sm text-stone-600 mb-1">
-                        Chef: <span className="font-medium">{chef?.first_name} {chef?.last_name}</span>
+                        Chef: <span className="font-medium">{chef?.firstName} {chef?.lastName}</span>
                       </p>
-                      <p className="text-sm text-stone-500">{formatDate(event?.date)}</p>
+                      <p className="text-sm text-stone-500">{formatDate(event?.date?.toISOString())}</p>
                       <p className="text-sm font-semibold text-stone-900 mt-1">{formatCurrency(booking.amount)}</p>
                       <p className="text-xs text-stone-400">
-                        Platform commission: {booking.commission_pct}% deducted on release
+                        Platform commission: {booking.commissionPct}% deducted on release
                       </p>
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
-                      {booking.booking_status === 'confirmed' && !booking.client_confirmed_at && (
+                      {booking.bookingStatus === 'confirmed' && !booking.clientConfirmedAt && (
                         <ConfirmCompletionButton bookingId={booking.id} />
                       )}
-                      {booking.booking_status === 'completed' && (
+                      {booking.bookingStatus === 'completed' && (
                         <Link href={`/dashboard/client/bookings/${booking.id}/review`}>
                           <button className="text-xs text-amber-600 font-semibold hover:underline">Leave a Review</button>
                         </Link>

@@ -1,4 +1,5 @@
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-helpers'
+import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
@@ -7,28 +8,25 @@ import { Calendar } from 'lucide-react'
 import { ApplyToEventButton } from './apply-button'
 
 export default async function ChefEventsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  const { user } = await requireAuth()
 
   // Check if approved chef
-  const { data: chef } = await supabase.from('chefs').select('id').eq('user_id', user.id).single()
+  const chef = await db.chef.findUnique({ where: { userId: user.id }, select: { id: true } })
   if (!chef) redirect('/dashboard/chef')
 
   // Get open events
-  const { data: events } = await supabase
-    .from('events')
-    .select('*, profiles(full_name)')
-    .eq('status', 'open')
-    .order('date', { ascending: true })
+  const events = await db.event.findMany({
+    where: { status: 'open' },
+    orderBy: { date: 'asc' },
+  })
 
   // Get chef's existing applications
-  const { data: myApplications } = await supabase
-    .from('event_applications')
-    .select('event_id, status')
-    .eq('chef_id', chef.id)
+  const myApplications = await db.eventApplication.findMany({
+    where: { chefId: chef.id },
+    select: { eventId: true, status: true },
+  })
 
-  const appliedEventIds = new Set((myApplications || []).map((a) => a.event_id))
+  const appliedEventIds = new Set(myApplications.map((a) => a.eventId))
 
   return (
     <div className="space-y-6">
@@ -48,7 +46,7 @@ export default async function ChefEventsPage() {
         <div className="grid gap-4">
           {events.map((event) => {
             const hasApplied = appliedEventIds.has(event.id)
-            const myApp = (myApplications || []).find((a) => a.event_id === event.id)
+            const myApp = myApplications.find((a) => a.eventId === event.id)
             return (
               <Card key={event.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="pt-5">
@@ -59,13 +57,13 @@ export default async function ChefEventsPage() {
                         {statusBadge(event.status)}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-stone-500 mb-2">
-                        <span>{event.event_type}</span>
-                        <span>{formatDate(event.date)}</span>
+                        <span>{event.eventType}</span>
+                        <span>{formatDate(event.date.toISOString())}</span>
                         <span>{event.location}</span>
-                        <span>{event.guest_count} guests</span>
+                        <span>{event.guestCount} guests</span>
                       </div>
                       <p className="text-sm font-semibold text-stone-900 mb-1">
-                        Budget: {formatCurrency(event.budget_min)} – {formatCurrency(event.budget_max)}
+                        Budget: {formatCurrency(event.budgetMin)} – {formatCurrency(event.budgetMax)}
                       </p>
                       <p className="text-sm text-stone-600 line-clamp-2">{event.description}</p>
                     </div>

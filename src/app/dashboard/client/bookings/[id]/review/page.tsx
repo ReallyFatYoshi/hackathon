@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,37 +22,17 @@ export default function LeaveReviewPage() {
     if (rating === 0) { toast({ title: 'Please select a rating', variant: 'error' }); return }
 
     setLoading(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-
-    // Get booking details to extract chef_id
-    const { data: booking } = await supabase
-      .from('bookings')
-      .select('chef_id, client_id')
-      .eq('id', bookingId)
-      .single()
-
-    if (!booking) { toast({ title: 'Booking not found', variant: 'error' }); setLoading(false); return }
-
-    const { error } = await supabase.from('reviews').insert({
-      booking_id: bookingId,
-      client_id: user.id,
-      chef_id: booking.chef_id,
-      rating,
-      comment,
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId, rating, comment }),
     })
+    const data = await res.json()
 
-    if (error) {
-      toast({ title: 'Failed to submit review', description: error.message, variant: 'error' })
+    if (!res.ok) {
+      toast({ title: 'Failed to submit review', description: data.error, variant: 'error' })
       setLoading(false)
       return
-    }
-
-    // Update chef's total_events count
-    const { data: chef } = await supabase.from('chefs').select('total_events').eq('id', booking.chef_id).single()
-    if (chef) {
-      await supabase.from('chefs').update({ total_events: (chef.total_events || 0) + 1 }).eq('id', booking.chef_id)
     }
 
     toast({ title: 'Review submitted!', variant: 'success' })

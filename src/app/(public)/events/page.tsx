@@ -1,17 +1,15 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/db'
 import Link from 'next/link'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
 import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react'
 
 export default async function PublicEventsPage() {
-  const supabase = await createClient()
-
-  const { data: events } = await supabase
-    .from('events')
-    .select('id, title, event_type, date, location, guest_count, budget_min, budget_max, description')
-    .eq('status', 'open')
-    .order('date', { ascending: true })
+  const events = await db.event.findMany({
+    where: { status: 'open' },
+    select: { id: true, title: true, eventType: true, date: true, location: true, guestCount: true, budgetMin: true, budgetMax: true, description: true },
+    orderBy: { date: 'asc' },
+  })
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--canvas)' }}>
@@ -53,13 +51,13 @@ export default async function PublicEventsPage() {
                       {statusBadge('open')}
                     </div>
                     <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-xs mb-3" style={{ color: 'var(--warm-stone)' }}>
-                      <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" style={{ color: 'var(--gold)' }} />{formatDate(event.date)}</span>
+                      <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" style={{ color: 'var(--gold)' }} />{formatDate(event.date.toISOString())}</span>
                       <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" style={{ color: 'var(--gold)' }} />{event.location}</span>
-                      <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" style={{ color: 'var(--gold)' }} />{event.guest_count} guests</span>
-                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: 'var(--parchment)', color: 'var(--warm-stone)' }}>{event.event_type}</span>
+                      <span className="flex items-center gap-1"><Users className="h-3.5 w-3.5" style={{ color: 'var(--gold)' }} />{event.guestCount} guests</span>
+                      <span className="px-2 py-0.5 rounded-full text-xs" style={{ background: 'var(--parchment)', color: 'var(--warm-stone)' }}>{event.eventType}</span>
                     </div>
                     <p className="text-sm font-semibold mb-1" style={{ color: 'var(--ink)' }}>
-                      Budget: {formatCurrency(event.budget_min)} – {formatCurrency(event.budget_max)}
+                      Budget: {formatCurrency(event.budgetMin)} – {formatCurrency(event.budgetMax)}
                     </p>
                     <p className="text-sm line-clamp-2 leading-relaxed" style={{ color: 'var(--warm-stone)' }}>{event.description}</p>
                   </div>

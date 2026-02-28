@@ -1,17 +1,17 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import {
   ChefHat, LogOut, Home, Calendar, BookOpen, User, Star,
-  FileText, Video, Users,
+  FileText, Video, Users, MessageSquare,
 } from 'lucide-react'
 import React from 'react'
 import type { UserProfile } from '@/types'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Home, Calendar, BookOpen, User, Star, ChefHat, FileText, Video, Users,
+  Home, Calendar, BookOpen, User, Star, ChefHat, FileText, Video, Users, MessageSquare,
 }
 
 export interface SidebarItem {
@@ -41,8 +41,7 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
   const router = useRouter()
 
   async function handleSignOut() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await signOut()
     router.push('/')
     router.refresh()
   }

@@ -1,0 +1,286 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// Better Auth tables
+// ============================================================
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("client") // client | chef | admin
+  phone         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      Session[]
+  accounts      Account[]
+
+  // App relations
+  chefApplications ChefApplication[]
+  chef             Chef?
+  clientEvents     Event[]           @relation("ClientEvents")
+  clientBookings   Booking[]         @relation("ClientBookings")
+  clientReviews    Review[]          @relation("ClientReviews")
+  sentMessages     Message[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}
+
+// ============================================================
+// Chef Applications
+// ============================================================
+model ChefApplication {
+  id                String   @id @default(cuid())
+  userId            String?
+  status            String   @default("pending_review")
+  applicantType     String   @default("individual")
+  companyName       String?
+  firstName         String
+  lastName          String
+  email             String
+  phone             String
+  yearsExperience   Int
+  cuisineSpecialties String[]
+  eventSpecialties  String[]
+  bio               String
+  portfolioImages   String[]
+  socialLinks       Json?    @default("{}")
+  adminNotes        String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  interviews Interview[]
+  chef       Chef?
+
+  @@map("chef_application")
+}
+
+// ============================================================
+// Interviews
+// ============================================================
+model Interview {
+  id             String   @id @default(cuid())
+  applicationId  String
+  scheduledAt    DateTime
+  dailyRoomUrl   String
+  dailyRoomName  String
+  status         String   @default("scheduled")
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  application ChefApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("interview")
+}
+
+// ============================================================
+// Chefs (approved profiles)
+// ============================================================
+model Chef {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  applicationId      String?  @unique
+  applicantType      String   @default("individual")
+  companyName        String?
+  firstName          String
+  lastName           String
+  bio                String
+  yearsExperience    Int
+  cuisineSpecialties String[]
+  eventSpecialties   String[]
+  portfolioImages    String[]
+  socialLinks        Json?    @default("{}")
+  totalEvents        Int      @default(0)
+  avgRating          Float    @default(0)
+  isVisible          Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  application       ChefApplication? @relation(fields: [applicationId], references: [id])
+  eventApplications EventApplication[]
+  bookings          Booking[]
+  reviews           Review[]
+
+  @@map("chef")
+}
+
+// ============================================================
+// Events
+// ============================================================
+model Event {
+  id          String   @id @default(cuid())
+  clientId    String
+  title       String
+  eventType   String
+  date        DateTime
+  location    String
+  guestCount  Int
+  budgetMin   Float
+  budgetMax   Float
+  description String
+  status      String   @default("open")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  client            User               @relation("ClientEvents", fields: [clientId], references: [id], onDelete: Cascade)
+  eventApplications EventApplication[]
+  bookings          Booking[]
+
+  @@map("event")
+}
+
+// ============================================================
+// Event Applications
+// ============================================================
+model EventApplication {
+  id        String   @id @default(cuid())
+  eventId   String
+  chefId    String
+  message   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  chef  Chef  @relation(fields: [chefId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, chefId])
+  @@map("event_application")
+}
+
+// ============================================================
+// Bookings
+// ============================================================
+model Booking {
+  id                     String    @id @default(cuid())
+  eventId                String
+  chefId                 String
+  clientId               String
+  amount                 Float
+  commissionPct          Float     @default(15)
+  paymentStatus          String    @default("held")
+  bookingStatus          String    @default("confirmed")
+  stripePaymentIntentId  String?
+  chefCompletedAt        DateTime?
+  clientConfirmedAt      DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  event    Event     @relation(fields: [eventId], references: [id])
+  chef     Chef      @relation(fields: [chefId], references: [id])
+  client   User      @relation("ClientBookings", fields: [clientId], references: [id])
+  review   Review?
+  messages Message[]
+
+  @@map("booking")
+}
+
+// ============================================================
+// Reviews
+// ============================================================
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String   @unique
+  clientId  String
+  chefId    String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id])
+  client  User    @relation("ClientReviews", fields: [clientId], references: [id])
+  chef    Chef    @relation(fields: [chefId], references: [id])
+
+  @@map("review")
+}
+
+// ============================================================
+// Messages
+// ============================================================
+model Message {
+  id        String   @id @default(cuid())
+  bookingId String
+  senderId  String
+  content   String
+  type      String   @default("text")
+  createdAt DateTime @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  sender  User    @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([bookingId, createdAt])
+  @@map("message")
+}
+
+// ============================================================
+// Payments
+// ============================================================
+model Payment {
+  id               String   @id @default(cuid())
+  bookingId        String
+  amount           Float
+  commission       Float
+  netAmount        Float
+  stripeTransferId String?
+  releasedAt       DateTime @default(now())
+  createdAt        DateTime @default(now())
+
+  @@map("payment")
+}

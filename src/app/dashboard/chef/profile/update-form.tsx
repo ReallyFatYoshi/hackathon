@@ -1,21 +1,20 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/components/ui/toast'
 import { CUISINE_OPTIONS, EVENT_TYPE_OPTIONS, cn } from '@/lib/utils'
-import type { Chef } from '@/types'
+import type { Chef } from '@prisma/client'
 
 export function UpdateProfileForm({ chef }: { chef: Chef }) {
   const { toast } = useToast()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [bio, setBio] = useState(chef.bio)
-  const [cuisines, setCuisines] = useState<string[]>(chef.cuisine_specialties)
-  const [events, setEvents] = useState<string[]>(chef.event_specialties)
+  const [cuisines, setCuisines] = useState<string[]>(chef.cuisineSpecialties)
+  const [events, setEvents] = useState<string[]>(chef.eventSpecialties)
 
   function toggleCuisine(c: string) {
     setCuisines((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c])
@@ -26,14 +25,15 @@ export function UpdateProfileForm({ chef }: { chef: Chef }) {
 
   async function handleSave() {
     setLoading(true)
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('chefs')
-      .update({ bio, cuisine_specialties: cuisines, event_specialties: events })
-      .eq('id', chef.id)
+    const res = await fetch('/api/chef/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bio, cuisineSpecialties: cuisines, eventSpecialties: events }),
+    })
 
-    if (error) {
-      toast({ title: 'Failed to update profile', description: error.message, variant: 'error' })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      toast({ title: 'Failed to update profile', description: data.error || 'Something went wrong', variant: 'error' })
     } else {
       toast({ title: 'Profile updated!', variant: 'success' })
       router.refresh()

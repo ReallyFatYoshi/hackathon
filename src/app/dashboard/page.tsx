@@ -1,19 +1,12 @@
-import { createClient } from '@/lib/supabase/server'
+import { requireAuth } from '@/lib/auth-helpers'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardRedirectPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { user } = await requireAuth()
 
-  if (!user) redirect('/login')
+  const role = (user as any).role
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role === 'admin') redirect('/dashboard/admin')
-  if (profile?.role === 'chef') redirect('/dashboard/chef')
+  if (role === 'admin') redirect('/dashboard/admin')
+  if (role === 'chef') redirect('/dashboard/chef')
   redirect('/dashboard/client')
 }
