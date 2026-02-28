@@ -39,6 +39,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
   const pcRef = useRef<RTCPeerConnection | null>(null)
   const channelRef = useRef<Channel | null>(null)
   const pendingCandidates = useRef<RTCIceCandidateInit[]>([])
+  const localStreamRef = useRef<MediaStream | null>(null)
 
   const updateState = useCallback((state: CallState) => {
     setCallState(state)
@@ -84,6 +85,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
       audio: true,
       video: video ? { width: 640, height: 480 } : false,
     })
+    localStreamRef.current = stream
     setLocalStream(stream)
     return stream
   }, [])
@@ -138,13 +140,14 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
   }, [currentUserId, sendSignal, updateState])
 
   const cleanup = useCallback(() => {
-    localStream?.getTracks().forEach((t) => t.stop())
+    localStreamRef.current?.getTracks().forEach((t) => t.stop())
+    localStreamRef.current = null
     setLocalStream(null)
     setRemoteStream(null)
     pcRef.current?.close()
     pcRef.current = null
     pendingCandidates.current = []
-  }, [localStream])
+  }, [])
 
   // Toggle audio
   const toggleAudio = useCallback(() => {
