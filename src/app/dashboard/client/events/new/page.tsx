@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { EVENT_TYPE_OPTIONS } from '@/lib/utils'
 
@@ -37,7 +38,7 @@ export default function NewEventPage() {
     }
 
     setLoading(true)
-    const res = await fetch('/api/events', {
+    const res = await csrfFetch('/api/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

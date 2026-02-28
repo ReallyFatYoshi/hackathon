@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { loadStripe } from '@stripe/stripe-js'
 
@@ -22,7 +23,7 @@ export function SelectChefButton({ applicationId, eventId, chefId, budgetMax }: 
   async function handleSelect() {
     setLoading(true)
     try {
-      const res = await fetch('/api/bookings/create', {
+      const res = await csrfFetch('/api/bookings/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ applicationId, eventId, chefId, amount: budgetMax }),

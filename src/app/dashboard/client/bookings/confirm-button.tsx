@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 
 export function ConfirmCompletionButton({ bookingId }: { bookingId: string }) {
@@ -12,7 +13,7 @@ export function ConfirmCompletionButton({ bookingId }: { bookingId: string }) {
   async function handleConfirm() {
     if (!confirm('Confirm that the event was completed successfully? This will release payment to the chef.')) return
     setLoading(true)
-    const res = await fetch('/api/payments/release', {
+    const res = await csrfFetch('/api/payments/release', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bookingId }),

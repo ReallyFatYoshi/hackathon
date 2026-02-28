@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 
 export function ApplyToEventButton({ eventId, chefId }: { eventId: string; chefId: string }) {
@@ -15,7 +16,7 @@ export function ApplyToEventButton({ eventId, chefId }: { eventId: string; chefI
   async function handleApply() {
     if (!message.trim()) { toast({ title: 'Please write a message', variant: 'error' }); return }
     setLoading(true)
-    const res = await fetch('/api/events/apply', {
+    const res = await csrfFetch('/api/events/apply', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ eventId, chefId, message }),

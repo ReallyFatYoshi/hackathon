@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { CUISINE_OPTIONS, EVENT_TYPE_OPTIONS, cn } from '@/lib/utils'
 import type { Chef } from '@prisma/client'
@@ -25,7 +26,7 @@ export function UpdateProfileForm({ chef }: { chef: Chef }) {
 
   async function handleSave() {
     setLoading(true)
-    const res = await fetch('/api/chef/profile', {
+    const res = await csrfFetch('/api/chef/profile', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bio, cuisineSpecialties: cuisines, eventSpecialties: events }),

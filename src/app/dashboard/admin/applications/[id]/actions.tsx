@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import type { ChefApplication, Interview } from '@/types'
 
@@ -24,7 +25,7 @@ export function ApplicationActions({ application, interview }: ApplicationAction
 
   async function performAction(action: string, extra?: Record<string, string>) {
     setLoading(action)
-    const res = await fetch(`/api/applications/${application.id}`, {
+    const res = await csrfFetch(`/api/applications/${application.id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, ...extra }),

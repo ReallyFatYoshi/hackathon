@@ -1,21 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
+const CSRF_COOKIE = 'csrf_token'
+const CSRF_HEADER = 'x-csrf-token'
 
-function checkCsrf(request: NextRequest): boolean {
-  if (SAFE_METHODS.includes(request.method)) return true
-  const origin = request.headers.get('origin')
-  const referer = request.headers.get('referer')
-  const host = request.headers.get('host')
-  if (!origin && !referer) return false
-  const allowedHost = host || 'localhost:3000'
-  if (origin) {
-    try { if (new URL(origin).host !== allowedHost) return false } catch { return false }
-  }
-  if (referer && !origin) {
-    try { if (new URL(referer).host !== allowedHost) return false } catch { return false }
-  }
-  return true
+/** Generate a random hex token using Web Crypto (Edge-compatible) */
+function generateToken(): string {
+  const buf = new Uint8Array(32)
+  crypto.getRandomValues(buf)
+  return Array.from(buf, (b) => b.toString(16).padStart(2, '0')).join('')
 }
 
 export async function middleware(request: NextRequest) {
@@ -26,9 +19,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // CSRF check on all mutating API requests
-  if (pathname.startsWith('/api/') && !checkCsrf(request)) {
-    return NextResponse.json({ error: 'CSRF validation failed' }, { status: 403 })
+  // --- CSRF double-submit cookie validation ---
+  if (pathname.startsWith('/api/') && !SAFE_METHODS.includes(request.method)) {
+    const cookieToken = request.cookies.get(CSRF_COOKIE)?.value
+    const headerToken = request.headers.get(CSRF_HEADER)
+
+    if (!cookieToken || !headerToken || cookieToken !== headerToken) {
+      return NextResponse.json({ error: 'CSRF validation failed' }, { status: 403 })
+    }
   }
 
   // Check for better-auth session cookie
@@ -53,7 +51,18 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next()
+  // Ensure CSRF cookie exists on every response
+  const response = NextResponse.next()
+  if (!request.cookies.get(CSRF_COOKIE)?.value) {
+    response.cookies.set(CSRF_COOKIE, generateToken(), {
+      httpOnly: false,  // JS must be able to read it
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    })
+  }
+
+  return response
 }
 
 export const config = {

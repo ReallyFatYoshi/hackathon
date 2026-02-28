@@ -1,40 +1,27 @@
-import { NextRequest } from 'next/server'
+'use client'
 
-const SAFE_METHODS = ['GET', 'HEAD', 'OPTIONS']
+const CSRF_COOKIE = 'csrf_token'
+
+/** Read the CSRF token from the cookie set by middleware */
+function getCsrfToken(): string {
+  if (typeof document === 'undefined') return ''
+  const match = document.cookie.match(new RegExp(`(?:^|; )${CSRF_COOKIE}=([^;]*)`))
+  return match ? decodeURIComponent(match[1]) : ''
+}
 
 /**
- * Validates the request origin matches the app URL to prevent CSRF attacks.
- * Returns true if the request is safe, false if it should be rejected.
+ * Drop-in replacement for fetch that automatically attaches the CSRF token
+ * header on mutating requests (POST, PUT, PATCH, DELETE).
  */
-export function validateCsrf(request: NextRequest): boolean {
-  if (SAFE_METHODS.includes(request.method)) return true
+export async function csrfFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const method = (init?.method ?? 'GET').toUpperCase()
+  const needsToken = !['GET', 'HEAD', 'OPTIONS'].includes(method)
 
-  const origin = request.headers.get('origin')
-  const referer = request.headers.get('referer')
-  const host = request.headers.get('host')
-
-  // At least one of origin or referer must be present
-  if (!origin && !referer) return false
-
-  const allowedHost = host || new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000').host
-
-  if (origin) {
-    try {
-      const originHost = new URL(origin).host
-      if (originHost !== allowedHost) return false
-    } catch {
-      return false
-    }
+  if (needsToken) {
+    const headers = new Headers(init?.headers)
+    headers.set('X-CSRF-Token', getCsrfToken())
+    return fetch(input, { ...init, headers })
   }
 
-  if (referer && !origin) {
-    try {
-      const refererHost = new URL(referer).host
-      if (refererHost !== allowedHost) return false
-    } catch {
-      return false
-    }
-  }
-
-  return true
+  return fetch(input, init)
 }

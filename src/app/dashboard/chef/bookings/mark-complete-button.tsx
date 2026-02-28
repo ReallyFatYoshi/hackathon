@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 
 export function MarkCompleteButton({ bookingId }: { bookingId: string }) {
@@ -12,7 +13,7 @@ export function MarkCompleteButton({ bookingId }: { bookingId: string }) {
   async function handleMark() {
     if (!confirm('Mark this event as completed? The client will be asked to confirm.')) return
     setLoading(true)
-    const res = await fetch('/api/bookings/complete', {
+    const res = await csrfFetch('/api/bookings/complete', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bookingId }),

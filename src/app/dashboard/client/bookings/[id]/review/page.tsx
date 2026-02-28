@@ -4,6 +4,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { Star } from 'lucide-react'
 
@@ -22,7 +23,7 @@ export default function LeaveReviewPage() {
     if (rating === 0) { toast({ title: 'Please select a rating', variant: 'error' }); return }
 
     setLoading(true)
-    const res = await fetch('/api/reviews', {
+    const res = await csrfFetch('/api/reviews', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bookingId, rating, comment }),

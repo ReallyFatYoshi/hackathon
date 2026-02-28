@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { getPusherClient } from '@/lib/pusher-client'
+import { csrfFetch } from '@/lib/csrf'
 import type { Message } from '@/types'
 import { Send, Phone, Video } from 'lucide-react'
 
@@ -100,7 +101,7 @@ export function ChatPanel({ bookingId, currentUserId, otherUserName, onCallStart
     }
     setMessages((prev) => [...prev, optimistic])
 
-    const res = await fetch('/api/chat', {
+    const res = await csrfFetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ booking_id: bookingId, content: text }),

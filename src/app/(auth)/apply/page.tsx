@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signUp, useSession } from '@/lib/auth-client'
+import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { ChefHat, Building2, Upload, X, ArrowRight, ArrowLeft } from 'lucide-react'
 import { CUISINE_OPTIONS, EVENT_TYPE_OPTIONS, cn } from '@/lib/utils'
@@ -162,7 +163,7 @@ export default function ApplyPage() {
     if (data.linkedin) social_links.linkedin = data.linkedin
     if (data.website) social_links.website = data.website
 
-    const res = await fetch('/api/applications', {
+    const res = await csrfFetch('/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
