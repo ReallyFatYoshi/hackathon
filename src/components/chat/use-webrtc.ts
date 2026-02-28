@@ -25,7 +25,7 @@ const ICE_SERVERS: RTCConfiguration = {
         }]
       : []),
   ],
-  iceTransportPolicy: process.env.NEXT_PUBLIC_TURN_URL ? 'all' : undefined as any,
+  iceTransportPolicy: process.env.NEXT_PUBLIC_TURN_URL ? 'relay' : undefined as any,
 }
 
 export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWebRTCOptions) {
