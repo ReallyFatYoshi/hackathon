@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect authenticated users away from auth pages
-  if (['/login', '/register'].includes(pathname)) {
+  if (['/login', '/register', '/apply'].includes(pathname)) {
     if (sessionToken) {
       const url = request.nextUrl.clone()
       url.pathname = '/dashboard'
