@@ -50,7 +50,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
     channelRef.current?.trigger('client-webrtc', signal)
   }, [])
 
-  // Create peer connection
+  // Create peer connection — ONLY after both parties accept
   const createPC = useCallback(() => {
     const pc = new RTCPeerConnection(ICE_SERVERS)
     pcRef.current = pc
@@ -88,7 +88,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
     return stream
   }, [])
 
-  // Start a call (initiator)
+  // Start a call (initiator) — only sends signaling, NO peer connection yet
   const startCall = useCallback(async (video: boolean) => {
     setWithVideo(video)
     updateState('calling')
@@ -100,7 +100,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
     })
   }, [currentUserId, sendSignal, updateState])
 
-  // Accept incoming call
+  // Accept incoming call — callee creates PC and signals acceptance
   const acceptCall = useCallback(async () => {
     updateState('connected')
 
@@ -169,6 +169,7 @@ export function useWebRTC({ bookingId, currentUserId, onCallStateChange }: UseWe
         break
       }
 
+      // Caller receives acceptance — NOW create PC and start WebRTC negotiation
       case 'call-accept': {
         const pc = createPC()
         const video = !!(signal.payload as any).video
