@@ -89,12 +89,12 @@ export default async function ChefOverviewPage() {
                 </p>
                 <p className="text-xs text-blue-600 mt-0.5">Log in at the scheduled time and click Join Interview.</p>
               </div>
-              <a href={interview.dailyRoomUrl} target="_blank" rel="noreferrer">
+              <Link href={`/dashboard/chef/interviews/${interview.roomId}/call`}>
                 <Button variant="outline" className="border-blue-400 text-blue-700 hover:bg-blue-100">
                   <Video className="h-4 w-4" />
                   Join Interview
                 </Button>
-              </a>
+              </Link>
             </div>
           </CardContent>
         </Card>

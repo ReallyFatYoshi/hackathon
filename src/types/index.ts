@@ -54,8 +54,7 @@ export interface Interview {
   id: string
   application_id: string
   scheduled_at: string
-  daily_room_url: string
-  daily_room_name: string
+  room_id: string
   status: InterviewStatus
   notes?: string
   created_at: string

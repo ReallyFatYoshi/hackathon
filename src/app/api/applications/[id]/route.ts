@@ -25,44 +25,14 @@ export async function POST(
     case 'schedule_interview': {
       if (!scheduled_at) return NextResponse.json({ error: 'scheduled_at is required' }, { status: 400 })
 
-      // Create Daily.co room
-      let dailyRoomUrl = `https://mychef.daily.co/interview-${id.slice(0, 8)}`
-      let dailyRoomName = `interview-${id.slice(0, 8)}`
-
-      if (process.env.DAILY_API_KEY) {
-        try {
-          const dailyRes = await fetch('https://api.daily.co/v1/rooms', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${process.env.DAILY_API_KEY}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: `interview-${id.slice(0, 8)}-${Date.now()}`,
-              properties: {
-                enable_prejoin_ui: true,
-                enable_chat: true,
-                exp: Math.floor(new Date(scheduled_at).getTime() / 1000) + 7200, // +2h
-              },
-            }),
-          })
-          if (dailyRes.ok) {
-            const dailyData = await dailyRes.json()
-            dailyRoomUrl = dailyData.url
-            dailyRoomName = dailyData.name
-          }
-        } catch (e) {
-          console.error('Daily.co room creation failed:', e)
-        }
-      }
+      const roomId = `interview-${id.slice(0, 8)}-${Date.now()}`
 
       // Create interview record
       await db.interview.create({
         data: {
           applicationId: id,
           scheduledAt: new Date(scheduled_at),
-          dailyRoomUrl,
-          dailyRoomName,
+          roomId,
           status: 'scheduled',
         },
       })
@@ -71,12 +41,13 @@ export async function POST(
       await db.chefApplication.update({ where: { id }, data: { status: 'interview_scheduled' } })
 
       // Send email notification
+      const callUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/admin/interviews/${roomId}/call`
       try {
         await sendInterviewScheduledEmail(
           application.email,
           `${application.firstName} ${application.lastName}`,
           scheduled_at,
-          dailyRoomUrl
+          callUrl
         )
       } catch (e) {
         console.error('Email send failed:', e)

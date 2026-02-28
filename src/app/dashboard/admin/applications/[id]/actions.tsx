@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -89,9 +90,9 @@ export function ApplicationActions({ application, interview }: ApplicationAction
         {/* After interview actions */}
         {status === 'interview_scheduled' && interview && (
           <div className="flex gap-3 flex-wrap">
-            <a href={interview.daily_room_url} target="_blank" rel="noreferrer">
+            <Link href={`/dashboard/admin/interviews/${interview.room_id}/call`}>
               <Button variant="outline">Join Interview Room</Button>
-            </a>
+            </Link>
             <Button
               variant="success"
               loading={loading === 'approve'}

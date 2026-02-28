@@ -43,12 +43,12 @@ export default async function AdminInterviewsPage() {
                         <p className="text-sm text-blue-700 font-medium mt-0.5">{formatDateTime(iv.scheduledAt.toISOString())}</p>
                       </div>
                       <div className="flex gap-2">
-                        <a href={iv.dailyRoomUrl} target="_blank" rel="noreferrer">
+                        <Link href={`/dashboard/admin/interviews/${iv.roomId}/call`}>
                           <Button size="sm">
                             <Video className="h-4 w-4" />
                             Join Room
                           </Button>
-                        </a>
+                        </Link>
                         <Link href={`/dashboard/admin/applications/${iv.applicationId}`}>
                           <Button size="sm" variant="outline">Review Application</Button>
                         </Link>

@@ -117,8 +117,7 @@ model Interview {
   id             String   @id @default(cuid())
   applicationId  String
   scheduledAt    DateTime
-  dailyRoomUrl   String
-  dailyRoomName  String
+  roomId         String   @default("")
   status         String   @default("scheduled")
   notes          String?
   createdAt      DateTime @default(now())

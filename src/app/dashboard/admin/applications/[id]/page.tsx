@@ -1,6 +1,7 @@
 import { requireRole } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
@@ -101,10 +102,10 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
             </div>
             <div><span className="text-stone-500">Scheduled:</span> <span className="font-medium">{formatDate(interview.scheduledAt.toISOString())}</span></div>
             <div>
-              <span className="text-stone-500">Meeting Link:</span>
-              <a href={interview.dailyRoomUrl} target="_blank" rel="noreferrer" className="ml-2 text-amber-600 hover:underline">
+              <span className="text-stone-500">Meeting:</span>
+              <Link href={`/dashboard/admin/interviews/${interview.roomId}/call`} className="ml-2 text-amber-600 hover:underline">
                 Join Interview Room
-              </a>
+              </Link>
             </div>
             {interview.notes && (
               <div><span className="text-stone-500">Notes:</span> <span>{interview.notes}</span></div>
@@ -139,8 +140,7 @@ export default async function ApplicationDetailPage({ params }: { params: Promis
           id: interview.id,
           application_id: interview.applicationId,
           scheduled_at: interview.scheduledAt.toISOString(),
-          daily_room_url: interview.dailyRoomUrl,
-          daily_room_name: interview.dailyRoomName,
+          room_id: interview.roomId,
           status: interview.status as any,
           notes: interview.notes ?? undefined,
           created_at: interview.createdAt.toISOString(),
