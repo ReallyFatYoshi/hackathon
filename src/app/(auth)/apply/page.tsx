@@ -152,10 +152,15 @@ export default function ApplyPage() {
       return
     }
 
-    // Convert images to base64 for the API (simplified — real app would use separate upload)
+    // Convert images to base64 data URLs for storage
     const imageUrls: string[] = []
     for (const file of data.portfolio_images) {
-      imageUrls.push(URL.createObjectURL(file))
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result as string)
+        reader.readAsDataURL(file)
+      })
+      imageUrls.push(dataUrl)
     }
 
     const social_links: Record<string, string> = {}

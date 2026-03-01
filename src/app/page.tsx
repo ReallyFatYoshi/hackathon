@@ -170,7 +170,7 @@ export default async function HomePage() {
                 <Link key={chef.id} href={`/chefs/${chef.id}`} className="group">
                   <div className={`bg-white rounded-2xl overflow-hidden border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 animate-fade-up delay-${i * 150}`} style={{ borderColor: 'var(--border)' }}>
                     <div className="aspect-[4/3] relative overflow-hidden" style={{ background: 'var(--parchment)' }}>
-                      {chef.portfolioImages?.[0] ? (
+                      {chef.portfolioImages?.[0] && !chef.portfolioImages[0].startsWith('blob:') ? (
                         <img
                           src={chef.portfolioImages[0]}
                           alt={`${chef.firstName}'s work`}
