@@ -37,69 +37,85 @@ export default async function HomePage() {
       <Navbar user={profile} />
 
       {/* ── HERO ─────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-[#0C0907] text-white min-h-[92vh] flex flex-col justify-center grain">
+      <section className="relative overflow-hidden bg-[#0C0907] text-white min-h-[92vh] flex flex-col grain">
+        {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_80%_20%,_#3d1f0055,_transparent)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_80%,_#1a0e0044,_transparent)]" />
         </div>
 
-        {/* Chef image — positioned on the right, blended into dark bg */}
-        <div className="absolute right-0 bottom-0 top-0 w-[55%] hidden lg:block pointer-events-none select-none">
-          <div className="relative h-full w-full">
-            <img
-              src="/mr_chef.png"
-              alt=""
-              className="absolute bottom-0 right-0 h-[92%] w-auto max-w-none object-contain object-right-bottom"
-              style={{ filter: 'brightness(0.35) contrast(1.1)', maskImage: 'linear-gradient(to left, black 30%, transparent 85%), linear-gradient(to top, transparent 2%, black 20%)', maskComposite: 'intersect', WebkitMaskImage: 'linear-gradient(to left, black 30%, transparent 85%), linear-gradient(to top, transparent 2%, black 20%)', WebkitMaskComposite: 'source-in' }}
-            />
-          </div>
-        </div>
+        {/* Two-column hero: text left, chef right */}
+        <div className="relative flex-1 flex items-center">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-24 md:py-32 lg:py-16">
+              {/* Left — Text content */}
+              <div>
+                {/* Eyebrow */}
+                <div className="animate-fade-up flex items-center gap-3 mb-10">
+                  <div className="w-8 h-px" style={{ background: 'var(--gold)' }} />
+                  <span className="text-xs uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--gold)' }}>
+                    Verified Professionals Only
+                  </span>
+                </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
-          {/* Eyebrow */}
-          <div className="animate-fade-up flex items-center gap-3 mb-10">
-            <div className="w-8 h-px" style={{ background: 'var(--gold)' }} />
-            <span className="text-xs uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--gold)' }}>
-              Verified Professionals Only
-            </span>
-          </div>
+                {/* Heading */}
+                <h1 className="font-display animate-fade-up delay-100">
+                  <span className="block text-[clamp(3.5rem,8vw,8rem)] font-light leading-[0.88] tracking-tight text-white">
+                    Exceptional
+                  </span>
+                  <span className="block text-[clamp(2rem,4.5vw,5rem)] font-light leading-none tracking-tight italic mt-3" style={{ color: '#E5DDD0' }}>
+                    Culinary Experiences,
+                  </span>
+                  <span className="block text-[clamp(2rem,4.5vw,5rem)] font-semibold leading-none mt-2 text-shimmer">
+                    Delivered.
+                  </span>
+                </h1>
 
-          {/* Heading */}
-          <h1 className="font-display animate-fade-up delay-100">
-            <span className="block text-[clamp(3.5rem,12vw,10rem)] font-light leading-[0.88] tracking-tight text-white">
-              Exceptional
-            </span>
-            <span className="block text-[clamp(2rem,6vw,6rem)] font-light leading-none tracking-tight italic mt-3" style={{ color: '#E5DDD0' }}>
-              Culinary Experiences,
-            </span>
-            <span className="block text-[clamp(2rem,6vw,6rem)] font-semibold leading-none mt-2 text-shimmer">
-              Delivered.
-            </span>
-          </h1>
+                {/* Subtext */}
+                <p className="animate-fade-up delay-300 mt-10 text-lg leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
+                  MyChef connects you with verified professional chefs for weddings, corporate events, private dinners, and more. Every chef is personally vetted and interviewed.
+                </p>
 
-          {/* Subtext */}
-          <p className="animate-fade-up delay-300 mt-10 text-lg leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
-            MyChef connects you with verified professional chefs for weddings, corporate events, private dinners, and more. Every chef is personally vetted and interviewed.
-          </p>
+                {/* CTAs */}
+                <div className="animate-fade-up delay-400 flex flex-col sm:flex-row gap-4 mt-10">
+                  <Link href="/chefs">
+                    <Button size="lg" className="bg-[#C8892A] hover:bg-[#A0621A] text-white font-medium tracking-wide border-0 w-full sm:w-auto">
+                      Find a Chef
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/apply">
+                    <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white tracking-wide w-full sm:w-auto">
+                      Apply as a Chef
+                    </Button>
+                  </Link>
+                </div>
+              </div>
 
-          {/* CTAs */}
-          <div className="animate-fade-up delay-400 flex flex-col sm:flex-row gap-4 mt-10">
-            <Link href="/chefs">
-              <Button size="lg" className="bg-[#C8892A] hover:bg-[#A0621A] text-white font-medium tracking-wide border-0 w-full sm:w-auto">
-                Find a Chef
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="/apply">
-              <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white tracking-wide w-full sm:w-auto">
-                Apply as a Chef
-              </Button>
-            </Link>
+              {/* Right — Chef image */}
+              <div className="hidden lg:flex items-end justify-center relative animate-fade-up delay-200">
+                <div className="relative">
+                  {/* Decorative gold accent ring behind the chef */}
+                  <div className="absolute -inset-6 rounded-full border border-[#C8892A]/20" />
+                  <div className="absolute -inset-12 rounded-full border border-[#C8892A]/10" />
+                  <img
+                    src="/mr_chef.png"
+                    alt=""
+                    className="relative h-[70vh] max-h-[700px] w-auto object-contain drop-shadow-[0_0_80px_rgba(200,137,42,0.15)]"
+                    style={{
+                      mixBlendMode: 'lighten',
+                      maskImage: 'linear-gradient(to top, transparent 0%, black 15%)',
+                      WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 15%)',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Stats bar */}
-        <div className="relative border-t border-white/10 mt-auto">
+        <div className="relative border-t border-white/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
               {[
