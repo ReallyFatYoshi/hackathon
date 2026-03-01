@@ -43,6 +43,18 @@ export default async function HomePage() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_80%,_#1a0e0044,_transparent)]" />
         </div>
 
+        {/* Chef image — positioned on the right, blended into dark bg */}
+        <div className="absolute right-0 bottom-0 top-0 w-[55%] hidden lg:block pointer-events-none select-none">
+          <div className="relative h-full w-full">
+            <img
+              src="/mr_chef.png"
+              alt=""
+              className="absolute bottom-0 right-0 h-[92%] w-auto max-w-none object-contain object-right-bottom"
+              style={{ filter: 'brightness(0.35) contrast(1.1)', maskImage: 'linear-gradient(to left, black 30%, transparent 85%), linear-gradient(to top, transparent 2%, black 20%)', maskComposite: 'intersect', WebkitMaskImage: 'linear-gradient(to left, black 30%, transparent 85%), linear-gradient(to top, transparent 2%, black 20%)', WebkitMaskComposite: 'source-in' }}
+            />
+          </div>
+        </div>
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 w-full">
           {/* Eyebrow */}
           <div className="animate-fade-up flex items-center gap-3 mb-10">
