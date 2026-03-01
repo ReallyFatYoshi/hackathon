@@ -85,8 +85,9 @@ export default async function HomePage() {
                     </Button>
                   </Link>
                   <Link href="/apply">
-                    <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white tracking-wide w-full sm:w-auto">
+                    <Button size="lg" variant="ghost" className="border border-[#C8892A]/40 text-[#E8C47A] bg-[#C8892A]/10 hover:bg-[#C8892A]/20 hover:border-[#C8892A]/60 hover:text-white tracking-wide w-full sm:w-auto backdrop-blur-sm shadow-[0_0_20px_rgba(200,137,42,0.08)] hover:shadow-[0_0_24px_rgba(200,137,42,0.15)] transition-all duration-300">
                       Apply as a Chef
+                      <ChefHat className="h-4 w-4" />
                     </Button>
                   </Link>
                 </div>
