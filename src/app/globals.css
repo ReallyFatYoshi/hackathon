@@ -151,15 +151,19 @@
 }
 
 /* ─── Page transitions ───────────────────────────────── */
-.page-transition {
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s var(--ease-expo);
+@keyframes page-enter-anim {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.page-visible {
-  opacity: 1;
-  transform: translateY(0);
+.page-enter {
+  animation: page-enter-anim 0.4s var(--ease-expo) both;
 }
 
 /* Reduce motion for accessibility */
@@ -168,7 +172,7 @@
   .animate-fade-in,
   .animate-scale-in,
   .reveal-hidden,
-  .page-transition {
+  .page-enter {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
