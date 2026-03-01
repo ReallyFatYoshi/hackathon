@@ -15,7 +15,7 @@ export default async function PublicEventsPage() {
     <div className="min-h-screen" style={{ background: 'var(--canvas)' }}>
       {/* Header */}
       <div className="py-16 md:py-20" style={{ background: 'var(--parchment)', borderBottom: '1px solid var(--border)' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-start gap-5">
             <div className="w-10 h-px mt-5 shrink-0" style={{ background: 'var(--gold)' }} />
             <div>
@@ -31,7 +31,7 @@ export default async function PublicEventsPage() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {!events || events.length === 0 ? (
           <div className="text-center py-28">
             <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'var(--parchment)' }}>
