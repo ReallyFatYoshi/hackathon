@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { label: 'Find Chefs', href: '/dashboard/client/chefs', icon: 'ChefHat' },
   { label: 'My Bookings', href: '/dashboard/client/bookings', icon: 'BookOpen' },
   { label: 'Messages', href: '/dashboard/client/messages', icon: 'MessageSquare' },
+  { label: 'Install App', href: '/dashboard/install', icon: 'Download' },
   { label: 'Security', href: '/dashboard/settings', icon: 'Shield' },
 ]
 

@@ -516,5 +516,44 @@
     "passkeyAddFailed": "Failed to register passkey",
     "passkeyDeleted": "Passkey removed",
     "passkeyDeleteFailed": "Failed to remove passkey"
+  },
+
+  "installApp": {
+    "title": "Install MyChef",
+    "subtitle": "Get the full app experience. Install MyChef on your device for faster access, offline support, and push notifications.",
+    "installNow": "Install MyChef App",
+    "alreadyInstalled": "MyChef is already installed",
+    "manualInstall": "Follow the steps below to install",
+    "whyInstall": "Why install the app?",
+    "howToInstall": "How to install",
+    "features": {
+      "fast": "Lightning Fast",
+      "fastDesc": "Instant load times with cached assets. No waiting for pages to load.",
+      "offline": "Works Offline",
+      "offlineDesc": "Browse chefs, view bookings, and check messages even without internet.",
+      "notifications": "Push Notifications",
+      "notificationsDesc": "Get notified instantly about booking updates, messages, and more.",
+      "native": "Native Feel",
+      "nativeDesc": "Full-screen experience that looks and feels like a native app.",
+      "crossPlatform": "All Devices",
+      "crossPlatformDesc": "Works on phones, tablets, and desktops — one app everywhere.",
+      "autoUpdate": "Always Updated",
+      "autoUpdateDesc": "Automatic updates in the background. Always the latest version."
+    },
+    "devices": {
+      "phone": "Phone",
+      "tablet": "Tablet",
+      "desktop": "Desktop"
+    },
+    "platforms": {
+      "chrome": "Chrome / Edge",
+      "chromeStep1": "Click the install icon in the address bar (or the three-dot menu).",
+      "chromeStep2": "Select \"Install MyChef\" from the menu.",
+      "chromeStep3": "The app will be added to your home screen and app launcher.",
+      "safari": "Safari (iOS)",
+      "safariStep1": "Tap the Share button at the bottom of the screen.",
+      "safariStep2": "Scroll down and tap \"Add to Home Screen\".",
+      "safariStep3": "Tap \"Add\" to install MyChef on your home screen."
+    }
   }
 }

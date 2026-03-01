@@ -516,5 +516,44 @@
     "passkeyAddFailed": "Passkey registreren mislukt",
     "passkeyDeleted": "Passkey verwijderd",
     "passkeyDeleteFailed": "Passkey verwijderen mislukt"
+  },
+
+  "installApp": {
+    "title": "Installeer MyChef",
+    "subtitle": "Krijg de volledige app-ervaring. Installeer MyChef op uw apparaat voor snellere toegang, offline ondersteuning en pushmeldingen.",
+    "installNow": "Installeer MyChef App",
+    "alreadyInstalled": "MyChef is al geïnstalleerd",
+    "manualInstall": "Volg de onderstaande stappen om te installeren",
+    "whyInstall": "Waarom de app installeren?",
+    "howToInstall": "Hoe te installeren",
+    "features": {
+      "fast": "Razend snel",
+      "fastDesc": "Directe laadtijden met gecachte bestanden. Geen wachten op pagina's.",
+      "offline": "Werkt offline",
+      "offlineDesc": "Bekijk chefs, boekingen en berichten zelfs zonder internet.",
+      "notifications": "Pushmeldingen",
+      "notificationsDesc": "Word direct op de hoogte gebracht van boekingsupdates, berichten en meer.",
+      "native": "Native gevoel",
+      "nativeDesc": "Volledig scherm ervaring die eruitziet en aanvoelt als een native app.",
+      "crossPlatform": "Alle apparaten",
+      "crossPlatformDesc": "Werkt op telefoons, tablets en desktops — één app overal.",
+      "autoUpdate": "Altijd bijgewerkt",
+      "autoUpdateDesc": "Automatische updates op de achtergrond. Altijd de nieuwste versie."
+    },
+    "devices": {
+      "phone": "Telefoon",
+      "tablet": "Tablet",
+      "desktop": "Desktop"
+    },
+    "platforms": {
+      "chrome": "Chrome / Edge",
+      "chromeStep1": "Klik op het installatiesymbool in de adresbalk (of het driepuntsmenu).",
+      "chromeStep2": "Selecteer \"MyChef installeren\" uit het menu.",
+      "chromeStep3": "De app wordt toegevoegd aan uw startscherm en app-launcher.",
+      "safari": "Safari (iOS)",
+      "safariStep1": "Tik op de deelknop onderaan het scherm.",
+      "safariStep2": "Scroll naar beneden en tik op \"Zet op beginscherm\".",
+      "safariStep3": "Tik op \"Voeg toe\" om MyChef op uw beginscherm te installeren."
+    }
   }
 }

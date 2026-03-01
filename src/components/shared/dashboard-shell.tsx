@@ -5,13 +5,13 @@ import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import {
   ChefHat, LogOut, Home, Calendar, BookOpen, User, Star,
-  FileText, Video, Users, MessageSquare, Shield,
+  FileText, Video, Users, MessageSquare, Shield, Download,
 } from 'lucide-react'
 import React from 'react'
 import type { UserProfile } from '@/types'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Home, Calendar, BookOpen, User, Star, ChefHat, FileText, Video, Users, MessageSquare, Shield,
+  Home, Calendar, BookOpen, User, Star, ChefHat, FileText, Video, Users, MessageSquare, Shield, Download,
 }
 
 export interface SidebarItem {
