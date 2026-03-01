@@ -1,4 +1,4 @@
-import { ChefHat, Instagram, Twitter, Linkedin } from 'lucide-react'
+import { Instagram, Twitter, Linkedin } from 'lucide-react'
 import Link from 'next/link'
 
 export function Footer() {
@@ -13,9 +13,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <Link href="/" className="flex items-center gap-2.5 mb-5 group w-fit">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center border" style={{ borderColor: 'rgba(255,255,255,0.12)', background: 'rgba(255,255,255,0.05)' }}>
-                <ChefHat className="h-5 w-5" style={{ color: 'var(--gold)' }} />
-              </div>
+              <img src="/icon.png" alt="MyChef" className="w-9 h-9 rounded-xl" />
               <span className="font-display text-xl font-semibold tracking-tight text-white">MyChef</span>
             </Link>
             <p className="text-sm leading-relaxed max-w-xs" style={{ color: 'var(--muted)' }}>
