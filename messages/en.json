@@ -380,6 +380,19 @@
     "typePlaceholder": "Type a message…"
   },
 
+  "chatView": {
+    "title": "Messages",
+    "searchPlaceholder": "Search conversations…",
+    "empty": "No conversations yet",
+    "emptyDesc": "When you book a chef, your conversations will appear here.",
+    "noResults": "No conversations found",
+    "noResultsDesc": "Try a different search term.",
+    "you": "You:",
+    "noMessages": "No messages yet",
+    "selectChat": "Select a conversation",
+    "selectChatDesc": "Choose a conversation from the sidebar to start chatting with your booked chefs."
+  },
+
   "badges": {
     "pendingReview": "Pending Review",
     "interviewScheduled": "Interview Scheduled",

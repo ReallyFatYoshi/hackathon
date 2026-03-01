@@ -12,6 +12,7 @@ interface ChatPanelProps {
   currentUserId: string
   otherUserName: string
   onCallStart?: (video: boolean) => void
+  embedded?: boolean
 }
 
 function getInitials(name: string) {
@@ -35,7 +36,7 @@ function formatTime(dateStr: string, yesterdayLabel: string) {
   return `${d.toLocaleDateString([], { month: 'short', day: 'numeric' })} ${time}`
 }
 
-export function ChatPanel({ bookingId, currentUserId, otherUserName, onCallStart }: ChatPanelProps) {
+export function ChatPanel({ bookingId, currentUserId, otherUserName, onCallStart, embedded }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -122,7 +123,7 @@ export function ChatPanel({ bookingId, currentUserId, otherUserName, onCallStart
   }
 
   return (
-    <div className="flex flex-col h-full rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--border)', background: 'white' }}>
+    <div className={`flex flex-col h-full overflow-hidden ${embedded ? '' : 'rounded-2xl border'}`} style={embedded ? { background: 'white' } : { borderColor: 'var(--border)', background: 'white' }}>
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="flex items-center gap-3">

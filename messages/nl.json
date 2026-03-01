@@ -380,6 +380,19 @@
     "typePlaceholder": "Typ een bericht…"
   },
 
+  "chatView": {
+    "title": "Berichten",
+    "searchPlaceholder": "Zoek gesprekken…",
+    "empty": "Nog geen gesprekken",
+    "emptyDesc": "Wanneer u een chef boekt, verschijnen uw gesprekken hier.",
+    "noResults": "Geen gesprekken gevonden",
+    "noResultsDesc": "Probeer een andere zoekterm.",
+    "you": "U:",
+    "noMessages": "Nog geen berichten",
+    "selectChat": "Selecteer een gesprek",
+    "selectChatDesc": "Kies een gesprek in de zijbalk om te chatten met uw geboekte chefs."
+  },
+
   "badges": {
     "pendingReview": "In behandeling",
     "interviewScheduled": "Interview gepland",
