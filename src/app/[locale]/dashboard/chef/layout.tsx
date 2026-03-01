@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { label: 'My Bookings', href: '/dashboard/chef/bookings', icon: 'BookOpen' },
   { label: 'My Profile', href: '/dashboard/chef/profile', icon: 'User' },
   { label: 'Messages', href: '/dashboard/chef/messages', icon: 'MessageSquare' },
+  { label: 'Security', href: '/dashboard/settings', icon: 'Shield' },
 ]
 
 export default async function ChefDashboardLayout({ children }: { children: React.ReactNode }) {

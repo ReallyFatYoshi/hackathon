@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { label: 'Interviews', href: '/dashboard/admin/interviews', icon: 'Video' },
   { label: 'Bookings', href: '/dashboard/admin/bookings', icon: 'BookOpen' },
   { label: 'Users', href: '/dashboard/admin/users', icon: 'Users' },
+  { label: 'Security', href: '/dashboard/settings', icon: 'Shield' },
 ]
 
 export default async function AdminDashboardLayout({ children }: { children: React.ReactNode }) {

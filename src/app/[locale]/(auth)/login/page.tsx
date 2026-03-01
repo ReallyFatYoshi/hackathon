@@ -21,10 +21,14 @@ function LoginForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const { error } = await signIn.email({ email, password })
+    const { data, error } = await signIn.email({ email, password })
     if (error) {
       toast({ title: 'Sign in failed', description: error.message, variant: 'error' })
       setLoading(false)
+      return
+    }
+    if (data && 'twoFactorRedirect' in data && data.twoFactorRedirect) {
+      router.push('/2fa')
       return
     }
     router.push(redirectTo)
