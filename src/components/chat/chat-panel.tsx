@@ -70,6 +70,15 @@ export function ChatPanel({ bookingId, currentUserId, otherUserName, onCallStart
     channel.bind('new-message', (newMsg: Message) => {
       setMessages((prev) => {
         if (prev.some((m) => m.id === newMsg.id)) return prev
+        // Replace optimistic message from same sender instead of duplicating
+        const optimisticIdx = prev.findIndex(
+          (m) => m.id.startsWith('temp-') && m.sender_id === newMsg.sender_id
+        )
+        if (optimisticIdx !== -1) {
+          const next = [...prev]
+          next[optimisticIdx] = newMsg
+          return next
+        }
         return [...prev, newMsg]
       })
     })

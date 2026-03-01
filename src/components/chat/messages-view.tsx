@@ -3,8 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations } from 'next-intl'
 import { ChatPanel } from './chat-panel'
-import { VideoCallOverlay } from './video-call-overlay'
-import { useWebRTC } from './use-webrtc'
 import { getPusherClient } from '@/lib/pusher-client'
 import type { Message } from '@/types'
 import {
@@ -325,8 +323,6 @@ function ActiveChat({
   onBack: () => void
   role: 'client' | 'chef'
 }) {
-  const webrtc = useWebRTC({ bookingId: conv.bookingId, currentUserId })
-  const AvatarIcon = role === 'client' ? ChefHat : User
 
   return (
     <div className="flex flex-col h-full">
@@ -363,25 +359,9 @@ function ActiveChat({
           bookingId={conv.bookingId}
           currentUserId={currentUserId}
           otherUserName={conv.otherName}
-          onCallStart={(video) => webrtc.startCall(video)}
           embedded
         />
       </div>
-
-      <VideoCallOverlay
-        callState={webrtc.callState}
-        localStream={webrtc.localStream}
-        remoteStream={webrtc.remoteStream}
-        isAudioMuted={webrtc.isAudioMuted}
-        isVideoOff={webrtc.isVideoOff}
-        withVideo={webrtc.withVideo}
-        otherUserName={conv.otherName}
-        onAccept={webrtc.acceptCall}
-        onReject={webrtc.rejectCall}
-        onEnd={webrtc.endCall}
-        onToggleAudio={webrtc.toggleAudio}
-        onToggleVideo={webrtc.toggleVideo}
-      />
     </div>
   )
 }
