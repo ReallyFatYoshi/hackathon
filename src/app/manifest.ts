@@ -1,0 +1,133 @@
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "MyChef — Professional Chef Marketplace",
+    short_name: "MyChef",
+    description:
+      "Connect with verified professional chefs for catering and event services.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#ffffff",
+    theme_color: "#d97706",
+    orientation: "portrait-primary",
+    icons: [
+      { src: "/icons/icon-72x72.png", sizes: "72x72", type: "image/png" },
+      { src: "/icons/icon-96x96.png", sizes: "96x96", type: "image/png" },
+      { src: "/icons/icon-128x128.png", sizes: "128x128", type: "image/png" },
+      { src: "/icons/icon-144x144.png", sizes: "144x144", type: "image/png" },
+      { src: "/icons/icon-152x152.png", sizes: "152x152", type: "image/png" },
+      {
+        src: "/icons/icon-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-384x384.png",
+        sizes: "384x384",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: "/icons/icon-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+    ],
+    screenshots: [
+      {
+        src: "/screenshots/homepage-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Homepage — Find your perfect chef",
+      },
+      {
+        src: "/screenshots/find-chefs-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Browse verified professional chefs",
+      },
+      {
+        src: "/screenshots/browse-events-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Browse available events",
+      },
+      {
+        src: "/screenshots/client-dashboard-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Client dashboard overview",
+      },
+      {
+        src: "/screenshots/client-new-event-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Post a new event",
+      },
+      {
+        src: "/screenshots/client-events-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Manage your events",
+      },
+      {
+        src: "/screenshots/client-bookings-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Track your bookings",
+      },
+      {
+        src: "/screenshots/client-messages-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Messages with your chefs",
+      },
+      {
+        src: "/screenshots/login-wide.png",
+        sizes: "1280x720",
+        type: "image/png",
+        form_factor: "wide",
+        label: "Sign in to your account",
+      },
+      {
+        src: "/screenshots/homepage-narrow.png",
+        sizes: "750x1334",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Homepage — Find your perfect chef",
+      },
+      {
+        src: "/screenshots/find-chefs-narrow.png",
+        sizes: "750x1334",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Browse verified professional chefs",
+      },
+      {
+        src: "/screenshots/browse-events-narrow.png",
+        sizes: "750x1334",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Browse available events",
+      },
+      {
+        src: "/screenshots/login-narrow.png",
+        sizes: "750x1334",
+        type: "image/png",
+        form_factor: "narrow",
+        label: "Sign in to your account",
+      },
+    ] as any,
+  };
+}

@@ -26,7 +26,6 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/icons/icon-196x196.png", sizes: "196x196", type: "image/png" },
