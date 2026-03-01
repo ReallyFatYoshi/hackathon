@@ -79,7 +79,7 @@ export default async function HomePage() {
               </Button>
             </Link>
             <Link href="/apply">
-              <Button size="lg" variant="ghost" className="border border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 tracking-wide w-full sm:w-auto">
+              <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white tracking-wide w-full sm:w-auto">
                 Apply as a Chef
               </Button>
             </Link>
@@ -306,7 +306,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
               <Link href="/apply">
-                <Button size="lg" variant="ghost" className="border border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60 min-w-[160px]">
+                <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white min-w-[160px]">
                   Join as a Chef
                 </Button>
               </Link>

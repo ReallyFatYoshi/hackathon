@@ -103,7 +103,7 @@ export default async function ChefProfilePage({ params }: { params: Promise<{ id
               <p className="font-display text-2xl font-light text-white mb-1">Ready to book<br /><span style={{ color: 'var(--gold-light)' }}>{chef.firstName}?</span></p>
               <p className="text-xs mt-2 mb-6 leading-relaxed" style={{ color: 'var(--muted)' }}>Post your event and receive a proposal directly from {chef.firstName}.</p>
               <Link href="/dashboard/client/events/new" className="block"><Button className="w-full bg-[#C8892A] hover:bg-[#A0621A] text-white border-0">Post Your Event <ArrowRight className="h-4 w-4" /></Button></Link>
-              <Link href="/register" className="block mt-3"><Button variant="ghost" className="w-full border border-white/40 text-white bg-transparent hover:bg-white/10 hover:border-white/60">Create Account First</Button></Link>
+              <Link href="/register" className="block mt-3"><Button variant="ghost" className="w-full border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white">Create Account First</Button></Link>
             </div>
           </div>
         </div>
