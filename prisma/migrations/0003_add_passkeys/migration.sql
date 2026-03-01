@@ -9,6 +9,7 @@ CREATE TABLE "passkey" (
     "deviceType" TEXT NOT NULL,
     "backedUp" BOOLEAN NOT NULL,
     "transports" TEXT,
+    "aaguid" TEXT,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "passkey_pkey" PRIMARY KEY ("id")
