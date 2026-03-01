@@ -1,30 +1,28 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from '@/i18n/navigation'
 import { useTransition } from 'react'
 import { cn } from '@/lib/utils'
+import { routing } from '@/i18n/routing'
 
-const locales = [
-  { code: 'en', label: 'EN' },
-  { code: 'nl', label: 'NL' },
-] as const
+const localeLabels: Record<string, string> = { en: 'EN', nl: 'NL' }
 
 export function LocaleSwitcher({ className }: { className?: string }) {
   const locale = useLocale()
   const router = useRouter()
+  const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
 
   function switchLocale(next: string) {
-    document.cookie = `NEXT_LOCALE=${next};path=/;max-age=31536000;SameSite=Lax`
     startTransition(() => {
-      router.refresh()
+      router.replace(pathname, { locale: next as any })
     })
   }
 
   return (
     <div className={cn('flex items-center rounded-full border border-stone-200 p-0.5 gap-0', className)}>
-      {locales.map(({ code, label }) => (
+      {routing.locales.map((code) => (
         <button
           key={code}
           onClick={() => switchLocale(code)}
@@ -36,7 +34,7 @@ export function LocaleSwitcher({ className }: { className?: string }) {
               : 'text-stone-500 hover:text-stone-800'
           )}
         >
-          {label}
+          {localeLabels[code] ?? code.toUpperCase()}
         </button>
       ))}
     </div>
