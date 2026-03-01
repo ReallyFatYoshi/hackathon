@@ -100,3 +100,4 @@ vercel deploy
 ```
 
 Set all environment variables in Vercel. Update `NEXT_PUBLIC_APP_URL` to your production URL.
+:D
