@@ -335,7 +335,18 @@
     "eventsDone": "Voltooide evenementen",
     "avgRating": "Gem. beoordeling",
     "yearsExp": "Jaren erv.",
-    "recentReviews": "Recente beoordelingen"
+    "recentReviews": "Recente beoordelingen",
+    "editProfile": "Profiel bewerken",
+    "portfolioImages": "Portfolio afbeeldingen",
+    "addPhoto": "Toev.",
+    "maxImages": "Maximaal 5 afbeeldingen toegestaan",
+    "noImages": "Nog geen portfolio afbeeldingen — voeg er een paar toe om uw werk te tonen.",
+    "bioLabel": "Bio",
+    "cuisineLabel": "Keukenspecialiteiten",
+    "eventLabel": "Evenementspecialiteiten",
+    "saveChanges": "Wijzigingen opslaan",
+    "updated": "Profiel bijgewerkt!",
+    "updateFailed": "Profiel bijwerken mislukt"
   },
 
   "chefBookings": {

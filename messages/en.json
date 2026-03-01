@@ -335,7 +335,18 @@
     "eventsDone": "Events Done",
     "avgRating": "Avg Rating",
     "yearsExp": "Years Exp.",
-    "recentReviews": "Recent Reviews"
+    "recentReviews": "Recent Reviews",
+    "editProfile": "Edit Profile",
+    "portfolioImages": "Portfolio Images",
+    "addPhoto": "Add",
+    "maxImages": "Maximum 5 images allowed",
+    "noImages": "No portfolio images yet — add some to showcase your work.",
+    "bioLabel": "Bio",
+    "cuisineLabel": "Cuisine Specialties",
+    "eventLabel": "Event Specialties",
+    "saveChanges": "Save Changes",
+    "updated": "Profile updated!",
+    "updateFailed": "Failed to update profile"
   },
 
   "chefBookings": {
