@@ -95,17 +95,16 @@ export default async function HomePage() {
               {/* Right — Chef image */}
               <div className="hidden lg:flex items-end justify-center relative animate-fade-up delay-200">
                 <div className="relative">
-                  {/* Decorative gold accent ring behind the chef */}
+                  {/* Decorative gold accent rings */}
                   <div className="absolute -inset-6 rounded-full border border-[#C8892A]/20" />
                   <div className="absolute -inset-12 rounded-full border border-[#C8892A]/10" />
                   <img
                     src="/mr_chef.png"
                     alt=""
-                    className="relative h-[70vh] max-h-[700px] w-auto object-contain drop-shadow-[0_0_80px_rgba(200,137,42,0.15)]"
+                    className="relative h-[70vh] max-h-[700px] w-auto object-contain drop-shadow-[0_0_60px_rgba(200,137,42,0.12)]"
                     style={{
-                      mixBlendMode: 'lighten',
-                      maskImage: 'linear-gradient(to top, transparent 0%, black 15%)',
-                      WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 15%)',
+                      maskImage: 'linear-gradient(to top, transparent 0%, black 12%)',
+                      WebkitMaskImage: 'linear-gradient(to top, transparent 0%, black 12%)',
                     }}
                   />
                 </div>
