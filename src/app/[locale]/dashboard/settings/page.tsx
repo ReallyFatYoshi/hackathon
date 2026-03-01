@@ -15,9 +15,18 @@ import {
   Smartphone,
   KeyRound,
   Monitor,
+  Fingerprint,
+  Trash2,
+  Plus,
 } from 'lucide-react'
 
 type Step = 'overview' | 'enable-password' | 'enable-qr' | 'enable-verify' | 'backup-codes' | 'disable'
+
+interface PasskeyInfo {
+  id: string
+  name: string | null
+  createdAt: Date | string | null
+}
 
 export default function SecuritySettingsPage() {
   const t = useTranslations('security')
@@ -32,8 +41,45 @@ export default function SecuritySettingsPage() {
   const [backupCodes, setBackupCodes] = useState<string[]>([])
   const [verifyCode, setVerifyCode] = useState('')
   const [copied, setCopied] = useState(false)
+  const [passkeys, setPasskeys] = useState<PasskeyInfo[]>([])
+  const [passkeyLoading, setPasskeyLoading] = useState(false)
 
   const is2FAEnabled = session?.user?.twoFactorEnabled
+
+  async function loadPasskeys() {
+    const { data } = await authClient.passkey.listUserPasskeys()
+    if (data) setPasskeys(data as PasskeyInfo[])
+  }
+
+  useEffect(() => {
+    loadPasskeys()
+  }, [])
+
+  async function handleAddPasskey() {
+    setPasskeyLoading(true)
+    try {
+      const { error } = await authClient.passkey.addPasskey()
+      if (error) {
+        toast({ title: t('passkeyAddFailed'), description: error.message, variant: 'error' })
+      } else {
+        toast({ title: t('passkeyAdded'), variant: 'success' })
+        await loadPasskeys()
+      }
+    } catch {
+      toast({ title: t('passkeyAddFailed'), variant: 'error' })
+    }
+    setPasskeyLoading(false)
+  }
+
+  async function handleDeletePasskey(id: string) {
+    const { error } = await authClient.passkey.deletePasskey({ id })
+    if (error) {
+      toast({ title: t('passkeyDeleteFailed'), description: error.message, variant: 'error' })
+    } else {
+      toast({ title: t('passkeyDeleted'), variant: 'success' })
+      setPasskeys((prev) => prev.filter((p) => p.id !== id))
+    }
+  }
 
   async function handleEnable() {
     if (!password) {
@@ -243,6 +289,83 @@ export default function SecuritySettingsPage() {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Passkeys Card */}
+          <div
+            className="rounded-2xl border p-6"
+            style={{ borderColor: 'var(--border)', background: 'white' }}
+          >
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: 'linear-gradient(135deg, #C8892A20, #E8C47A15)', border: '1px solid #C8892A30' }}
+                >
+                  <Fingerprint className="w-6 h-6" style={{ color: 'var(--gold)' }} />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-base" style={{ color: 'var(--ink)' }}>
+                    {t('passkeys')}
+                  </h3>
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--warm-stone)' }}>
+                    {t('passkeysDesc')}
+                  </p>
+                </div>
+              </div>
+              <Button
+                size="sm"
+                className="bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 shrink-0"
+                onClick={handleAddPasskey}
+                loading={passkeyLoading}
+              >
+                <Plus className="w-4 h-4" />
+                {t('addPasskey')}
+              </Button>
+            </div>
+
+            {passkeys.length > 0 ? (
+              <div className="space-y-2">
+                {passkeys.map((pk) => (
+                  <div
+                    key={pk.id}
+                    className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border"
+                    style={{ borderColor: 'var(--border)', background: '#FAFAF9' }}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Fingerprint className="w-5 h-5 shrink-0" style={{ color: 'var(--gold)' }} />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate" style={{ color: 'var(--ink)' }}>
+                          {pk.name || t('unnamedPasskey')}
+                        </p>
+                        {pk.createdAt && (
+                          <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                            {t('addedOn')} {new Date(pk.createdAt as string | number).toLocaleDateString()}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeletePasskey(pk.id)}
+                      className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-500 shrink-0"
+                      title={t('deletePasskey')}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div
+                className="text-center py-6 rounded-xl border border-dashed"
+                style={{ borderColor: 'var(--border)' }}
+              >
+                <Fingerprint className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--muted)' }} />
+                <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>
+                  {t('noPasskeys')}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

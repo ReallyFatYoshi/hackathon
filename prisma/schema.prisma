@@ -32,6 +32,7 @@ model User {
   clientReviews    Review[]          @relation("ClientReviews")
   sentMessages     Message[]
   twoFactors       TwoFactor[]
+  passkeys         Passkey[]
 
   @@map("user")
 }
@@ -91,6 +92,23 @@ model TwoFactor {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("twoFactor")
+}
+
+model Passkey {
+  id                  String    @id @default(cuid())
+  name                String?
+  publicKey           String
+  userId              String
+  credentialID        String
+  counter             Int
+  deviceType          String
+  backedUp            Boolean
+  transports          String?
+  createdAt           DateTime? @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("passkey")
 }
 
 // ============================================================

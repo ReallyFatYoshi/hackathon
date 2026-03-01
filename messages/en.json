@@ -97,6 +97,9 @@
       "password": "Password",
       "passwordPlaceholder": "••••••••",
       "submit": "Sign In",
+      "or": "or",
+      "signInWithPasskey": "Sign in with Passkey",
+      "passkeyFailed": "Passkey sign-in failed",
       "noAccount": "Don't have an account?",
       "createAccount": "Create account",
       "wantChef": "Want to become a chef?",
@@ -477,6 +480,17 @@
     "twoFAEnabled": "Two-factor authentication enabled!",
     "disableFailed": "Failed to disable 2FA",
     "twoFADisabled": "Two-factor authentication disabled",
-    "regenerateFailed": "Failed to regenerate backup codes"
+    "regenerateFailed": "Failed to regenerate backup codes",
+    "passkeys": "Passkeys",
+    "passkeysDesc": "Sign in with biometrics, security keys, or your device PIN — no password needed.",
+    "addPasskey": "Add Passkey",
+    "noPasskeys": "No passkeys registered yet. Add one for passwordless sign-in.",
+    "unnamedPasskey": "Unnamed passkey",
+    "addedOn": "Added on",
+    "deletePasskey": "Delete passkey",
+    "passkeyAdded": "Passkey registered successfully!",
+    "passkeyAddFailed": "Failed to register passkey",
+    "passkeyDeleted": "Passkey removed",
+    "passkeyDeleteFailed": "Failed to remove passkey"
   }
 }

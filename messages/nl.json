@@ -97,6 +97,9 @@
       "password": "Wachtwoord",
       "passwordPlaceholder": "••••••••",
       "submit": "Inloggen",
+      "or": "of",
+      "signInWithPasskey": "Inloggen met Passkey",
+      "passkeyFailed": "Passkey-inloggen mislukt",
       "noAccount": "Nog geen account?",
       "createAccount": "Account aanmaken",
       "wantChef": "Wilt u chef worden?",
@@ -477,6 +480,17 @@
     "twoFAEnabled": "Tweefactorauthenticatie ingeschakeld!",
     "disableFailed": "2FA uitschakelen mislukt",
     "twoFADisabled": "Tweefactorauthenticatie uitgeschakeld",
-    "regenerateFailed": "Reservecodes opnieuw genereren mislukt"
+    "regenerateFailed": "Reservecodes opnieuw genereren mislukt",
+    "passkeys": "Passkeys",
+    "passkeysDesc": "Log in met biometrie, beveiligingssleutels of je apparaat-PIN — geen wachtwoord nodig.",
+    "addPasskey": "Passkey toevoegen",
+    "noPasskeys": "Nog geen passkeys geregistreerd. Voeg er een toe voor wachtwoordloos inloggen.",
+    "unnamedPasskey": "Naamloze passkey",
+    "addedOn": "Toegevoegd op",
+    "deletePasskey": "Passkey verwijderen",
+    "passkeyAdded": "Passkey succesvol geregistreerd!",
+    "passkeyAddFailed": "Passkey registreren mislukt",
+    "passkeyDeleted": "Passkey verwijderd",
+    "passkeyDeleteFailed": "Passkey verwijderen mislukt"
   }
 }

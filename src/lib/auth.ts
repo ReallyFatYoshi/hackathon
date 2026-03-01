@@ -3,6 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { twoFactor } from 'better-auth/plugins'
 import { haveIBeenPwned } from 'better-auth/plugins'
 import { multiSession } from 'better-auth/plugins'
+import { passkey } from '@better-auth/passkey'
 import { db } from './db'
 
 export const auth = betterAuth({
@@ -20,6 +21,9 @@ export const auth = betterAuth({
     }),
     multiSession({
       maximumSessions: 5,
+    }),
+    passkey({
+      rpName: 'MyChef',
     }),
   ],
   user: {
