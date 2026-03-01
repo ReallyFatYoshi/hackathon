@@ -1,12 +1,14 @@
 import { requireAuth } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ChefHat, Star } from 'lucide-react'
 import { UpdateProfileForm } from './update-form'
 
 export default async function ChefProfilePage() {
   const { user } = await requireAuth()
+  const t = await getTranslations('chefProfile')
 
   const chef = await db.chef.findUnique({ where: { userId: user.id } })
   if (!chef) redirect('/dashboard/chef')
@@ -20,27 +22,27 @@ export default async function ChefProfilePage() {
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">My Profile</h1>
-        <p className="text-stone-500 mt-1">Manage your public chef profile</p>
+        <h1 className="text-2xl font-bold text-stone-900">{t('title')}</h1>
+        <p className="text-stone-500 mt-1">{t('subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-2xl font-bold">{chef.totalEvents}</p>
-            <p className="text-xs text-stone-500">Events Done</p>
+            <p className="text-xs text-stone-500">{t('eventsDone')}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-2xl font-bold">⭐ {Number(chef.avgRating).toFixed(1)}</p>
-            <p className="text-xs text-stone-500">Avg Rating</p>
+            <p className="text-xs text-stone-500">{t('avgRating')}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-4 text-center">
             <p className="text-2xl font-bold">{chef.yearsExperience}</p>
-            <p className="text-xs text-stone-500">Years Exp.</p>
+            <p className="text-xs text-stone-500">{t('yearsExp')}</p>
           </CardContent>
         </Card>
       </div>
@@ -49,7 +51,7 @@ export default async function ChefProfilePage() {
 
       {reviews && reviews.length > 0 && (
         <Card>
-          <CardHeader><CardTitle>Recent Reviews</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t('recentReviews')}</CardTitle></CardHeader>
           <CardContent className="space-y-4">
             {reviews.map((review) => (
               <div key={review.id} className="border-b border-stone-100 pb-4 last:border-0">

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { csrfFetch } from '@/lib/csrf'
@@ -12,9 +13,11 @@ export function ApplyToEventButton({ eventId, chefId }: { eventId: string; chefI
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
+  const t = useTranslations('chefApplyButton')
+  const tCommon = useTranslations('common')
 
   async function handleApply() {
-    if (!message.trim()) { toast({ title: 'Please write a message', variant: 'error' }); return }
+    if (!message.trim()) { toast({ title: t('writeMessage'), variant: 'error' }); return }
     setLoading(true)
     const res = await csrfFetch('/api/events/apply', {
       method: 'POST',
@@ -23,30 +26,30 @@ export function ApplyToEventButton({ eventId, chefId }: { eventId: string; chefI
     })
     if (!res.ok) {
       const data = await res.json().catch(() => ({}))
-      toast({ title: 'Application failed', description: data.error || 'Something went wrong', variant: 'error' })
+      toast({ title: t('applicationFailed'), description: data.error || t('somethingWrong'), variant: 'error' })
       setLoading(false)
       return
     }
-    toast({ title: 'Application sent!', variant: 'success' })
+    toast({ title: t('applicationSent'), variant: 'success' })
     setOpen(false)
     router.refresh()
   }
 
   if (!open) {
-    return <Button size="sm" onClick={() => setOpen(true)}>Apply</Button>
+    return <Button size="sm" onClick={() => setOpen(true)}>{t('apply')}</Button>
   }
 
   return (
     <div className="w-72 space-y-2">
       <Textarea
-        placeholder="Introduce yourself and explain why you're the right chef for this event..."
+        placeholder={t('messagePlaceholder')}
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         className="min-h-[90px]"
       />
       <div className="flex gap-2">
-        <Button size="sm" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-        <Button size="sm" onClick={handleApply} loading={loading}>Send Application</Button>
+        <Button size="sm" variant="outline" onClick={() => setOpen(false)}>{tCommon('cancel')}</Button>
+        <Button size="sm" onClick={handleApply} loading={loading}>{t('sendApplication')}</Button>
       </div>
     </div>
   )

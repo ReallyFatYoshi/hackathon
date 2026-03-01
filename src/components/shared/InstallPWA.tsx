@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Download } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -10,6 +11,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export function InstallPWA({ className }: { className?: string }) {
+  const t = useTranslations('common')
   const [prompt, setPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installed, setInstalled] = useState(false)
 
@@ -41,7 +43,7 @@ export function InstallPWA({ className }: { className?: string }) {
       className={className}
     >
       <Download className="h-4 w-4" />
-      Install App
+      {t('installApp')}
     </Button>
   )
 }

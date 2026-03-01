@@ -1,0 +1,422 @@
+{
+  "common": {
+    "appName": "MyChef",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "submit": "Submit",
+    "save": "Save",
+    "viewAll": "View all",
+    "guests": "guests",
+    "events": "events",
+    "years": "years",
+    "yrs": "yrs",
+    "budget": "Budget",
+    "status": "Status",
+    "description": "Description",
+    "noResults": "No results",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "getStarted": "Get Started",
+    "postEvent": "Post Event",
+    "applyNow": "Apply Now",
+    "browseEvents": "Browse Events",
+    "findAChef": "Find a Chef",
+    "dashboard": "Dashboard",
+    "installApp": "Install App",
+    "toggleMenu": "Toggle menu",
+    "applied": "Applied",
+    "chef": "Chef",
+    "company": "Company"
+  },
+
+  "home": {
+    "eyebrow": "Verified Professionals Only",
+    "headingLine1": "Exceptional",
+    "headingLine2": "Culinary Experiences,",
+    "headingLine3": "Delivered.",
+    "subtitle": "MyChef connects you with verified professional chefs for weddings, corporate events, private dinners, and more. Every chef is personally vetted and interviewed.",
+    "findAChef": "Find a Chef",
+    "applyAsChef": "Apply as a Chef",
+    "stats": {
+      "chefs": "200+",
+      "chefsLabel": "Verified Chefs",
+      "events": "1,500+",
+      "eventsLabel": "Events Catered",
+      "clients": "900+",
+      "clientsLabel": "Happy Clients",
+      "rating": "4.9★",
+      "ratingLabel": "Average Rating"
+    },
+    "howItWorks": {
+      "title": "How MyChef Works",
+      "subtitle": "A seamless journey from posting your event to enjoying a world-class culinary experience.",
+      "step1Title": "Post Your Event",
+      "step1Desc": "Describe your event, date, location, guest count, and budget. Takes just a few minutes.",
+      "step2Title": "Chefs Apply",
+      "step2Desc": "Verified chefs browse your listing and send proposals. Review profiles and choose the perfect fit.",
+      "step3Title": "Book & Pay Securely",
+      "step3Desc": "Funds are held in escrow and released only after you confirm a successful event."
+    },
+    "featured": {
+      "title": "Featured Chefs",
+      "subtitle": "Handpicked professionals, personally vetted by our team"
+    },
+    "whyChoose": {
+      "sectionTitle": "Why Choose Us",
+      "title": "A Platform Built on Trust",
+      "verified": "Verified Professionals",
+      "verifiedDesc": "Every chef is personally interviewed and reviewed before being listed on the platform.",
+      "escrow": "Secure Escrow Payments",
+      "escrowDesc": "Funds are held safely and released only after you confirm a successful event.",
+      "transparency": "Full Transparency",
+      "transparencyDesc": "Real reviews, verified event counts, and complete chef profiles — no hidden surprises.",
+      "dispute": "Dispute Protection",
+      "disputeDesc": "Our admin team mediates any issues. Your satisfaction is our top priority.",
+      "badge1": "Vetted & Verified",
+      "badge2": "Escrow Payments",
+      "badge3": "Verified Reviews",
+      "badge4": "Dispute Support"
+    },
+    "cta": {
+      "eyebrow": "Get Started",
+      "title": "Ready to Elevate\nYour Event?",
+      "subtitle": "Join thousands of clients who've found their perfect chef through MyChef.",
+      "postEvent": "Post an Event",
+      "joinAsChef": "Join as a Chef"
+    }
+  },
+
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to your account to continue",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "wantChef": "Want to become a chef?",
+      "applyHere": "Apply here"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start posting events and booking chefs",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Jane Smith",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Min. 8 characters",
+      "passwordHint": "At least 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPlaceholder": "Repeat password",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "wantCook": "Want to cook, not book?",
+      "applyAsChef": "Apply as a chef",
+      "passwordMismatch": "Passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "registrationFailed": "Registration failed",
+      "accountCreated": "Account created!",
+      "welcomeMsg": "Welcome to MyChef."
+    },
+    "apply": {
+      "steps": {
+        "personalInfo": "Personal Info",
+        "experience": "Experience",
+        "portfolio": "Portfolio",
+        "review": "Review"
+      },
+      "applyingAs": "Applying as",
+      "individualChef": "Individual Chef",
+      "soloProfessional": "Solo professional",
+      "cateringCompany": "Catering Company",
+      "businessOrTeam": "Business or team",
+      "companyName": "Company name",
+      "companyPlaceholder": "e.g. Rossi Catering Co.",
+      "contactFirstName": "Contact first name",
+      "firstName": "First name",
+      "contactLastName": "Contact last name",
+      "lastName": "Last name",
+      "email": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "phone": "Phone number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "yearsExperience": "Years of professional experience",
+      "yearsPlaceholder": "e.g. 8",
+      "cuisineSpecialties": "Cuisine Specialties",
+      "eventSpecialties": "Event Specialties",
+      "shortBio": "Short bio",
+      "bioPlaceholder": "Tell us about your culinary journey, training, signature style, and what makes your cooking unique...",
+      "socialLinks": "Social Links",
+      "optional": "optional",
+      "instagramUrl": "Instagram URL",
+      "linkedinUrl": "LinkedIn URL",
+      "websiteUrl": "Website URL",
+      "uploadIntro": "Upload 3–5 high-quality photos of your work. These will be the first impression clients have of your cooking.",
+      "addPhoto": "Add photo",
+      "required": "3 required",
+      "applicationSummary": "Application Summary",
+      "type": "Type",
+      "name": "Name",
+      "experience": "Experience",
+      "yearsUnit": "years",
+      "bio": "Bio",
+      "portfolioLabel": "Portfolio",
+      "whatHappens": "What happens next",
+      "whatHappensDesc": "Our team reviews your application within 3–5 business days. If approved, we'll schedule a brief video interview through the platform.",
+      "submitApplication": "Submit Application",
+      "submitting": "Submitting…",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "maxImages": "Maximum 5 images allowed",
+      "fillRequired": "Please fill in all required fields",
+      "enterCompany": "Please enter your company name",
+      "fillRequiredCuisine": "Please fill in all required fields and select at least one cuisine",
+      "uploadMinImages": "Please upload at least 3 portfolio images",
+      "createAccountFailed": "Failed to create account",
+      "submissionFailed": "Submission failed",
+      "applicationSubmitted": "Application submitted!",
+      "inTouchSoon": "We'll be in touch within 3–5 business days."
+    }
+  },
+
+  "chefs": {
+    "eyebrow": "Our Network",
+    "title": "Verified Chefs & Caterers",
+    "subtitle": "Every chef and catering company on MyChef has been personally reviewed, interviewed, and approved by our team.",
+    "empty": "No verified chefs yet",
+    "emptyDesc": "Check back soon — we are reviewing applications now.",
+    "more": "+"
+  },
+
+  "events": {
+    "eyebrow": "For Chefs",
+    "title": "Open Events",
+    "subtitle": "Clients are looking for professional chefs. Are you the right fit?",
+    "empty": "No open events right now",
+    "emptyDesc": "Check back soon — new events are posted regularly.",
+    "applyAsChef": "Apply as Chef",
+    "ctaTitle": "Are you a professional chef?",
+    "ctaDesc": "Apply to join our verified network and start getting booked."
+  },
+
+  "clientDashboard": {
+    "title": "Dashboard",
+    "subtitle": "Manage your events and bookings",
+    "totalEvents": "Total Events",
+    "openEvents": "Open Events",
+    "activeBookings": "Active Bookings",
+    "recentEvents": "Recent Events",
+    "noEvents": "No events yet",
+    "postFirst": "Post your first event",
+    "recentBookings": "Recent Bookings",
+    "noBookings": "No bookings yet"
+  },
+
+  "clientEvents": {
+    "title": "My Events",
+    "subtitle": "Manage your event listings",
+    "empty": "No events yet",
+    "emptyDesc": "Post your first event and start receiving proposals from verified chefs.",
+    "postAnEvent": "Post an Event",
+    "applications": "applications"
+  },
+
+  "clientEventDetail": {
+    "title": "Event Details",
+    "budget": "Budget",
+    "status": "Status",
+    "description": "Description",
+    "applicationsTitle": "Chef Applications",
+    "noApplications": "No applications yet. Chefs will apply soon!",
+    "yearsExperience": "years experience",
+    "eventsCompleted": "events completed"
+  },
+
+  "clientBookings": {
+    "title": "My Bookings",
+    "subtitle": "Track your chef bookings and payment status",
+    "empty": "No bookings yet",
+    "emptyDesc": "Once you select a chef for your event, your booking will appear here.",
+    "chef": "Chef:",
+    "platformCommission": "Platform commission:",
+    "deductedOnRelease": "% deducted on release",
+    "leaveReview": "Leave a Review"
+  },
+
+  "clientMessages": {
+    "title": "Messages",
+    "subtitle": "Chat with your booked chefs",
+    "empty": "No conversations yet",
+    "emptyDesc": "Once you book a chef, you can chat with them here.",
+    "you": "You:",
+    "noMessages": "No messages yet — say hello!"
+  },
+
+  "newEvent": {
+    "title": "Post an Event",
+    "subtitle": "Describe your event and let verified chefs apply",
+    "eventTitle": "Event title",
+    "eventTitlePlaceholder": "e.g. Wedding Dinner for 80 Guests",
+    "eventType": "Event type",
+    "selectEventType": "Select event type",
+    "eventDate": "Event date & time",
+    "location": "Location",
+    "locationPlaceholder": "City, Venue Name",
+    "guestCount": "Estimated guest count",
+    "guestPlaceholder": "50",
+    "budgetMin": "Budget minimum ($)",
+    "budgetMinPlaceholder": "500",
+    "budgetMax": "Budget maximum ($)",
+    "budgetMaxPlaceholder": "2000",
+    "eventDescription": "Event description",
+    "descriptionPlaceholder": "Describe the event, cuisine preferences, dietary requirements, serving style, and anything else a chef should know...",
+    "selectTypeError": "Please select an event type",
+    "budgetError": "Minimum budget cannot exceed maximum budget",
+    "createFailed": "Failed to create event",
+    "eventPosted": "Event posted!",
+    "chefsCanApply": "Chefs can now apply to your event."
+  },
+
+  "chefDashboard": {
+    "title": "Chef Dashboard",
+    "subtitle": "Your culinary career hub",
+    "noApplication": "No application submitted",
+    "noApplicationDesc": "Apply to join our network of verified professional chefs.",
+    "underReview": "Application Under Review",
+    "underReviewDesc": "Our team is reviewing your application. We'll be in touch within 3–5 business days.",
+    "interviewScheduled": "Interview Scheduled",
+    "interviewInstruction": "Log in at the scheduled time and click Join Interview.",
+    "joinInterview": "Join Interview",
+    "notApproved": "Application Not Approved",
+    "notApprovedDesc": "Unfortunately your application was not approved. You're welcome to reapply.",
+    "note": "Note:",
+    "reapply": "Reapply",
+    "eventsCompleted": "Events Completed",
+    "averageRating": "Average Rating",
+    "activeBookings": "Active Bookings",
+    "recentBookings": "Recent Bookings",
+    "noBookings": "No bookings yet",
+    "quickActions": "Quick Actions",
+    "browseOpenEvents": "Browse Open Events",
+    "findEventsDesc": "Find events to apply for",
+    "updateProfile": "Update Profile",
+    "keepProfileFresh": "Keep your profile fresh"
+  },
+
+  "chefEvents": {
+    "title": "Open Events",
+    "subtitle": "Browse and apply to events that match your expertise",
+    "empty": "No open events at the moment. Check back soon!"
+  },
+
+  "chefApplyButton": {
+    "writeMessage": "Please write a message",
+    "applicationFailed": "Application failed",
+    "somethingWrong": "Something went wrong",
+    "applicationSent": "Application sent!",
+    "messagePlaceholder": "Introduce yourself and explain why you're the right chef for this event...",
+    "sendApplication": "Send Application",
+    "apply": "Apply"
+  },
+
+  "chefProfile": {
+    "title": "My Profile",
+    "subtitle": "Manage your public chef profile",
+    "eventsDone": "Events Done",
+    "avgRating": "Avg Rating",
+    "yearsExp": "Years Exp.",
+    "recentReviews": "Recent Reviews"
+  },
+
+  "chefBookings": {
+    "title": "My Bookings",
+    "subtitle": "Track your confirmed events and payments",
+    "empty": "No bookings yet. Apply to events to get booked!",
+    "total": "Total:",
+    "platformFee": "Platform fee",
+    "youReceive": "You receive:",
+    "awaitingClient": "Awaiting client",
+    "confirmation": "confirmation"
+  },
+
+  "chefMessages": {
+    "title": "Messages",
+    "subtitle": "Chat with your clients",
+    "empty": "No conversations yet",
+    "emptyDesc": "When clients book you, their conversations appear here.",
+    "you": "You:",
+    "noMessages": "No messages yet"
+  },
+
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Platform overview and management",
+    "pendingApps": "Pending Apps",
+    "scheduledInterviews": "Scheduled Interviews",
+    "totalUsers": "Total Users",
+    "totalBookings": "Total Bookings",
+    "recentApplications": "Recent Applications",
+    "noApplications": "No applications yet"
+  },
+
+  "chat": {
+    "bookingChat": "Booking chat",
+    "voiceCall": "Voice call",
+    "videoCall": "Video call",
+    "loadingMessages": "Loading messages…",
+    "startConversation": "Start the conversation",
+    "discussWith": "Discuss event details, menu options, and logistics with {name}.",
+    "yesterday": "Yesterday",
+    "typePlaceholder": "Type a message…"
+  },
+
+  "badges": {
+    "pendingReview": "Pending Review",
+    "interviewScheduled": "Interview Scheduled",
+    "interviewCompleted": "Interview Completed",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "noShow": "No Show",
+    "open": "Open",
+    "filled": "Filled",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "confirmed": "Confirmed",
+    "heldEscrow": "Held (Escrow)",
+    "released": "Released",
+    "refunded": "Refunded",
+    "disputed": "Disputed",
+    "scheduled": "Scheduled",
+    "inProgress": "In Progress"
+  },
+
+  "footer": {
+    "description": "Connecting institutions and individuals with verified professional chefs for extraordinary catering and event services.",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "platform": "Platform",
+    "findAChef": "Find a Chef",
+    "browseEvents": "Browse Events",
+    "becomeAChef": "Become a Chef",
+    "account": "Account",
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "dashboard": "Dashboard",
+    "quote": "Every great meal begins with a great chef.",
+    "platformFee": "Platform fee",
+    "feePercent": "15%",
+    "onCompleted": "on completed bookings",
+    "rights": "All rights reserved.",
+    "systemsOk": "All systems operational"
+  }
+}

@@ -8,12 +8,15 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import type { UserProfile } from '@/types'
 import { InstallPWA } from './InstallPWA'
+import { LocaleSwitcher } from './locale-switcher'
+import { useTranslations } from 'next-intl'
 
 interface NavbarProps {
   user?: UserProfile | null
 }
 
 export function Navbar({ user }: NavbarProps) {
+  const t = useTranslations('common')
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const router = useRouter()
   const pathname = usePathname()
@@ -32,8 +35,8 @@ export function Navbar({ user }: NavbarProps) {
       : '/dashboard/client'
 
   const publicLinks = [
-    { label: 'Find a Chef', href: '/chefs' },
-    { label: 'Browse Events', href: '/events' },
+    { label: t('findAChef'), href: '/chefs' },
+    { label: t('browseEvents'), href: '/events' },
   ]
 
   return (
@@ -42,8 +45,8 @@ export function Navbar({ user }: NavbarProps) {
         <div className="flex h-16 items-center justify-between gap-6">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <img src="/icon.png" alt="MyChef" className="w-8 h-8 rounded-lg" />
-            <span className="font-display text-xl font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>MyChef</span>
+            <img src="/icon.png" alt={t('appName')} className="w-8 h-8 rounded-lg" />
+            <span className="font-display text-xl font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>{t('appName')}</span>
           </Link>
 
           {/* Desktop nav */}
@@ -67,24 +70,25 @@ export function Navbar({ user }: NavbarProps) {
 
           {/* Desktop actions */}
           <div className="hidden md:flex items-center gap-2 shrink-0">
+            <LocaleSwitcher />
             <InstallPWA />
             {user ? (
               <>
                 <Link href={dashboardHref}>
-                  <Button variant="outline" size="sm" className="text-sm" style={{ borderColor: 'var(--border)' }}>Dashboard</Button>
+                  <Button variant="outline" size="sm" className="text-sm" style={{ borderColor: 'var(--border)' }}>{t('dashboard')}</Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={handleSignOut} className="text-sm" style={{ color: 'var(--warm-stone)' }}>
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {t('signOut')}
                 </Button>
               </>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm" className="text-sm" style={{ color: 'var(--warm-stone)' }}>Sign In</Button>
+                  <Button variant="ghost" size="sm" className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('signIn')}</Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="text-sm bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">Get Started</Button>
+                  <Button size="sm" className="text-sm bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">{t('getStarted')}</Button>
                 </Link>
               </>
             )}
@@ -95,7 +99,7 @@ export function Navbar({ user }: NavbarProps) {
             className="md:hidden p-2 rounded-lg transition-colors"
             style={{ color: 'var(--warm-stone)' }}
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={t('toggleMenu')}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -124,26 +128,27 @@ export function Navbar({ user }: NavbarProps) {
                   className="block px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Dashboard
+                  {t('dashboard')}
                 </Link>
                 <button
                   onClick={() => { handleSignOut(); setMobileOpen(false) }}
                   className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50"
                 >
-                  Sign Out
+                  {t('signOut')}
                 </button>
               </>
             ) : (
               <>
                 <Link href="/login" className="block px-3 py-2.5 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50" onClick={() => setMobileOpen(false)}>
-                  Sign In
+                  {t('signIn')}
                 </Link>
                 <Link href="/register" className="block px-3 py-2.5 rounded-lg text-sm font-semibold" style={{ color: 'var(--gold)' }} onClick={() => setMobileOpen(false)}>
-                  Get Started
+                  {t('getStarted')}
                 </Link>
               </>
             )}
-            <div className="px-1 pt-1">
+            <div className="px-1 pt-1 flex items-center gap-2">
+              <LocaleSwitcher />
               <InstallPWA className="w-full justify-start" />
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
@@ -9,6 +10,9 @@ import { SelectChefButton } from './select-chef-button'
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const { user } = await requireAuth()
+  const t = await getTranslations('clientEventDetail')
+  const tCommon = await getTranslations('common')
+  const tBadges = await getTranslations('badges')
 
   const event = await db.event.findFirst({
     where: { id, clientId: user.id },
@@ -27,28 +31,28 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
       <div>
         <div className="flex items-center gap-3 mb-1">
           <h1 className="text-2xl font-bold text-stone-900">{event.title}</h1>
-          {statusBadge(event.status)}
+          {statusBadge(event.status, tBadges)}
         </div>
         <p className="text-stone-500 text-sm">
-          {event.eventType} · {formatDate(event.date.toISOString())} · {event.location} · {event.guestCount} guests
+          {event.eventType} · {formatDate(event.date.toISOString())} · {event.location} · {event.guestCount} {tCommon('guests')}
         </p>
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Event Details</CardTitle></CardHeader>
+        <CardHeader><CardTitle>{t('title')}</CardTitle></CardHeader>
         <CardContent className="space-y-3 text-sm">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <span className="text-stone-500">Budget</span>
+              <span className="text-stone-500">{t('budget')}</span>
               <p className="font-medium">{formatCurrency(event.budgetMin)} – {formatCurrency(event.budgetMax)}</p>
             </div>
             <div>
-              <span className="text-stone-500">Status</span>
-              <div className="mt-0.5">{statusBadge(event.status)}</div>
+              <span className="text-stone-500">{t('status')}</span>
+              <div className="mt-0.5">{statusBadge(event.status, tBadges)}</div>
             </div>
           </div>
           <div>
-            <span className="text-stone-500">Description</span>
+            <span className="text-stone-500">{t('description')}</span>
             <p className="mt-1 text-stone-700 leading-relaxed">{event.description}</p>
           </div>
         </CardContent>
@@ -56,12 +60,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       <Card>
         <CardHeader>
-          <CardTitle>Chef Applications ({applications?.length || 0})</CardTitle>
+          <CardTitle>{t('applicationsTitle')} ({applications?.length || 0})</CardTitle>
         </CardHeader>
         <CardContent>
           {!applications || applications.length === 0 ? (
             <div className="text-center py-10 text-stone-400">
-              <p className="text-sm">No applications yet. Chefs will apply soon!</p>
+              <p className="text-sm">{t('noApplications')}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -75,10 +79,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                           <p className="font-semibold text-stone-900">
                             {chef?.firstName} {chef?.lastName}
                           </p>
-                          {statusBadge(app.status)}
+                          {statusBadge(app.status, tBadges)}
                         </div>
                         <p className="text-xs text-stone-500 mb-1">
-                          {chef?.yearsExperience} years experience · ⭐ {Number(chef?.avgRating || 0).toFixed(1)} · {chef?.totalEvents} events completed
+                          {chef?.yearsExperience} {t('yearsExperience')} · ⭐ {Number(chef?.avgRating || 0).toFixed(1)} · {chef?.totalEvents} {t('eventsCompleted')}
                         </p>
                         <p className="text-sm text-stone-600">{app.message}</p>
                         {chef?.cuisineSpecialties?.length > 0 && (

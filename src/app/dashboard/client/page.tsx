@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
@@ -9,6 +10,9 @@ import { Calendar, ChefHat, BookOpen, Plus, TrendingUp } from 'lucide-react'
 
 export default async function ClientOverviewPage() {
   const { user } = await requireAuth()
+  const t = await getTranslations('clientDashboard')
+  const tCommon = await getTranslations('common')
+  const tBadges = await getTranslations('badges')
 
   const [events, bookings] = await Promise.all([
     db.event.findMany({ where: { clientId: user.id }, orderBy: { createdAt: 'desc' }, take: 5 }),
@@ -23,13 +27,13 @@ export default async function ClientOverviewPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>Dashboard</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--warm-stone)' }}>Manage your events and bookings</p>
+          <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{t('title')}</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--warm-stone)' }}>{t('subtitle')}</p>
         </div>
         <Link href="/dashboard/client/events/new">
           <Button className="bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">
             <Plus className="h-4 w-4" />
-            Post Event
+            {tCommon('postEvent')}
           </Button>
         </Link>
       </div>
@@ -37,9 +41,9 @@ export default async function ClientOverviewPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { label: 'Total Events',    value: events.length,   icon: Calendar,    color: '#C8892A', bg: '#C8892A10' },
-          { label: 'Open Events',     value: openEvents,      icon: TrendingUp,  color: '#4F46E5', bg: '#EEF2FF' },
-          { label: 'Active Bookings', value: activeBookings,  icon: BookOpen,    color: '#059669', bg: '#ECFDF5' },
+          { label: t('totalEvents'),    value: events.length,   icon: Calendar,    color: '#C8892A', bg: '#C8892A10' },
+          { label: t('openEvents'),     value: openEvents,      icon: TrendingUp,  color: '#4F46E5', bg: '#EEF2FF' },
+          { label: t('activeBookings'), value: activeBookings,  icon: BookOpen,    color: '#059669', bg: '#ECFDF5' },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
             <div className="flex items-center gap-4">
@@ -60,8 +64,8 @@ export default async function ClientOverviewPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>Recent Events</CardTitle>
-              <Link href="/dashboard/client/events" className="text-xs font-medium hover:underline" style={{ color: 'var(--gold)' }}>View all</Link>
+              <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>{t('recentEvents')}</CardTitle>
+              <Link href="/dashboard/client/events" className="text-xs font-medium hover:underline" style={{ color: 'var(--gold)' }}>{tCommon('viewAll')}</Link>
             </div>
           </CardHeader>
           <CardContent>
@@ -70,9 +74,9 @@ export default async function ClientOverviewPage() {
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--parchment)' }}>
                   <Calendar className="h-6 w-6" style={{ color: 'var(--muted)' }} />
                 </div>
-                <p className="text-sm mb-3" style={{ color: 'var(--warm-stone)' }}>No events yet</p>
+                <p className="text-sm mb-3" style={{ color: 'var(--warm-stone)' }}>{t('noEvents')}</p>
                 <Link href="/dashboard/client/events/new">
-                  <Button size="sm" className="bg-[#0C0907] text-white border-0">Post your first event</Button>
+                  <Button size="sm" className="bg-[#0C0907] text-white border-0">{t('postFirst')}</Button>
                 </Link>
               </div>
             ) : (
@@ -84,7 +88,7 @@ export default async function ClientOverviewPage() {
                         <p className="font-medium text-sm truncate" style={{ color: 'var(--ink)' }}>{event.title}</p>
                         <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>{formatDate(event.date.toISOString())}</p>
                       </div>
-                      {statusBadge(event.status)}
+                      {statusBadge(event.status, tBadges)}
                     </div>
                   </Link>
                 ))}
@@ -97,8 +101,8 @@ export default async function ClientOverviewPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>Recent Bookings</CardTitle>
-              <Link href="/dashboard/client/bookings" className="text-xs font-medium hover:underline" style={{ color: 'var(--gold)' }}>View all</Link>
+              <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>{t('recentBookings')}</CardTitle>
+              <Link href="/dashboard/client/bookings" className="text-xs font-medium hover:underline" style={{ color: 'var(--gold)' }}>{tCommon('viewAll')}</Link>
             </div>
           </CardHeader>
           <CardContent>
@@ -107,7 +111,7 @@ export default async function ClientOverviewPage() {
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3" style={{ background: 'var(--parchment)' }}>
                   <BookOpen className="h-6 w-6" style={{ color: 'var(--muted)' }} />
                 </div>
-                <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>No bookings yet</p>
+                <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('noBookings')}</p>
               </div>
             ) : (
               <div className="space-y-1">
@@ -119,7 +123,7 @@ export default async function ClientOverviewPage() {
                       </p>
                       <p className="text-xs mt-0.5 font-medium" style={{ color: 'var(--gold)' }}>{formatCurrency(booking.amount)}</p>
                     </div>
-                    {statusBadge(booking.bookingStatus)}
+                    {statusBadge(booking.bookingStatus, tBadges)}
                   </div>
                 ))}
               </div>

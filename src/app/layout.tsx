@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import { ToastProvider } from "@/components/ui/toast";
 import { PageTransition } from "@/components/ui/page-transition";
@@ -102,19 +104,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html lang={locale} className={`${cormorant.variable} ${dmSans.variable}`}>
       <body className="antialiased">
-        <ToastProvider>
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </ToastProvider>
+        <NextIntlClientProvider messages={messages}>
+          <ToastProvider>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </ToastProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

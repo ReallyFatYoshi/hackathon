@@ -27,7 +27,29 @@ export function Badge({ className, variant = 'default', ...props }: BadgeProps) 
   )
 }
 
-export function statusBadge(status: string): React.ReactElement {
+const STATUS_KEY_MAP: Record<string, string> = {
+  pending_review: 'pendingReview',
+  interview_scheduled: 'interviewScheduled',
+  interview_completed: 'interviewCompleted',
+  approved: 'approved',
+  rejected: 'rejected',
+  no_show: 'noShow',
+  open: 'open',
+  filled: 'filled',
+  completed: 'completed',
+  cancelled: 'cancelled',
+  pending: 'pending',
+  accepted: 'accepted',
+  confirmed: 'confirmed',
+  held: 'heldEscrow',
+  released: 'released',
+  refunded: 'refunded',
+  disputed: 'disputed',
+  scheduled: 'scheduled',
+  in_progress: 'inProgress',
+}
+
+export function statusBadge(status: string, t?: (key: string) => string): React.ReactElement {
   const map: Record<string, { label: string; variant: BadgeProps['variant'] }> = {
     pending_review: { label: 'Pending Review', variant: 'warning' },
     interview_scheduled: { label: 'Interview Scheduled', variant: 'info' },
@@ -51,5 +73,6 @@ export function statusBadge(status: string): React.ReactElement {
   }
 
   const config = map[status] || { label: status, variant: 'default' as const }
-  return <Badge variant={config.variant}>{config.label}</Badge>
+  const label = t ? t(STATUS_KEY_MAP[status] || status) : config.label
+  return <Badge variant={config.variant}>{label}</Badge>
 }

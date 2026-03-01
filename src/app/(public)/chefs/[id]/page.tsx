@@ -1,11 +1,14 @@
 import { db } from '@/lib/db'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { Button } from '@/components/ui/button'
 import { ChefHat, Star, Calendar, Award, ExternalLink, ArrowRight } from 'lucide-react'
 
 export default async function ChefProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const tCommon = await getTranslations('common')
+  const tDetail = await getTranslations('clientEventDetail')
 
   const chef = await db.chef.findFirst({ where: { id, isVisible: true } })
   if (!chef) notFound()
@@ -38,9 +41,9 @@ export default async function ChefProfilePage({ params }: { params: Promise<{ id
             </div>
             <div className="flex-1">
               <div className="flex flex-wrap items-center gap-4 text-sm mb-3" style={{ color: 'var(--warm-stone)' }}>
-                <span className="flex items-center gap-1.5"><Award className="h-4 w-4" style={{ color: 'var(--gold)' }} />{chef.yearsExperience} years experience</span>
+                <span className="flex items-center gap-1.5"><Award className="h-4 w-4" style={{ color: 'var(--gold)' }} />{chef.yearsExperience} {tDetail('yearsExperience')}</span>
                 {chef.avgRating > 0 && <span className="flex items-center gap-1.5 font-semibold" style={{ color: 'var(--gold)' }}><Star className="h-4 w-4 fill-[#C8892A] stroke-[#C8892A]" />{Number(chef.avgRating).toFixed(1)}<span className="font-normal" style={{ color: 'var(--warm-stone)' }}>({reviews?.length || 0} reviews)</span></span>}
-                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" style={{ color: 'var(--gold)' }} />{chef.totalEvents} events</span>
+                <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" style={{ color: 'var(--gold)' }} />{chef.totalEvents} {tCommon('events')}</span>
               </div>
               {chef.socialLinks && Object.keys(chef.socialLinks).length > 0 && (
                 <div className="flex flex-wrap gap-3">

@@ -1,0 +1,422 @@
+{
+  "common": {
+    "appName": "MyChef",
+    "loading": "Laden...",
+    "cancel": "Annuleren",
+    "back": "Terug",
+    "continue": "Verder",
+    "submit": "Verzenden",
+    "save": "Opslaan",
+    "viewAll": "Alles bekijken",
+    "guests": "gasten",
+    "events": "evenementen",
+    "years": "jaar",
+    "yrs": "jr",
+    "budget": "Budget",
+    "status": "Status",
+    "description": "Beschrijving",
+    "noResults": "Geen resultaten",
+    "signIn": "Inloggen",
+    "signOut": "Uitloggen",
+    "getStarted": "Aan de slag",
+    "postEvent": "Evenement plaatsen",
+    "applyNow": "Nu solliciteren",
+    "browseEvents": "Evenementen bekijken",
+    "findAChef": "Zoek een chef",
+    "dashboard": "Dashboard",
+    "installApp": "App installeren",
+    "toggleMenu": "Menu openen",
+    "applied": "Gesolliciteerd",
+    "chef": "Chef",
+    "company": "Bedrijf"
+  },
+
+  "home": {
+    "eyebrow": "Alleen geverifieerde professionals",
+    "headingLine1": "Uitzonderlijke",
+    "headingLine2": "Culinaire Ervaringen,",
+    "headingLine3": "Geleverd.",
+    "subtitle": "MyChef verbindt u met geverifieerde professionele koks voor bruiloften, bedrijfsevenementen, privédiners en meer. Elke chef is persoonlijk gescreend en geïnterviewd.",
+    "findAChef": "Zoek een chef",
+    "applyAsChef": "Solliciteer als chef",
+    "stats": {
+      "chefs": "200+",
+      "chefsLabel": "Geverifieerde chefs",
+      "events": "1.500+",
+      "eventsLabel": "Verzorgde evenementen",
+      "clients": "900+",
+      "clientsLabel": "Tevreden klanten",
+      "rating": "4,9★",
+      "ratingLabel": "Gemiddelde beoordeling"
+    },
+    "howItWorks": {
+      "title": "Hoe MyChef werkt",
+      "subtitle": "Een naadloze reis van het plaatsen van uw evenement tot het genieten van een culinaire topervaring.",
+      "step1Title": "Plaats uw evenement",
+      "step1Desc": "Beschrijf uw evenement, datum, locatie, aantal gasten en budget. In slechts enkele minuten klaar.",
+      "step2Title": "Chefs solliciteren",
+      "step2Desc": "Geverifieerde chefs bekijken uw aanvraag en sturen voorstellen. Bekijk profielen en kies de perfecte match.",
+      "step3Title": "Boek & betaal veilig",
+      "step3Desc": "Geld wordt in escrow bewaard en pas vrijgegeven nadat u een succesvol evenement bevestigt."
+    },
+    "featured": {
+      "title": "Uitgelichte chefs",
+      "subtitle": "Zorgvuldig geselecteerde professionals, persoonlijk gescreend door ons team"
+    },
+    "whyChoose": {
+      "sectionTitle": "Waarom MyChef",
+      "title": "Een platform gebouwd op vertrouwen",
+      "verified": "Geverifieerde professionals",
+      "verifiedDesc": "Elke chef wordt persoonlijk geïnterviewd en beoordeeld voordat deze op het platform wordt geplaatst.",
+      "escrow": "Veilige escrow-betalingen",
+      "escrowDesc": "Geld wordt veilig bewaard en pas vrijgegeven nadat u een succesvol evenement bevestigt.",
+      "transparency": "Volledige transparantie",
+      "transparencyDesc": "Echte beoordelingen, geverifieerde evenementaantallen en volledige chefprofielen — geen verrassingen.",
+      "dispute": "Geschilbescherming",
+      "disputeDesc": "Ons adminteam bemiddelt bij problemen. Uw tevredenheid is onze hoogste prioriteit.",
+      "badge1": "Gescreend & geverifieerd",
+      "badge2": "Escrow-betalingen",
+      "badge3": "Geverifieerde reviews",
+      "badge4": "Geschilondersteuning"
+    },
+    "cta": {
+      "eyebrow": "Aan de slag",
+      "title": "Klaar om uw evenement\nnaar een hoger niveau te tillen?",
+      "subtitle": "Sluit u aan bij duizenden klanten die hun perfecte chef hebben gevonden via MyChef.",
+      "postEvent": "Plaats een evenement",
+      "joinAsChef": "Word chef"
+    }
+  },
+
+  "auth": {
+    "login": {
+      "title": "Welkom terug",
+      "subtitle": "Log in op uw account om verder te gaan",
+      "email": "E-mailadres",
+      "emailPlaceholder": "u@voorbeeld.nl",
+      "password": "Wachtwoord",
+      "passwordPlaceholder": "••••••••",
+      "submit": "Inloggen",
+      "noAccount": "Nog geen account?",
+      "createAccount": "Account aanmaken",
+      "wantChef": "Wilt u chef worden?",
+      "applyHere": "Hier solliciteren"
+    },
+    "register": {
+      "title": "Maak uw account aan",
+      "subtitle": "Begin met het plaatsen van evenementen en het boeken van chefs",
+      "fullName": "Volledige naam",
+      "fullNamePlaceholder": "Jan Jansen",
+      "email": "E-mailadres",
+      "emailPlaceholder": "u@voorbeeld.nl",
+      "password": "Wachtwoord",
+      "passwordPlaceholder": "Min. 8 tekens",
+      "passwordHint": "Minimaal 8 tekens",
+      "confirmPassword": "Bevestig wachtwoord",
+      "confirmPlaceholder": "Herhaal wachtwoord",
+      "submit": "Account aanmaken",
+      "hasAccount": "Heeft u al een account?",
+      "signIn": "Inloggen",
+      "wantCook": "Liever koken dan boeken?",
+      "applyAsChef": "Solliciteer als chef",
+      "passwordMismatch": "Wachtwoorden komen niet overeen",
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens bevatten",
+      "registrationFailed": "Registratie mislukt",
+      "accountCreated": "Account aangemaakt!",
+      "welcomeMsg": "Welkom bij MyChef."
+    },
+    "apply": {
+      "steps": {
+        "personalInfo": "Persoonlijke info",
+        "experience": "Ervaring",
+        "portfolio": "Portfolio",
+        "review": "Overzicht"
+      },
+      "applyingAs": "Solliciteren als",
+      "individualChef": "Individuele chef",
+      "soloProfessional": "Zelfstandig professional",
+      "cateringCompany": "Cateringbedrijf",
+      "businessOrTeam": "Bedrijf of team",
+      "companyName": "Bedrijfsnaam",
+      "companyPlaceholder": "bijv. Rossi Catering B.V.",
+      "contactFirstName": "Voornaam contactpersoon",
+      "firstName": "Voornaam",
+      "contactLastName": "Achternaam contactpersoon",
+      "lastName": "Achternaam",
+      "email": "E-mailadres",
+      "emailPlaceholder": "u@voorbeeld.nl",
+      "phone": "Telefoonnummer",
+      "phonePlaceholder": "+31 6 12345678",
+      "yearsExperience": "Jaren professionele ervaring",
+      "yearsPlaceholder": "bijv. 8",
+      "cuisineSpecialties": "Keukenspecialiteiten",
+      "eventSpecialties": "Evenementspecialiteiten",
+      "shortBio": "Korte biografie",
+      "bioPlaceholder": "Vertel ons over uw culinaire reis, opleiding, kenmerkende stijl en wat uw kookkunst uniek maakt...",
+      "socialLinks": "Sociale media",
+      "optional": "optioneel",
+      "instagramUrl": "Instagram URL",
+      "linkedinUrl": "LinkedIn URL",
+      "websiteUrl": "Website URL",
+      "uploadIntro": "Upload 3–5 foto's van hoge kwaliteit van uw werk. Dit is de eerste indruk die klanten van uw kookkunst krijgen.",
+      "addPhoto": "Foto toevoegen",
+      "required": "3 vereist",
+      "applicationSummary": "Sollicitatieoverzicht",
+      "type": "Type",
+      "name": "Naam",
+      "experience": "Ervaring",
+      "yearsUnit": "jaar",
+      "bio": "Biografie",
+      "portfolioLabel": "Portfolio",
+      "whatHappens": "Wat gebeurt er nu",
+      "whatHappensDesc": "Ons team beoordeelt uw sollicitatie binnen 3–5 werkdagen. Bij goedkeuring plannen we een kort videogesprek via het platform.",
+      "submitApplication": "Sollicitatie verzenden",
+      "submitting": "Verzenden…",
+      "hasAccount": "Heeft u al een account?",
+      "signIn": "Inloggen",
+      "maxImages": "Maximaal 5 afbeeldingen toegestaan",
+      "fillRequired": "Vul alle verplichte velden in",
+      "enterCompany": "Vul uw bedrijfsnaam in",
+      "fillRequiredCuisine": "Vul alle verplichte velden in en selecteer minimaal één keuken",
+      "uploadMinImages": "Upload minimaal 3 portfoliofoto's",
+      "createAccountFailed": "Account aanmaken mislukt",
+      "submissionFailed": "Verzending mislukt",
+      "applicationSubmitted": "Sollicitatie ingediend!",
+      "inTouchSoon": "We nemen binnen 3–5 werkdagen contact met u op."
+    }
+  },
+
+  "chefs": {
+    "eyebrow": "Ons netwerk",
+    "title": "Geverifieerde chefs & cateraars",
+    "subtitle": "Elke chef en elk cateringbedrijf op MyChef is persoonlijk beoordeeld, geïnterviewd en goedgekeurd door ons team.",
+    "empty": "Nog geen geverifieerde chefs",
+    "emptyDesc": "Kom binnenkort terug — we beoordelen momenteel sollicitaties.",
+    "more": "+"
+  },
+
+  "events": {
+    "eyebrow": "Voor chefs",
+    "title": "Open evenementen",
+    "subtitle": "Klanten zoeken professionele koks. Bent u de juiste match?",
+    "empty": "Momenteel geen open evenementen",
+    "emptyDesc": "Kom binnenkort terug — er worden regelmatig nieuwe evenementen geplaatst.",
+    "applyAsChef": "Solliciteer als chef",
+    "ctaTitle": "Bent u een professionele chef?",
+    "ctaDesc": "Solliciteer om lid te worden van ons geverifieerde netwerk en begin met boekingen."
+  },
+
+  "clientDashboard": {
+    "title": "Dashboard",
+    "subtitle": "Beheer uw evenementen en boekingen",
+    "totalEvents": "Totaal evenementen",
+    "openEvents": "Open evenementen",
+    "activeBookings": "Actieve boekingen",
+    "recentEvents": "Recente evenementen",
+    "noEvents": "Nog geen evenementen",
+    "postFirst": "Plaats uw eerste evenement",
+    "recentBookings": "Recente boekingen",
+    "noBookings": "Nog geen boekingen"
+  },
+
+  "clientEvents": {
+    "title": "Mijn evenementen",
+    "subtitle": "Beheer uw evenementaanvragen",
+    "empty": "Nog geen evenementen",
+    "emptyDesc": "Plaats uw eerste evenement en ontvang voorstellen van geverifieerde chefs.",
+    "postAnEvent": "Plaats een evenement",
+    "applications": "sollicitaties"
+  },
+
+  "clientEventDetail": {
+    "title": "Evenementdetails",
+    "budget": "Budget",
+    "status": "Status",
+    "description": "Beschrijving",
+    "applicationsTitle": "Chefsollicitaties",
+    "noApplications": "Nog geen sollicitaties. Chefs solliciteren binnenkort!",
+    "yearsExperience": "jaar ervaring",
+    "eventsCompleted": "evenementen voltooid"
+  },
+
+  "clientBookings": {
+    "title": "Mijn boekingen",
+    "subtitle": "Volg uw chefboekingen en betalingsstatus",
+    "empty": "Nog geen boekingen",
+    "emptyDesc": "Zodra u een chef selecteert voor uw evenement, verschijnt uw boeking hier.",
+    "chef": "Chef:",
+    "platformCommission": "Platformcommissie:",
+    "deductedOnRelease": "% ingehouden bij vrijgave",
+    "leaveReview": "Beoordeling schrijven"
+  },
+
+  "clientMessages": {
+    "title": "Berichten",
+    "subtitle": "Chat met uw geboekte chefs",
+    "empty": "Nog geen gesprekken",
+    "emptyDesc": "Zodra u een chef boekt, kunt u hier chatten.",
+    "you": "U:",
+    "noMessages": "Nog geen berichten — zeg hallo!"
+  },
+
+  "newEvent": {
+    "title": "Evenement plaatsen",
+    "subtitle": "Beschrijf uw evenement en laat geverifieerde chefs solliciteren",
+    "eventTitle": "Evenementtitel",
+    "eventTitlePlaceholder": "bijv. Bruiloftsdiner voor 80 gasten",
+    "eventType": "Type evenement",
+    "selectEventType": "Selecteer type evenement",
+    "eventDate": "Datum & tijd evenement",
+    "location": "Locatie",
+    "locationPlaceholder": "Stad, naam locatie",
+    "guestCount": "Geschat aantal gasten",
+    "guestPlaceholder": "50",
+    "budgetMin": "Minimumbudget (€)",
+    "budgetMinPlaceholder": "500",
+    "budgetMax": "Maximumbudget (€)",
+    "budgetMaxPlaceholder": "2000",
+    "eventDescription": "Evenementbeschrijving",
+    "descriptionPlaceholder": "Beschrijf het evenement, keukenvoorkeuren, dieetwensen, serveerstijl en alles wat een chef moet weten...",
+    "selectTypeError": "Selecteer een type evenement",
+    "budgetError": "Minimumbudget kan niet hoger zijn dan maximumbudget",
+    "createFailed": "Evenement aanmaken mislukt",
+    "eventPosted": "Evenement geplaatst!",
+    "chefsCanApply": "Chefs kunnen nu op uw evenement solliciteren."
+  },
+
+  "chefDashboard": {
+    "title": "Chef Dashboard",
+    "subtitle": "Uw culinaire carrièrehub",
+    "noApplication": "Geen sollicitatie ingediend",
+    "noApplicationDesc": "Solliciteer om lid te worden van ons netwerk van geverifieerde professionele chefs.",
+    "underReview": "Sollicitatie in behandeling",
+    "underReviewDesc": "Ons team beoordeelt uw sollicitatie. We nemen binnen 3–5 werkdagen contact met u op.",
+    "interviewScheduled": "Interview gepland",
+    "interviewInstruction": "Log in op het geplande tijdstip en klik op Interview starten.",
+    "joinInterview": "Interview starten",
+    "notApproved": "Sollicitatie niet goedgekeurd",
+    "notApprovedDesc": "Helaas is uw sollicitatie niet goedgekeurd. U bent welkom om opnieuw te solliciteren.",
+    "note": "Opmerking:",
+    "reapply": "Opnieuw solliciteren",
+    "eventsCompleted": "Voltooide evenementen",
+    "averageRating": "Gemiddelde beoordeling",
+    "activeBookings": "Actieve boekingen",
+    "recentBookings": "Recente boekingen",
+    "noBookings": "Nog geen boekingen",
+    "quickActions": "Snelle acties",
+    "browseOpenEvents": "Open evenementen bekijken",
+    "findEventsDesc": "Vind evenementen om op te solliciteren",
+    "updateProfile": "Profiel bijwerken",
+    "keepProfileFresh": "Houd uw profiel actueel"
+  },
+
+  "chefEvents": {
+    "title": "Open evenementen",
+    "subtitle": "Bekijk en solliciteer op evenementen die bij uw expertise passen",
+    "empty": "Momenteel geen open evenementen. Kom binnenkort terug!"
+  },
+
+  "chefApplyButton": {
+    "writeMessage": "Schrijf een bericht",
+    "applicationFailed": "Sollicitatie mislukt",
+    "somethingWrong": "Er is iets misgegaan",
+    "applicationSent": "Sollicitatie verzonden!",
+    "messagePlaceholder": "Stel uzelf voor en leg uit waarom u de juiste chef bent voor dit evenement...",
+    "sendApplication": "Sollicitatie verzenden",
+    "apply": "Solliciteren"
+  },
+
+  "chefProfile": {
+    "title": "Mijn profiel",
+    "subtitle": "Beheer uw openbare chefprofiel",
+    "eventsDone": "Voltooide evenementen",
+    "avgRating": "Gem. beoordeling",
+    "yearsExp": "Jaren erv.",
+    "recentReviews": "Recente beoordelingen"
+  },
+
+  "chefBookings": {
+    "title": "Mijn boekingen",
+    "subtitle": "Volg uw bevestigde evenementen en betalingen",
+    "empty": "Nog geen boekingen. Solliciteer op evenementen om geboekt te worden!",
+    "total": "Totaal:",
+    "platformFee": "Platformkosten",
+    "youReceive": "U ontvangt:",
+    "awaitingClient": "Wacht op klant",
+    "confirmation": "bevestiging"
+  },
+
+  "chefMessages": {
+    "title": "Berichten",
+    "subtitle": "Chat met uw klanten",
+    "empty": "Nog geen gesprekken",
+    "emptyDesc": "Wanneer klanten u boeken, verschijnen hun gesprekken hier.",
+    "you": "U:",
+    "noMessages": "Nog geen berichten"
+  },
+
+  "admin": {
+    "title": "Beheerdersdashboard",
+    "subtitle": "Platformoverzicht en beheer",
+    "pendingApps": "Openstaande sollicitaties",
+    "scheduledInterviews": "Geplande interviews",
+    "totalUsers": "Totaal gebruikers",
+    "totalBookings": "Totaal boekingen",
+    "recentApplications": "Recente sollicitaties",
+    "noApplications": "Nog geen sollicitaties"
+  },
+
+  "chat": {
+    "bookingChat": "Boekingschat",
+    "voiceCall": "Spraakoproep",
+    "videoCall": "Video-oproep",
+    "loadingMessages": "Berichten laden…",
+    "startConversation": "Begin het gesprek",
+    "discussWith": "Bespreek evenementdetails, menu-opties en logistiek met {name}.",
+    "yesterday": "Gisteren",
+    "typePlaceholder": "Typ een bericht…"
+  },
+
+  "badges": {
+    "pendingReview": "In behandeling",
+    "interviewScheduled": "Interview gepland",
+    "interviewCompleted": "Interview afgerond",
+    "approved": "Goedgekeurd",
+    "rejected": "Afgewezen",
+    "noShow": "Niet verschenen",
+    "open": "Open",
+    "filled": "Ingevuld",
+    "completed": "Voltooid",
+    "cancelled": "Geannuleerd",
+    "pending": "In afwachting",
+    "accepted": "Geaccepteerd",
+    "confirmed": "Bevestigd",
+    "heldEscrow": "Vastgehouden (Escrow)",
+    "released": "Vrijgegeven",
+    "refunded": "Terugbetaald",
+    "disputed": "Betwist",
+    "scheduled": "Gepland",
+    "inProgress": "Bezig"
+  },
+
+  "footer": {
+    "description": "Verbindt instellingen en particulieren met geverifieerde professionele chefs voor uitzonderlijke catering- en evenementdiensten.",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "linkedin": "LinkedIn",
+    "platform": "Platform",
+    "findAChef": "Zoek een chef",
+    "browseEvents": "Evenementen bekijken",
+    "becomeAChef": "Word een chef",
+    "account": "Account",
+    "signUp": "Registreren",
+    "signIn": "Inloggen",
+    "dashboard": "Dashboard",
+    "quote": "Elke geweldige maaltijd begint met een geweldige chef.",
+    "platformFee": "Platformkosten",
+    "feePercent": "15%",
+    "onCompleted": "op voltooide boekingen",
+    "rights": "Alle rechten voorbehouden.",
+    "systemsOk": "Alle systemen operationeel"
+  }
+}

@@ -15,8 +15,11 @@ import {
   ArrowRight,
   CheckCircle,
 } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 export default async function HomePage() {
+  const t = await getTranslations('home')
+  const tc = await getTranslations('common')
   const session = await getSession()
 
   let profile = null
@@ -54,39 +57,39 @@ export default async function HomePage() {
                 <div className="animate-fade-up flex items-center gap-3 mb-10">
                   <div className="w-8 h-px" style={{ background: 'var(--gold)' }} />
                   <span className="text-xs uppercase tracking-[0.25em] font-medium" style={{ color: 'var(--gold)' }}>
-                    Verified Professionals Only
+                    {t('eyebrow')}
                   </span>
                 </div>
 
                 {/* Heading */}
                 <h1 className="font-display animate-fade-up delay-100">
                   <span className="block text-[clamp(3.5rem,8vw,8rem)] font-light leading-[0.88] tracking-tight text-white">
-                    Exceptional
+                    {t('headingLine1')}
                   </span>
                   <span className="block text-[clamp(2rem,4.5vw,5rem)] font-light leading-none tracking-tight italic mt-3" style={{ color: '#E5DDD0' }}>
-                    Culinary Experiences,
+                    {t('headingLine2')}
                   </span>
                   <span className="block text-[clamp(2rem,4.5vw,5rem)] font-semibold leading-none mt-2 text-shimmer">
-                    Delivered.
+                    {t('headingLine3')}
                   </span>
                 </h1>
 
                 {/* Subtext */}
                 <p className="animate-fade-up delay-300 mt-10 text-lg leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
-                  MyChef connects you with verified professional chefs for weddings, corporate events, private dinners, and more. Every chef is personally vetted and interviewed.
+                  {t('subtitle')}
                 </p>
 
                 {/* CTAs */}
                 <div className="animate-fade-up delay-400 flex flex-col sm:flex-row gap-4 mt-10">
                   <Link href="/chefs">
                     <Button size="lg" className="bg-[#C8892A] hover:bg-[#A0621A] text-white font-medium tracking-wide border-0 w-full sm:w-auto">
-                      Find a Chef
+                      {t('findAChef')}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
                   <Link href="/apply">
                     <Button size="lg" variant="ghost" className="border border-[#C8892A]/40 text-[#E8C47A] bg-[#C8892A]/10 hover:bg-[#C8892A]/20 hover:border-[#C8892A]/60 hover:text-white tracking-wide w-full sm:w-auto backdrop-blur-sm shadow-[0_0_20px_rgba(200,137,42,0.08)] hover:shadow-[0_0_24px_rgba(200,137,42,0.15)] transition-all duration-300">
-                      Apply as a Chef
+                      {t('applyAsChef')}
                       <ChefHat className="h-4 w-4" />
                     </Button>
                   </Link>
@@ -119,10 +122,10 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/10">
               {[
-                { value: '200+',   label: 'Verified Chefs' },
-                { value: '1,500+', label: 'Events Catered' },
-                { value: '900+',   label: 'Happy Clients' },
-                { value: '4.9★',   label: 'Average Rating' },
+                { value: t('stats.chefs'),   label: t('stats.chefsLabel') },
+                { value: t('stats.events'), label: t('stats.eventsLabel') },
+                { value: t('stats.clients'),   label: t('stats.clientsLabel') },
+                { value: t('stats.rating'),   label: t('stats.ratingLabel') },
               ].map((stat, i) => (
                 <div key={stat.label} className={`py-6 px-6 text-center animate-fade-up delay-${500 + i * 100}`}>
                   <div className="font-display text-2xl font-semibold" style={{ color: 'var(--gold)' }}>{stat.value}</div>
@@ -142,10 +145,10 @@ export default async function HomePage() {
               <div className="w-10 h-px mt-4 shrink-0" style={{ background: 'var(--gold)' }} />
               <div>
                 <h2 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light" style={{ color: 'var(--ink)' }}>
-                  How MyChef Works
+                  {t('howItWorks.title')}
                 </h2>
                 <p className="mt-3 max-w-md leading-relaxed" style={{ color: 'var(--warm-stone)' }}>
-                  A seamless journey from posting your event to enjoying a world-class culinary experience.
+                  {t('howItWorks.subtitle')}
                 </p>
               </div>
             </div>
@@ -153,9 +156,9 @@ export default async function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { icon: Calendar,   step: '01', title: 'Post Your Event',     desc: 'Describe your event, date, location, guest count, and budget. Takes just a few minutes.' },
-              { icon: ChefHat,    step: '02', title: 'Chefs Apply',         desc: 'Verified chefs browse your listing and send proposals. Review profiles and choose the perfect fit.' },
-              { icon: CreditCard, step: '03', title: 'Book & Pay Securely', desc: 'Funds are held in escrow and released only after you confirm a successful event.' },
+              { icon: Calendar,   step: '01', title: t('howItWorks.step1Title'),     desc: t('howItWorks.step1Desc') },
+              { icon: ChefHat,    step: '02', title: t('howItWorks.step2Title'),         desc: t('howItWorks.step2Desc') },
+              { icon: CreditCard, step: '03', title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
             ].map((item, i) => (
               <Reveal key={item.step} delay={i * 120}>
                 <div className="group relative bg-white rounded-2xl p-8 border hover:shadow-xl transition-all duration-300" style={{ borderColor: 'var(--border)' }}>
@@ -187,13 +190,13 @@ export default async function HomePage() {
                   <div className="w-10 h-px mt-4 shrink-0" style={{ background: 'var(--gold)' }} />
                   <div>
                     <h2 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light" style={{ color: 'var(--ink)' }}>
-                      Featured Chefs
+                      {t('featured.title')}
                     </h2>
-                    <p className="mt-2" style={{ color: 'var(--warm-stone)' }}>Handpicked professionals, personally vetted by our team</p>
+                    <p className="mt-2" style={{ color: 'var(--warm-stone)' }}>{t('featured.subtitle')}</p>
                   </div>
                 </div>
                 <Link href="/chefs" className="hidden sm:flex items-center gap-1.5 text-sm font-medium transition-all hover:gap-2.5" style={{ color: 'var(--gold)' }}>
-                  View all <ArrowRight className="h-4 w-4" />
+                  {tc('viewAll')} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </Reveal>
@@ -246,7 +249,7 @@ export default async function HomePage() {
 
             <div className="sm:hidden mt-8 text-center">
               <Link href="/chefs" className="inline-flex items-center gap-1.5 text-sm font-medium" style={{ color: 'var(--gold)' }}>
-                View all chefs <ArrowRight className="h-4 w-4" />
+                {tc('viewAll')} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
@@ -262,19 +265,19 @@ export default async function HomePage() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-8 h-px" style={{ background: 'var(--gold)' }} />
                   <span className="text-xs uppercase tracking-[0.2em] font-medium" style={{ color: 'var(--gold)' }}>
-                    Why Choose Us
+                    {t('whyChoose.sectionTitle')}
                   </span>
                 </div>
                 <h2 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-light mb-10 leading-tight" style={{ color: 'var(--ink)' }}>
-                  A Platform Built on Trust
+                  {t('whyChoose.title')}
                 </h2>
               </Reveal>
               <div className="space-y-7">
                 {[
-                  { title: 'Verified Professionals',  desc: 'Every chef is personally interviewed and reviewed before being listed on the platform.' },
-                  { title: 'Secure Escrow Payments',   desc: 'Funds are held safely and released only after you confirm a successful event.' },
-                  { title: 'Full Transparency',        desc: 'Real reviews, verified event counts, and complete chef profiles — no hidden surprises.' },
-                  { title: 'Dispute Protection',       desc: 'Our admin team mediates any issues. Your satisfaction is our top priority.' },
+                  { title: t('whyChoose.verified'),  desc: t('whyChoose.verifiedDesc') },
+                  { title: t('whyChoose.escrow'),   desc: t('whyChoose.escrowDesc') },
+                  { title: t('whyChoose.transparency'),        desc: t('whyChoose.transparencyDesc') },
+                  { title: t('whyChoose.dispute'),       desc: t('whyChoose.disputeDesc') },
                 ].map((item, i) => (
                   <Reveal key={item.title} delay={i * 80} variant="fade-left">
                     <div className="flex gap-4 group">
@@ -293,10 +296,10 @@ export default async function HomePage() {
 
             <div className="grid grid-cols-2 gap-4">
               {[
-                { icon: Shield,     label: 'Vetted & Verified',   bg: '#EEF2FF', color: '#4F46E5' },
-                { icon: CreditCard, label: 'Escrow Payments',     bg: '#ECFDF5', color: '#059669' },
-                { icon: Star,       label: 'Verified Reviews',    bg: '#C8892A10', color: '#C8892A' },
-                { icon: Users,      label: 'Dispute Support',     bg: '#FDF4FF', color: '#9333EA' },
+                { icon: Shield,     label: t('whyChoose.badge1'),   bg: '#EEF2FF', color: '#4F46E5' },
+                { icon: CreditCard, label: t('whyChoose.badge2'),     bg: '#ECFDF5', color: '#059669' },
+                { icon: Star,       label: t('whyChoose.badge3'),    bg: '#C8892A10', color: '#C8892A' },
+                { icon: Users,      label: t('whyChoose.badge4'),     bg: '#FDF4FF', color: '#9333EA' },
               ].map((item, i) => (
                 <Reveal key={item.label} delay={i * 100} variant="scale-in">
                   <div className="bg-white rounded-2xl p-7 border flex flex-col items-center gap-3 text-center hover:shadow-lg transition-shadow duration-300" style={{ borderColor: 'var(--border)' }}>
@@ -318,24 +321,24 @@ export default async function HomePage() {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Reveal variant="fade-in">
             <div className="decor-line justify-center mb-8">
-              Get Started
+              {t('cta.eyebrow')}
             </div>
             <h2 className="font-display text-[clamp(2.5rem,7vw,6rem)] font-light text-white mb-6 leading-tight">
-              Ready to Elevate<br />
-              <span className="italic" style={{ color: 'var(--gold-light)' }}>Your Event?</span>
+              {t('cta.title').split('\n')[0]}<br />
+              <span className="italic" style={{ color: 'var(--gold-light)' }}>{t('cta.title').split('\n')[1] || t('cta.title')}</span>
             </h2>
             <p className="mb-12 text-lg max-w-md mx-auto leading-relaxed" style={{ color: 'var(--muted)' }}>
-              Join thousands of clients who&apos;ve found their perfect chef through MyChef.
+              {t('cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/register">
                 <Button size="lg" className="bg-[#C8892A] hover:bg-[#A0621A] text-white font-medium tracking-wide min-w-[160px] border-0">
-                  Post an Event
+                  {t('cta.postEvent')}
                 </Button>
               </Link>
               <Link href="/apply">
                 <Button size="lg" variant="ghost" className="border-2 border-white text-white bg-white/10 hover:bg-white/20 hover:border-white min-w-[160px]">
-                  Join as a Chef
+                  {t('cta.joinAsChef')}
                 </Button>
               </Link>
             </div>

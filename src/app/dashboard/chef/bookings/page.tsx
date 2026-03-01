@@ -1,6 +1,7 @@
 import { requireAuth } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { Card, CardContent } from '@/components/ui/card'
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate, formatCurrency } from '@/lib/utils'
@@ -9,6 +10,8 @@ import { MarkCompleteButton } from './mark-complete-button'
 
 export default async function ChefBookingsPage() {
   const { user } = await requireAuth()
+  const t = await getTranslations('chefBookings')
+  const tBadges = await getTranslations('badges')
 
   const chef = await db.chef.findUnique({ where: { userId: user.id }, select: { id: true } })
   if (!chef) redirect('/dashboard/chef')
@@ -22,15 +25,15 @@ export default async function ChefBookingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">My Bookings</h1>
-        <p className="text-stone-500 mt-1">Track your confirmed events and payments</p>
+        <h1 className="text-2xl font-bold text-stone-900">{t('title')}</h1>
+        <p className="text-stone-500 mt-1">{t('subtitle')}</p>
       </div>
 
       {!bookings || bookings.length === 0 ? (
         <Card>
           <CardContent className="py-16 text-center">
             <BookOpen className="h-12 w-12 mx-auto mb-4 text-stone-300" />
-            <p className="text-stone-500 text-sm">No bookings yet. Apply to events to get booked!</p>
+            <p className="text-stone-500 text-sm">{t('empty')}</p>
           </CardContent>
         </Card>
       ) : (
@@ -47,20 +50,20 @@ export default async function ChefBookingsPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h3 className="font-semibold text-stone-900">{event?.title}</h3>
-                        {statusBadge(booking.bookingStatus)}
-                        {statusBadge(booking.paymentStatus)}
+                        {statusBadge(booking.bookingStatus, tBadges)}
+                        {statusBadge(booking.paymentStatus, tBadges)}
                       </div>
                       <p className="text-sm text-stone-500">{formatDate(event?.date?.toISOString())}</p>
                       <p className="text-sm text-stone-500">{event?.location}</p>
                       <div className="mt-2 space-y-0.5">
                         <p className="text-sm font-semibold text-stone-900">
-                          Total: {formatCurrency(booking.amount)}
+                          {t('total')} {formatCurrency(booking.amount)}
                         </p>
                         <p className="text-xs text-stone-400">
-                          Platform fee ({booking.commissionPct}%): −{formatCurrency(commission)}
+                          {t('platformFee')} ({booking.commissionPct}%): −{formatCurrency(commission)}
                         </p>
                         <p className="text-sm font-bold text-emerald-600">
-                          You receive: {formatCurrency(netAmount)}
+                          {t('youReceive')} {formatCurrency(netAmount)}
                         </p>
                       </div>
                     </div>
@@ -70,7 +73,7 @@ export default async function ChefBookingsPage() {
                       )}
                       {booking.chefCompletedAt && !booking.clientConfirmedAt && (
                         <div className="text-xs text-stone-500 text-right">
-                          Awaiting client<br/>confirmation
+                          {t('awaitingClient')}<br/>{t('confirmation')}
                         </div>
                       )}
                     </div>

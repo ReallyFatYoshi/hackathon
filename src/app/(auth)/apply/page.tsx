@@ -1,19 +1,13 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { signUp, useSession } from '@/lib/auth-client'
 import { csrfFetch } from '@/lib/csrf'
 import { useToast } from '@/components/ui/toast'
 import { ChefHat, Building2, Upload, X, ArrowRight, ArrowLeft } from 'lucide-react'
 import { CUISINE_OPTIONS, EVENT_TYPE_OPTIONS, cn } from '@/lib/utils'
 import Link from 'next/link'
-
-const STEPS = [
-  { num: '01', label: 'Personal Info' },
-  { num: '02', label: 'Experience'    },
-  { num: '03', label: 'Portfolio'     },
-  { num: '04', label: 'Review'        },
-]
 
 interface FormData {
   applicant_type: 'individual' | 'company'
@@ -62,10 +56,20 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function ApplyPage() {
+  const t = useTranslations('auth.apply')
+  const tc = useTranslations('common')
   const router = useRouter()
   const { toast } = useToast()
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
+
+  const STEPS = [
+    { num: '01', label: t('steps.personalInfo') },
+    { num: '02', label: t('steps.experience')   },
+    { num: '03', label: t('steps.portfolio')     },
+    { num: '04', label: t('steps.review')        },
+  ]
+
   const [data, setData] = useState<FormData>({
     applicant_type: 'individual',
     company_name: '',
@@ -98,7 +102,7 @@ export default function ApplyPage() {
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || [])
     if (data.portfolio_images.length + files.length > 5) {
-      toast({ title: 'Maximum 5 images allowed', variant: 'error' })
+      toast({ title: t('maxImages'), variant: 'error' })
       return
     }
     setData((prev) => ({ ...prev, portfolio_images: [...prev.portfolio_images, ...files] }))
@@ -113,23 +117,23 @@ export default function ApplyPage() {
   function validateStep(): boolean {
     if (step === 0) {
       if (!data.first_name || !data.last_name || !data.email || !data.phone) {
-        toast({ title: 'Please fill in all required fields', variant: 'error' })
+        toast({ title: t('fillRequired'), variant: 'error' })
         return false
       }
       if (data.applicant_type === 'company' && !data.company_name) {
-        toast({ title: 'Please enter your company name', variant: 'error' })
+        toast({ title: t('enterCompany'), variant: 'error' })
         return false
       }
     }
     if (step === 1) {
       if (!data.years_experience || data.cuisine_specialties.length === 0 || !data.bio) {
-        toast({ title: 'Please fill in all required fields and select at least one cuisine', variant: 'error' })
+        toast({ title: t('fillRequiredCuisine'), variant: 'error' })
         return false
       }
     }
     if (step === 2) {
       if (data.portfolio_images.length < 3) {
-        toast({ title: 'Please upload at least 3 portfolio images', variant: 'error' })
+        toast({ title: t('uploadMinImages'), variant: 'error' })
         return false
       }
     }
@@ -147,7 +151,7 @@ export default function ApplyPage() {
     })
 
     if (signUpError) {
-      toast({ title: 'Failed to create account', description: signUpError.message, variant: 'error' })
+      toast({ title: t('createAccountFailed'), description: signUpError.message, variant: 'error' })
       setLoading(false)
       return
     }
@@ -189,12 +193,12 @@ export default function ApplyPage() {
 
     if (!res.ok) {
       const body = await res.json().catch(() => ({}))
-      toast({ title: 'Submission failed', description: body.error || 'Unknown error', variant: 'error' })
+      toast({ title: t('submissionFailed'), description: body.error || 'Unknown error', variant: 'error' })
       setLoading(false)
       return
     }
 
-    toast({ title: 'Application submitted!', description: "We'll be in touch within 3–5 business days.", variant: 'success' })
+    toast({ title: t('applicationSubmitted'), description: t('inTouchSoon'), variant: 'success' })
     router.push('/dashboard/chef')
   }
 
@@ -258,11 +262,11 @@ export default function ApplyPage() {
           {/* STEP 0 — Personal Info */}
           {step === 0 && (
             <>
-              <Field label="Applying as" required>
+              <Field label={t('applyingAs')} required>
                 <div className="grid grid-cols-2 gap-2.5 mt-1">
                   {([
-                    { val: 'individual' as const, Icon: ChefHat,   label: 'Individual Chef',  sub: 'Solo professional' },
-                    { val: 'company'    as const, Icon: Building2, label: 'Catering Company', sub: 'Business or team' },
+                    { val: 'individual' as const, Icon: ChefHat,   label: t('individualChef'),  sub: t('soloProfessional') },
+                    { val: 'company'    as const, Icon: Building2, label: t('cateringCompany'), sub: t('businessOrTeam') },
                   ] as const).map(({ val, Icon, label, sub }) => (
                     <button
                       key={val}
@@ -284,26 +288,26 @@ export default function ApplyPage() {
               </Field>
 
               {data.applicant_type === 'company' && (
-                <Field label="Company name" required>
-                  <input className={fieldCls} value={data.company_name} onChange={(e) => update('company_name', e.target.value)} placeholder="e.g. Rossi Catering Co." />
+                <Field label={t('companyName')} required>
+                  <input className={fieldCls} value={data.company_name} onChange={(e) => update('company_name', e.target.value)} placeholder={t('companyPlaceholder')} />
                 </Field>
               )}
 
               <div className="grid grid-cols-2 gap-5">
-                <Field label={data.applicant_type === 'company' ? 'Contact first name' : 'First name'} required>
+                <Field label={data.applicant_type === 'company' ? t('contactFirstName') : t('firstName')} required>
                   <input className={fieldCls} value={data.first_name} onChange={(e) => update('first_name', e.target.value)} />
                 </Field>
-                <Field label={data.applicant_type === 'company' ? 'Contact last name' : 'Last name'} required>
+                <Field label={data.applicant_type === 'company' ? t('contactLastName') : t('lastName')} required>
                   <input className={fieldCls} value={data.last_name} onChange={(e) => update('last_name', e.target.value)} />
                 </Field>
               </div>
 
-              <Field label="Email address" required>
-                <input className={fieldCls} type="email" value={data.email} onChange={(e) => update('email', e.target.value)} placeholder="you@example.com" />
+              <Field label={t('email')} required>
+                <input className={fieldCls} type="email" value={data.email} onChange={(e) => update('email', e.target.value)} placeholder={t('emailPlaceholder')} />
               </Field>
 
-              <Field label="Phone number" required>
-                <input className={fieldCls} type="tel" value={data.phone} onChange={(e) => update('phone', e.target.value)} placeholder="+1 (555) 000-0000" />
+              <Field label={t('phone')} required>
+                <input className={fieldCls} type="tel" value={data.phone} onChange={(e) => update('phone', e.target.value)} placeholder={t('phonePlaceholder')} />
               </Field>
             </>
           )}
@@ -311,11 +315,11 @@ export default function ApplyPage() {
           {/* STEP 1 — Experience */}
           {step === 1 && (
             <>
-              <Field label="Years of professional experience" required>
-                <input className={fieldCls} type="number" min="0" max="50" value={data.years_experience} onChange={(e) => update('years_experience', e.target.value)} placeholder="e.g. 8" />
+              <Field label={t('yearsExperience')} required>
+                <input className={fieldCls} type="number" min="0" max="50" value={data.years_experience} onChange={(e) => update('years_experience', e.target.value)} placeholder={t('yearsPlaceholder')} />
               </Field>
 
-              <Field label="Cuisine Specialties" required>
+              <Field label={t('cuisineSpecialties')} required>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {CUISINE_OPTIONS.map((c) => (
                     <button
@@ -334,7 +338,7 @@ export default function ApplyPage() {
                 </div>
               </Field>
 
-              <Field label="Event Specialties">
+              <Field label={t('eventSpecialties')}>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {EVENT_TYPE_OPTIONS.map((e) => (
                     <button
@@ -353,22 +357,22 @@ export default function ApplyPage() {
                 </div>
               </Field>
 
-              <Field label="Short bio" required>
+              <Field label={t('shortBio')} required>
                 <textarea
                   className={cn(fieldCls, 'resize-none min-h-[96px] leading-relaxed')}
                   value={data.bio}
                   onChange={(e) => update('bio', e.target.value)}
-                  placeholder="Tell us about your culinary journey, training, signature style, and what makes your cooking unique..."
+                  placeholder={t('bioPlaceholder')}
                   rows={4}
                 />
               </Field>
 
               <div>
-                <Label>Social Links <span className="normal-case font-normal text-stone-300">(optional)</span></Label>
+                <Label>{t('socialLinks')} <span className="normal-case font-normal text-stone-300">({t('optional')})</span></Label>
                 {([
-                  { key: 'instagram' as const, placeholder: 'Instagram URL' },
-                  { key: 'linkedin'  as const, placeholder: 'LinkedIn URL' },
-                  { key: 'website'   as const, placeholder: 'Website URL' },
+                  { key: 'instagram' as const, placeholder: t('instagramUrl') },
+                  { key: 'linkedin'  as const, placeholder: t('linkedinUrl') },
+                  { key: 'website'   as const, placeholder: t('websiteUrl') },
                 ] as const).map(({ key, placeholder }) => (
                   <div key={key} className="flex items-center gap-3 mb-3">
                     <span className="text-[10px] uppercase tracking-widest text-stone-300 w-16 shrink-0 font-semibold">{key}</span>
@@ -383,7 +387,7 @@ export default function ApplyPage() {
           {step === 2 && (
             <>
               <p className="text-sm text-stone-500 leading-relaxed">
-                Upload 3–5 high-quality photos of your work. These will be the first impression clients have of your cooking.
+                {t('uploadIntro')}
               </p>
 
               <div className="grid grid-cols-3 gap-2.5">
@@ -402,7 +406,7 @@ export default function ApplyPage() {
                 {data.portfolio_images.length < 5 && (
                   <label className="aspect-square rounded-xl border-2 border-dashed border-stone-200 flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all duration-200">
                     <Upload className="h-5 w-5 text-stone-300 mb-1.5" />
-                    <span className="text-[10px] text-stone-400 font-medium tracking-wide">Add photo</span>
+                    <span className="text-[10px] text-stone-400 font-medium tracking-wide">{t('addPhoto')}</span>
                     <input type="file" accept="image/*" multiple onChange={handleImageChange} className="hidden" />
                   </label>
                 )}
@@ -416,7 +420,7 @@ export default function ApplyPage() {
                   )} />
                 ))}
                 <span className="text-[11px] text-stone-400 ml-1">
-                  {data.portfolio_images.length}/5{data.portfolio_images.length < 3 && ' · 3 required'}
+                  {data.portfolio_images.length}/5{data.portfolio_images.length < 3 && ` · ${t('required')}`}
                 </span>
               </div>
             </>
@@ -427,17 +431,17 @@ export default function ApplyPage() {
             <>
               <div className="rounded-2xl bg-white border border-stone-100 shadow-sm overflow-hidden">
                 <div className="px-5 py-3 bg-stone-50/80 border-b border-stone-100">
-                  <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-stone-400">Application Summary</span>
+                  <span className="text-[10px] font-semibold tracking-[0.15em] uppercase text-stone-400">{t('applicationSummary')}</span>
                 </div>
                 <div className="px-5 py-4">
-                  <SummaryRow label="Type" value={data.applicant_type === 'company' ? 'Catering Company' : 'Individual Chef'} />
-                  {data.company_name && <SummaryRow label="Company" value={data.company_name} />}
-                  <SummaryRow label="Name" value={`${data.first_name} ${data.last_name}`} />
-                  <SummaryRow label="Email" value={data.email} />
-                  <SummaryRow label="Phone" value={data.phone} />
-                  <SummaryRow label="Experience" value={`${data.years_experience} years`} />
+                  <SummaryRow label={t('type')} value={data.applicant_type === 'company' ? t('cateringCompany') : t('individualChef')} />
+                  {data.company_name && <SummaryRow label={tc('company')} value={data.company_name} />}
+                  <SummaryRow label={t('name')} value={`${data.first_name} ${data.last_name}`} />
+                  <SummaryRow label={t('email')} value={data.email} />
+                  <SummaryRow label={t('phone')} value={data.phone} />
+                  <SummaryRow label={t('experience')} value={`${data.years_experience} ${t('yearsUnit')}`} />
                   <div className="py-2 border-b border-stone-50">
-                    <span className="text-xs text-stone-400">Cuisine Specialties</span>
+                    <span className="text-xs text-stone-400">{t('cuisineSpecialties')}</span>
                     <div className="flex flex-wrap gap-1.5 mt-1.5">
                       {data.cuisine_specialties.map((c) => (
                         <span key={c} className="bg-stone-100 text-stone-700 text-xs px-2.5 py-0.5 rounded-full">{c}</span>
@@ -446,7 +450,7 @@ export default function ApplyPage() {
                   </div>
                   {data.event_specialties.length > 0 && (
                     <div className="py-2 border-b border-stone-50">
-                      <span className="text-xs text-stone-400">Event Specialties</span>
+                      <span className="text-xs text-stone-400">{t('eventSpecialties')}</span>
                       <div className="flex flex-wrap gap-1.5 mt-1.5">
                         {data.event_specialties.map((e) => (
                           <span key={e} className="bg-amber-50 text-amber-700 text-xs px-2.5 py-0.5 rounded-full">{e}</span>
@@ -455,12 +459,12 @@ export default function ApplyPage() {
                     </div>
                   )}
                   <div className="pt-2">
-                    <span className="text-xs text-stone-400">Bio</span>
+                    <span className="text-xs text-stone-400">{t('bio')}</span>
                     <p className="text-sm text-stone-700 mt-1 leading-relaxed">{data.bio}</p>
                   </div>
                   {previewUrls.length > 0 && (
                     <div className="pt-2">
-                      <span className="text-xs text-stone-400">Portfolio</span>
+                      <span className="text-xs text-stone-400">{t('portfolioLabel')}</span>
                       <div className="flex gap-2 mt-1.5">
                         {previewUrls.map((url, i) => (
                           <img key={i} src={url} alt="" className="w-10 h-10 rounded-lg object-cover border border-stone-100" />
@@ -472,9 +476,9 @@ export default function ApplyPage() {
               </div>
 
               <div className="rounded-xl bg-amber-50 border border-amber-100 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-1">What happens next</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-amber-700 mb-1">{t('whatHappens')}</p>
                 <p className="text-xs text-amber-800 leading-relaxed">
-                  Our team reviews your application within 3–5 business days. If approved, we&apos;ll schedule a brief video interview through the platform.
+                  {t('whatHappensDesc')}
                 </p>
               </div>
             </>
@@ -491,12 +495,12 @@ export default function ApplyPage() {
               className="flex items-center gap-1.5 text-sm text-stone-400 hover:text-stone-700 transition-colors duration-200"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back
+              {tc('back')}
             </button>
           ) : (
             <Link href="/" className="flex items-center gap-1.5 text-sm text-stone-300 hover:text-stone-500 transition-colors duration-200">
               <ArrowLeft className="h-4 w-4" />
-              Cancel
+              {tc('cancel')}
             </Link>
           )}
 
@@ -506,7 +510,7 @@ export default function ApplyPage() {
               onClick={() => { if (validateStep()) setStep(step + 1) }}
               className="flex items-center gap-2 bg-stone-900 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-stone-800 active:scale-[0.98] transition-all duration-150"
             >
-              Continue
+              {tc('continue')}
               <ArrowRight className="h-4 w-4" />
             </button>
           ) : (
@@ -522,10 +526,10 @@ export default function ApplyPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Submitting…
+                  {t('submitting')}
                 </>
               ) : (
-                <>Submit Application <ArrowRight className="h-4 w-4" /></>
+                <>{t('submitApplication')} <ArrowRight className="h-4 w-4" /></>
               )}
             </button>
           )}
@@ -533,9 +537,9 @@ export default function ApplyPage() {
 
         {/* Sign-in hint */}
         <p className="text-center text-xs text-stone-400 mt-6">
-          Already have an account?{' '}
+          {t('hasAccount')}{' '}
           <Link href="/login" className="text-amber-600 hover:text-amber-700 font-semibold transition-colors">
-            Sign in
+            {t('signIn')}
           </Link>
         </p>
 

@@ -1,6 +1,7 @@
 import { requireRole } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
 import { statusBadge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
@@ -8,6 +9,9 @@ import { FileText, Users, BookOpen, Video } from 'lucide-react'
 
 export default async function AdminOverviewPage() {
   await requireRole('admin')
+  const t = await getTranslations('admin')
+  const tCommon = await getTranslations('common')
+  const tBadges = await getTranslations('badges')
 
   const [recentApps, usersCount, bookingsCount, scheduledInterviewsCount] = await Promise.all([
     db.chefApplication.findMany({
@@ -25,8 +29,8 @@ export default async function AdminOverviewPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>Admin Dashboard</h1>
-        <p className="mt-1" style={{ color: 'var(--warm-stone)' }}>Platform overview and management</p>
+        <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{t('title')}</h1>
+        <p className="mt-1" style={{ color: 'var(--warm-stone)' }}>{t('subtitle')}</p>
       </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -38,7 +42,7 @@ export default async function AdminOverviewPage() {
                 </div>
                 <div>
                   <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{pendingApps.length}</p>
-                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Pending Apps</p>
+                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('pendingApps')}</p>
                 </div>
               </div>
           </div>
@@ -51,7 +55,7 @@ export default async function AdminOverviewPage() {
                 </div>
                 <div>
                   <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{scheduledInterviewsCount}</p>
-                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Scheduled Interviews</p>
+                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('scheduledInterviews')}</p>
                 </div>
               </div>
           </div>
@@ -64,7 +68,7 @@ export default async function AdminOverviewPage() {
                 </div>
                 <div>
                   <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{usersCount}</p>
-                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Total Users</p>
+                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('totalUsers')}</p>
                 </div>
               </div>
           </div>
@@ -77,7 +81,7 @@ export default async function AdminOverviewPage() {
                 </div>
                 <div>
                   <p className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{bookingsCount}</p>
-                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>Total Bookings</p>
+                  <p className="text-sm" style={{ color: 'var(--warm-stone)' }}>{t('totalBookings')}</p>
                 </div>
               </div>
           </div>
@@ -87,13 +91,13 @@ export default async function AdminOverviewPage() {
       <div className="bg-white rounded-2xl border" style={{ borderColor: 'var(--border)' }}>
         <div className="p-6 pb-0">
           <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--ink)' }}>Recent Applications</h3>
-            <Link href="/dashboard/admin/applications" className="text-xs hover:underline" style={{ color: 'var(--gold)' }}>View all</Link>
+            <h3 className="font-display text-lg font-semibold" style={{ color: 'var(--ink)' }}>{t('recentApplications')}</h3>
+            <Link href="/dashboard/admin/applications" className="text-xs hover:underline" style={{ color: 'var(--gold)' }}>{tCommon('viewAll')}</Link>
           </div>
         </div>
         <div className="p-6">
           {recentApps.length === 0 ? (
-            <p className="text-sm py-4 text-center" style={{ color: 'var(--muted)' }}>No applications yet</p>
+            <p className="text-sm py-4 text-center" style={{ color: 'var(--muted)' }}>{t('noApplications')}</p>
           ) : (
             <div className="divide-y" style={{ borderColor: 'var(--border)' }}>
               {recentApps.map((app) => (
@@ -103,7 +107,7 @@ export default async function AdminOverviewPage() {
                       <p className="font-medium text-sm" style={{ color: 'var(--ink)' }}>{app.firstName} {app.lastName}</p>
                       <p className="text-xs" style={{ color: 'var(--warm-stone)' }}>{formatDate(app.createdAt.toISOString())}</p>
                     </div>
-                    {statusBadge(app.status)}
+                    {statusBadge(app.status, tBadges)}
                   </div>
                 </Link>
               ))}

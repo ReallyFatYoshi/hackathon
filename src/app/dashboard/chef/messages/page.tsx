@@ -1,12 +1,14 @@
 import { requireAuth } from '@/lib/auth-helpers'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
 import { MessageSquare, User } from 'lucide-react'
 
 export default async function ChefMessagesPage() {
   const { user } = await requireAuth()
+  const t = await getTranslations('chefMessages')
 
   const chef = await db.chef.findUnique({ where: { userId: user.id }, select: { id: true } })
   if (!chef) redirect('/dashboard/chef')
@@ -49,15 +51,15 @@ export default async function ChefMessagesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--ink)' }}>Messages</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>Chat with your clients</p>
+        <h1 className="font-display text-2xl font-semibold" style={{ color: 'var(--ink)' }}>{t('title')}</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>{t('subtitle')}</p>
       </div>
 
       {conversations.length === 0 ? (
         <div className="bg-white rounded-2xl border text-center py-16 px-6" style={{ borderColor: 'var(--border)' }}>
           <MessageSquare className="h-10 w-10 mx-auto mb-3" style={{ color: 'var(--muted)' }} />
-          <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--ink)' }}>No conversations yet</h3>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>When clients book you, their conversations appear here.</p>
+          <h3 className="font-display text-lg font-semibold mb-1" style={{ color: 'var(--ink)' }}>{t('empty')}</h3>
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>{t('emptyDesc')}</p>
         </div>
       ) : (
         <div className="bg-white rounded-2xl border divide-y overflow-hidden" style={{ borderColor: 'var(--border)', '--tw-divide-color': 'var(--border)' } as React.CSSProperties}>
@@ -84,11 +86,11 @@ export default async function ChefMessagesPage() {
                 <p className="text-xs truncate mb-0.5" style={{ color: 'var(--warm-stone)' }}>{conv.eventTitle}</p>
                 {conv.lastMessage ? (
                   <p className="text-sm truncate" style={{ color: 'var(--muted)' }}>
-                    {conv.isFromMe && <span style={{ color: 'var(--warm-stone)' }}>You: </span>}
+                    {conv.isFromMe && <span style={{ color: 'var(--warm-stone)' }}>{t('you')} </span>}
                     {conv.lastMessage}
                   </p>
                 ) : (
-                  <p className="text-sm italic" style={{ color: 'var(--muted)' }}>No messages yet</p>
+                  <p className="text-sm italic" style={{ color: 'var(--muted)' }}>{t('noMessages')}</p>
                 )}
               </div>
             </Link>
