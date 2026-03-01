@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 
 interface RevealProps {
   children: ReactNode
@@ -26,6 +26,7 @@ export function Reveal({
   once = true,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const [revealed, setRevealed] = useState(false)
 
   useEffect(() => {
     const el = ref.current
@@ -34,12 +35,10 @@ export function Reveal({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.style.animationDelay = `${delay}ms`
-          el.classList.add(`reveal-${variant}`)
-          el.classList.add('revealed')
+          setRevealed(true)
           if (once) observer.unobserve(el)
         } else if (!once) {
-          el.classList.remove(`reveal-${variant}`, 'revealed')
+          setRevealed(false)
         }
       },
       { threshold, rootMargin: '0px 0px -40px 0px' }
@@ -47,10 +46,14 @@ export function Reveal({
 
     observer.observe(el)
     return () => observer.disconnect()
-  }, [delay, variant, threshold, once])
+  }, [threshold, once])
 
   return (
-    <div ref={ref} className={`reveal-hidden ${className}`} style={style}>
+    <div
+      ref={ref}
+      className={`${revealed ? `reveal-${variant}` : 'reveal-hidden'} ${className}`}
+      style={{ ...style, animationDelay: revealed ? `${delay}ms` : undefined }}
+    >
       {children}
     </div>
   )
