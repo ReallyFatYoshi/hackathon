@@ -71,7 +71,7 @@ export function TourSelector() {
 
           {/* Panel */}
           <div
-            className="fixed bottom-20 right-6 z-50 w-80 max-h-[70vh] overflow-y-auto rounded-2xl border shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-300"
+            className="fixed z-50 overflow-y-auto rounded-2xl border shadow-2xl animate-in slide-in-from-bottom-4 fade-in duration-300 bottom-20 right-4 left-4 sm:left-auto sm:right-6 sm:w-80 max-h-[70vh]"
             style={{
               background: 'white',
               borderColor: '#E8E0D4',
