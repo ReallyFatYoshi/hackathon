@@ -7,6 +7,7 @@ import {
   admin,
   bearer,
   openAPI,
+  captcha,
 } from 'better-auth/plugins'
 import { passkey } from '@better-auth/passkey'
 import { db } from './db'
@@ -24,10 +25,10 @@ export const auth = betterAuth({
   // ── OWASP A07: Identification and Authentication Failures ──────────
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
     minPasswordLength: 10,
     maxPasswordLength: 128,
-    autoSignIn: false,
+    autoSignIn: true,
   },
 
   // ── OWASP A07 / A04: Rate Limiting & Account Lockout ──────────────
@@ -87,6 +88,15 @@ export const auth = betterAuth({
 
     // ── OWASP A05: Security Misconfiguration – API Docs ──────────────
     openAPI(),
+
+    // ── Bot Protection – hCaptcha ────────────────────────────────────
+    ...(process.env.HCAPTCHA_SECRET_KEY
+      ? [captcha({
+          provider: 'hcaptcha',
+          secretKey: process.env.HCAPTCHA_SECRET_KEY,
+          endpoints: ['/sign-up/email', '/sign-in/email'],
+        })]
+      : []),
   ],
 
   user: {

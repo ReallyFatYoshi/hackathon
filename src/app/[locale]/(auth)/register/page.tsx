@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { signUp } from '@/lib/auth-client'
+import { useHCaptcha } from '@/hooks/use-hcaptcha'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
@@ -14,6 +15,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
+  const { CaptchaWidget, getToken, reset: resetCaptcha, enabled: captchaEnabled } = useHCaptcha()
 
   function updateField(field: string) {
     return (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -26,20 +28,23 @@ export default function RegisterPage() {
       toast({ title: t('passwordMismatch'), variant: 'error' })
       return
     }
-    if (form.password.length < 8) {
+    if (form.password.length < 10) {
       toast({ title: t('passwordTooShort'), variant: 'error' })
       return
     }
 
     setLoading(true)
+    const captchaToken = getToken()
     const { error } = await signUp.email({
       email: form.email,
       password: form.password,
       name: form.full_name,
+      fetchOptions: captchaToken ? { headers: { 'x-captcha-response': captchaToken } } : undefined,
     })
 
     if (error) {
       toast({ title: t('registrationFailed'), description: error.message, variant: 'error' })
+      resetCaptcha()
       setLoading(false)
       return
     }
@@ -57,11 +62,12 @@ export default function RegisterPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <Input label={t('fullName')} value={form.full_name} onChange={updateField('full_name')} placeholder={t('fullNamePlaceholder')} required />
-        <Input label={t('email')} type="email" value={form.email} onChange={updateField('email')} placeholder={t('emailPlaceholder')} required />
-        <Input label={t('password')} type="password" value={form.password} onChange={updateField('password')} placeholder={t('passwordPlaceholder')} required hint={t('passwordHint')} />
-        <Input label={t('confirmPassword')} type="password" value={form.confirm} onChange={updateField('confirm')} placeholder={t('confirmPlaceholder')} required />
-        <Button type="submit" className="w-full bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 mt-2" size="lg" loading={loading}>
+        <Input label={t('fullName')} value={form.full_name} onChange={updateField('full_name')} placeholder={t('fullNamePlaceholder')} required autoComplete="name" />
+        <Input label={t('email')} type="email" value={form.email} onChange={updateField('email')} placeholder={t('emailPlaceholder')} required autoComplete="email" />
+        <Input label={t('password')} type="password" value={form.password} onChange={updateField('password')} placeholder={t('passwordPlaceholder')} required hint={t('passwordHint')} autoComplete="new-password" />
+        <Input label={t('confirmPassword')} type="password" value={form.confirm} onChange={updateField('confirm')} placeholder={t('confirmPlaceholder')} required autoComplete="new-password" />
+        <CaptchaWidget className="flex justify-center" />
+        <Button type="submit" className="w-full bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 mt-2" size="lg" loading={loading} disabled={captchaEnabled && !getToken()}>
           {t('submit')}
         </Button>
       </form>

@@ -105,7 +105,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html className={`${cormorant.variable} ${dmSans.variable}`}>
+    <html className={`${cormorant.variable} ${dmSans.variable}`} suppressHydrationWarning>
       <body className="antialiased">
         {children}
       </body>

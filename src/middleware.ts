@@ -33,6 +33,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Let .well-known routes through without locale prefixing
+  if (pathname.startsWith('/.well-known')) {
+    return NextResponse.next()
+  }
+
   // --- CSRF double-submit cookie validation ---
   if (pathname.startsWith('/api/') && !SAFE_METHODS.includes(request.method)) {
     const cookieToken = request.cookies.get(CSRF_COOKIE)?.value

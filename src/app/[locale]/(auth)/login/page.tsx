@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { signIn, authClient } from '@/lib/auth-client'
+import { useHCaptcha } from '@/hooks/use-hcaptcha'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
@@ -18,14 +19,21 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
+  const { CaptchaWidget, getToken, reset: resetCaptcha, enabled: captchaEnabled } = useHCaptcha()
   const redirectTo = searchParams.get('redirectTo') || '/dashboard'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
-    const { data, error } = await signIn.email({ email, password })
+    const captchaToken = getToken()
+    const { data, error } = await signIn.email({
+      email,
+      password,
+      fetchOptions: captchaToken ? { headers: { 'x-captcha-response': captchaToken } } : undefined,
+    })
     if (error) {
       toast({ title: 'Sign in failed', description: error.message, variant: 'error' })
+      resetCaptcha()
       setLoading(false)
       return
     }
@@ -80,7 +88,8 @@ function LoginForm() {
           required
           autoComplete="current-password webauthn"
         />
-        <Button type="submit" className="w-full bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 mt-2" size="lg" loading={loading}>
+        <CaptchaWidget className="flex justify-center" />
+        <Button type="submit" className="w-full bg-[#0C0907] hover:bg-[#1A1208] text-white border-0 mt-2" size="lg" loading={loading} disabled={captchaEnabled && !getToken()}>
           {t('submit')}
         </Button>
       </form>

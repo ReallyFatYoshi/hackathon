@@ -4,11 +4,8 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <html>
-      <body style={{ margin: 0 }}>
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
-
+    <>
+      <style>{`
           .error-root {
             min-height: 100vh;
             display: flex;
@@ -122,7 +119,6 @@ export default function NotFound() {
             </Link>
           </div>
         </div>
-      </body>
-    </html>
+    </>
   )
 }
