@@ -1,9 +1,10 @@
 import webpush from 'web-push'
 import { db } from '@/lib/db'
+import { getBaseUrl } from '@/lib/url'
 
 const VAPID_PUBLIC = process.env.NEXT_PUBLIC_VAPID_KEY!
 const VAPID_PRIVATE = process.env.VAPID_PRIVATE_KEY!
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+const APP_URL = getBaseUrl()
 
 webpush.setVapidDetails(`mailto:noreply@mychef.app`, VAPID_PUBLIC, VAPID_PRIVATE)
 

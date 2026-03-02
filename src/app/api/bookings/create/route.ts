@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { stripe, COMMISSION_PCT } from '@/lib/stripe'
 import { sendBookingConfirmedEmail } from '@/lib/email'
+import { getBaseUrl } from '@/lib/url'
 import { sendPushToUser } from '@/lib/push'
 
 export async function POST(request: NextRequest) {
@@ -54,8 +55,8 @@ export async function POST(request: NextRequest) {
         applicationId,
         commissionPct: COMMISSION_PCT.toString(),
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client/bookings?payment=success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/client/events/${eventId}?payment=cancelled`,
+      success_url: `${getBaseUrl()}/dashboard/client/bookings?payment=success`,
+      cancel_url: `${getBaseUrl()}/dashboard/client/events/${eventId}?payment=cancelled`,
       payment_intent_data: {
         capture_method: 'manual', // Authorize only — capture after completion
         metadata: {

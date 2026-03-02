@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { sendInterviewScheduledEmail, sendApplicationStatusEmail } from '@/lib/email'
+import { getBaseUrl } from '@/lib/url'
 
 export async function POST(
   request: NextRequest,
@@ -41,7 +42,7 @@ export async function POST(
       await db.chefApplication.update({ where: { id }, data: { status: 'interview_scheduled' } })
 
       // Send email notification
-      const callUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard/admin/interviews/${roomId}/call`
+      const callUrl = `${getBaseUrl()}/dashboard/admin/interviews/${roomId}/call`
       try {
         await sendInterviewScheduledEmail(
           application.email,
