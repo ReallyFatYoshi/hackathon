@@ -565,5 +565,102 @@
       "safariStep2": "Scroll down and tap \"Add to Home Screen\".",
       "safariStep3": "Tap \"Add\" to install MyChef on your home screen."
     }
+  },
+
+  "tours": {
+    "selectorTitle": "Guided Tours",
+    "selectorDesc": "Learn how to use MyChef",
+    "next": "Next",
+    "prev": "Back",
+    "finish": "Finish",
+
+    "navigation": {
+      "title": "Navigate the Dashboard",
+      "desc": "Learn how the sidebar and main navigation work.",
+      "step0Title": "Sidebar",
+      "step0Content": "This is your main navigation panel. It stays visible on desktop so you can quickly jump between sections.",
+      "step1Title": "Home Logo",
+      "step1Content": "Click the MyChef logo to return to the main landing page at any time.",
+      "step2Title": "Navigation Menu",
+      "step2Content": "Each menu item takes you to a different section of your dashboard. The active page is highlighted in gold.",
+      "step3Title": "Your Profile",
+      "step3Content": "Your name, role, and sign-out button are here at the bottom of the sidebar.",
+      "step4Title": "Main Content",
+      "step4Content": "This is where the content for each page is displayed. Let's explore what you can do!"
+    },
+
+    "clientOverview": {
+      "title": "Client Dashboard",
+      "desc": "Get an overview of your events, bookings, and activity.",
+      "step0Title": "Welcome",
+      "step0Content": "This is your dashboard overview. It shows a summary of all your activity on MyChef.",
+      "step1Title": "Post an Event",
+      "step1Content": "Click this button to create a new event and start looking for the perfect chef.",
+      "step2Title": "Your Stats",
+      "step2Content": "Track your total events, open events awaiting chefs, and active bookings at a glance.",
+      "step3Title": "Recent Events",
+      "step3Content": "Your latest events are shown here. Click any event to see its details and applications.",
+      "step4Title": "Recent Bookings",
+      "step4Content": "Your latest bookings with hired chefs appear here, including status and payment info."
+    },
+
+    "clientChefs": {
+      "title": "Find Chefs",
+      "desc": "Discover and browse verified professional chefs.",
+      "step0Title": "Browse Chefs",
+      "step0Content": "Here you can browse all verified chefs on the platform. View their profiles, specialties, and ratings.",
+      "step1Title": "Find Chefs Tab",
+      "step1Content": "Use this navigation item to access the chef directory whenever you need to find culinary talent."
+    },
+
+    "clientEvents": {
+      "title": "Manage Events",
+      "desc": "Create and manage your culinary events.",
+      "step0Title": "Your Events",
+      "step0Content": "This page lists all your events. You can see their status, date, and how many chefs have applied.",
+      "step1Title": "Create Event",
+      "step1Content": "Click here to post a new event. You'll specify the date, cuisine type, guest count, and budget.",
+      "step2Title": "Bookings",
+      "step2Content": "After hiring a chef, your bookings will appear in the Bookings section. Track status and communicate with your chef."
+    },
+
+    "messages": {
+      "title": "Messages",
+      "desc": "Chat with your hired chefs or clients in real time.",
+      "step0Title": "Real-time Chat",
+      "step0Content": "Access your conversations here. You can message the chefs you've hired (or clients who hired you) in real time."
+    },
+
+    "chefOverview": {
+      "title": "Chef Dashboard",
+      "desc": "View your chef stats, bookings, and application status.",
+      "step0Title": "Chef Dashboard",
+      "step0Content": "Welcome to your chef dashboard. This shows your current status and key metrics.",
+      "step1Title": "Application Status",
+      "step1Content": "This banner shows your application status — whether you need to apply, are under review, or have an interview scheduled.",
+      "step2Title": "Performance Stats",
+      "step2Content": "Once approved, you'll see your completed events, average rating, and active bookings here."
+    },
+
+    "chefProfile": {
+      "title": "Chef Profile",
+      "desc": "Manage your professional profile, portfolio, and specialties.",
+      "step0Title": "Your Profile",
+      "step0Content": "Go to your profile to update your bio, cuisine specialties, portfolio images, and social links. A complete profile attracts more clients!"
+    },
+
+    "security": {
+      "title": "Security Settings",
+      "desc": "Manage two-factor authentication and passkeys.",
+      "step0Title": "Account Security",
+      "step0Content": "Visit Security to enable two-factor authentication, manage passkeys for passwordless login, and view active sessions."
+    },
+
+    "installApp": {
+      "title": "Install the App",
+      "desc": "Install MyChef as a native app on your device.",
+      "step0Title": "Install MyChef",
+      "step0Content": "Go to Install App to add MyChef to your home screen. It works offline, loads instantly, and sends push notifications."
+    }
   }
 }

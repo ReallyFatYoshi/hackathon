@@ -9,6 +9,9 @@ import {
 } from 'lucide-react'
 import React from 'react'
 import type { UserProfile } from '@/types'
+import { TourProvider } from '@/components/tours/tour-provider'
+import { TourSelector } from '@/components/tours/tour-selector'
+import { useLocale } from 'next-intl'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Home, Calendar, BookOpen, User, Star, ChefHat, FileText, Video, Users, MessageSquare, Shield, Download,
@@ -39,6 +42,8 @@ function getInitials(name?: string | null, email?: string | null) {
 export function DashboardShell({ user, items, children }: DashboardShellProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const locale = useLocale()
+  const role = (user.role || 'client') as 'client' | 'chef' | 'admin'
 
   async function handleSignOut() {
     await signOut()
@@ -47,11 +52,12 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
   }
 
   return (
+    <TourProvider role={role} locale={locale}>
     <div className="flex min-h-screen" style={{ background: 'var(--canvas)' }}>
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 shrink-0 border-r" style={{ background: 'white', borderColor: 'var(--border)' }}>
+      <aside data-tour="sidebar" className="hidden md:flex flex-col w-64 shrink-0 border-r" style={{ background: 'white', borderColor: 'var(--border)' }}>
         {/* Logo */}
-        <div className="px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+        <div data-tour="sidebar-logo" className="px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
           <Link href="/" className="flex items-center gap-2.5 group">
             <img src="/icon.png" alt="MyChef" className="w-8 h-8 rounded-lg" />
             <span className="font-display text-lg font-semibold tracking-tight" style={{ color: 'var(--ink)' }}>MyChef</span>
@@ -59,14 +65,16 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 p-3 space-y-0.5">
+        <nav data-tour="sidebar-nav" className="flex-1 p-3 space-y-0.5">
           {items.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
             const Icon = ICON_MAP[item.icon] || Home
+            const tourId = item.icon.toLowerCase()
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                data-tour={`nav-${tourId}`}
                 className={cn(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
                   active
@@ -83,7 +91,7 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
         </nav>
 
         {/* User footer */}
-        <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
+        <div data-tour="sidebar-user" className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
           <div className="flex items-center gap-3 px-3 py-2 mb-1 rounded-xl" style={{ background: 'var(--parchment)' }}>
             <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-white text-xs font-bold" style={{ background: 'var(--ink)' }}>
               {getInitials(user.full_name, user.email)}
@@ -95,6 +103,7 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
           </div>
           <button
             onClick={handleSignOut}
+            data-tour="sign-out"
             className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-stone-50 border border-transparent"
             style={{ color: 'var(--warm-stone)' }}
           >
@@ -126,10 +135,12 @@ export function DashboardShell({ user, items, children }: DashboardShellProps) {
           </div>
         </header>
 
-        <main className="flex-1 p-6 max-w-6xl w-full mx-auto">
+        <main data-tour="main-content" className="flex-1 p-6 max-w-6xl w-full mx-auto">
           {children}
         </main>
       </div>
     </div>
+    <TourSelector />
+    </TourProvider>
   )
 }

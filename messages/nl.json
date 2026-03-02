@@ -565,5 +565,102 @@
       "safariStep2": "Scroll naar beneden en tik op \"Zet op beginscherm\".",
       "safariStep3": "Tik op \"Voeg toe\" om MyChef op uw beginscherm te installeren."
     }
+  },
+
+  "tours": {
+    "selectorTitle": "Rondleidingen",
+    "selectorDesc": "Leer hoe u MyChef kunt gebruiken",
+    "next": "Volgende",
+    "prev": "Terug",
+    "finish": "Voltooien",
+
+    "navigation": {
+      "title": "Dashboard Navigatie",
+      "desc": "Leer hoe de zijbalk en navigatie werken.",
+      "step0Title": "Zijbalk",
+      "step0Content": "Dit is uw hoofdnavigatiepaneel. Het blijft zichtbaar op desktop zodat u snel tussen secties kunt wisselen.",
+      "step1Title": "Logo",
+      "step1Content": "Klik op het MyChef-logo om op elk moment terug te keren naar de hoofdpagina.",
+      "step2Title": "Navigatiemenu",
+      "step2Content": "Elk menu-item brengt u naar een ander deel van uw dashboard. De actieve pagina is goud gemarkeerd.",
+      "step3Title": "Uw Profiel",
+      "step3Content": "Uw naam, rol en uitlogknop bevinden zich onderaan de zijbalk.",
+      "step4Title": "Hoofdinhoud",
+      "step4Content": "Hier wordt de inhoud van elke pagina weergegeven. Laten we ontdekken wat u kunt doen!"
+    },
+
+    "clientOverview": {
+      "title": "Klant Dashboard",
+      "desc": "Krijg een overzicht van uw evenementen, boekingen en activiteit.",
+      "step0Title": "Welkom",
+      "step0Content": "Dit is uw dashboard-overzicht. Het toont een samenvatting van al uw activiteit op MyChef.",
+      "step1Title": "Evenement Plaatsen",
+      "step1Content": "Klik op deze knop om een nieuw evenement aan te maken en de perfecte chef te zoeken.",
+      "step2Title": "Uw Statistieken",
+      "step2Content": "Bekijk in één oogopslag uw totale evenementen, openstaande evenementen en actieve boekingen.",
+      "step3Title": "Recente Evenementen",
+      "step3Content": "Uw laatste evenementen worden hier getoond. Klik op een evenement voor details en aanmeldingen.",
+      "step4Title": "Recente Boekingen",
+      "step4Content": "Uw laatste boekingen met ingehuurde chefs verschijnen hier, inclusief status en betalingsinfo."
+    },
+
+    "clientChefs": {
+      "title": "Chefs Zoeken",
+      "desc": "Ontdek en blader door geverifieerde professionele chefs.",
+      "step0Title": "Blader door Chefs",
+      "step0Content": "Hier kunt u alle geverifieerde chefs op het platform bekijken. Bekijk hun profielen, specialiteiten en beoordelingen.",
+      "step1Title": "Chefs Zoeken Tab",
+      "step1Content": "Gebruik dit navigatie-item om de chef-directory te openen wanneer u culinair talent zoekt."
+    },
+
+    "clientEvents": {
+      "title": "Evenementen Beheren",
+      "desc": "Maak en beheer uw culinaire evenementen.",
+      "step0Title": "Uw Evenementen",
+      "step0Content": "Deze pagina toont al uw evenementen. U kunt de status, datum en aantal aanmeldingen van chefs zien.",
+      "step1Title": "Evenement Aanmaken",
+      "step1Content": "Klik hier om een nieuw evenement te plaatsen. U specificeert de datum, keukentype, aantal gasten en budget.",
+      "step2Title": "Boekingen",
+      "step2Content": "Na het inhuren van een chef verschijnen uw boekingen in de sectie Boekingen. Volg de status en communiceer met uw chef."
+    },
+
+    "messages": {
+      "title": "Berichten",
+      "desc": "Chat in realtime met uw ingehuurde chefs of klanten.",
+      "step0Title": "Realtime Chat",
+      "step0Content": "Bekijk uw gesprekken hier. U kunt in realtime berichten sturen naar de chefs die u heeft ingehuurd (of klanten die u hebben ingehuurd)."
+    },
+
+    "chefOverview": {
+      "title": "Chef Dashboard",
+      "desc": "Bekijk uw chef-statistieken, boekingen en aanmeldingsstatus.",
+      "step0Title": "Chef Dashboard",
+      "step0Content": "Welkom op uw chef-dashboard. Dit toont uw huidige status en belangrijkste statistieken.",
+      "step1Title": "Aanmeldingsstatus",
+      "step1Content": "Deze banner toont uw aanmeldingsstatus — of u zich moet aanmelden, in behandeling bent, of een interview gepland heeft.",
+      "step2Title": "Prestatiestatistieken",
+      "step2Content": "Eenmaal goedgekeurd ziet u hier uw voltooide evenementen, gemiddelde beoordeling en actieve boekingen."
+    },
+
+    "chefProfile": {
+      "title": "Chef Profiel",
+      "desc": "Beheer uw professionele profiel, portfolio en specialiteiten.",
+      "step0Title": "Uw Profiel",
+      "step0Content": "Ga naar uw profiel om uw bio, keukenspecialiteiten, portfolio-afbeeldingen en sociale links bij te werken. Een volledig profiel trekt meer klanten aan!"
+    },
+
+    "security": {
+      "title": "Beveiligingsinstellingen",
+      "desc": "Beheer tweefactorauthenticatie en passkeys.",
+      "step0Title": "Accountbeveiliging",
+      "step0Content": "Bezoek Beveiliging om tweefactorauthenticatie in te schakelen, passkeys te beheren voor wachtwoordloos inloggen en actieve sessies te bekijken."
+    },
+
+    "installApp": {
+      "title": "App Installeren",
+      "desc": "Installeer MyChef als een native app op uw apparaat.",
+      "step0Title": "Installeer MyChef",
+      "step0Content": "Ga naar App Installeren om MyChef aan uw startscherm toe te voegen. Het werkt offline, laadt direct en stuurt pushmeldingen."
+    }
   }
 }

@@ -25,13 +25,13 @@ export default async function ClientOverviewPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div data-tour="page-header" className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{t('title')}</h1>
           <p className="text-sm mt-1" style={{ color: 'var(--warm-stone)' }}>{t('subtitle')}</p>
         </div>
         <Link href="/dashboard/client/events/new">
-          <Button className="bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">
+          <Button data-tour="post-event-btn" className="bg-[#0C0907] hover:bg-[#1A1208] text-white border-0">
             <Plus className="h-4 w-4" />
             {tCommon('postEvent')}
           </Button>
@@ -39,7 +39,7 @@ export default async function ClientOverviewPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div data-tour="stats-grid" className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
           { label: t('totalEvents'),    value: events.length,   icon: Calendar,    color: '#C8892A', bg: '#C8892A10' },
           { label: t('openEvents'),     value: openEvents,      icon: TrendingUp,  color: '#4F46E5', bg: '#EEF2FF' },
@@ -59,9 +59,9 @@ export default async function ClientOverviewPage() {
         ))}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div data-tour="recent-section" className="grid md:grid-cols-2 gap-6">
         {/* Recent Events */}
-        <Card>
+        <Card data-tour="recent-events">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>{t('recentEvents')}</CardTitle>
@@ -98,7 +98,7 @@ export default async function ClientOverviewPage() {
         </Card>
 
         {/* Recent Bookings */}
-        <Card>
+        <Card data-tour="recent-bookings">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="font-display text-xl font-semibold" style={{ color: 'var(--ink)' }}>{t('recentBookings')}</CardTitle>

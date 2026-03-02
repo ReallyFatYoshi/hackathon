@@ -49,14 +49,14 @@ export default async function ChefOverviewPage() {
 
   return (
     <div className="space-y-8">
-      <div>
+      <div data-tour="page-header">
         <h1 className="font-display text-3xl font-semibold" style={{ color: 'var(--ink)' }}>{t('title')}</h1>
         <p className="mt-1" style={{ color: 'var(--warm-stone)' }}>{t('subtitle')}</p>
       </div>
 
       {/* Application Status Banner */}
       {!application && (
-        <Card className="border-amber-200 bg-amber-50">
+        <Card data-tour="chef-status" className="border-amber-200 bg-amber-50">
           <CardContent className="py-5 flex items-center justify-between gap-4">
             <div>
               <p className="font-semibold text-amber-800">{t('noApplication')}</p>
@@ -122,7 +122,7 @@ export default async function ChefOverviewPage() {
       {isApproved && chef && (
         <>
           {/* Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div data-tour="stats-grid" className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div className="bg-white rounded-2xl border p-6" style={{ borderColor: 'var(--border)' }}>
               <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-3" style={{ background: '#C8892A10' }}>
                 <Calendar className="h-5 w-5" style={{ color: '#C8892A' }} />
