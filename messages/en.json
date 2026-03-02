@@ -515,7 +515,14 @@
     "passkeyAdded": "Passkey registered successfully!",
     "passkeyAddFailed": "Failed to register passkey",
     "passkeyDeleted": "Passkey removed",
-    "passkeyDeleteFailed": "Failed to remove passkey"
+    "passkeyDeleteFailed": "Failed to remove passkey",
+    "pushNotifications": "Push Notifications",
+    "pushEnabledDesc": "You'll receive notifications for new messages, bookings, and applications.",
+    "pushDisabledDesc": "Enable push notifications to stay updated on messages and bookings.",
+    "pushUnsupported": "Push notifications are not supported in your browser.",
+    "pushDenied": "Notifications are blocked. Please allow them in your browser settings.",
+    "enablePush": "Enable Notifications",
+    "disablePush": "Disable Notifications"
   },
 
   "errorPages": {

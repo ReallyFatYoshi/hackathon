@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { pusherServer } from '@/lib/pusher'
+import { sendPushToUser } from '@/lib/push'
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: request.headers })
@@ -42,6 +43,16 @@ export async function POST(request: NextRequest) {
     type: message.type,
     created_at: message.createdAt.toISOString(),
   })
+
+  // Send push notification to the other participant
+  const recipientId =
+    session.user.id === booking.clientId ? booking.chef.userId : booking.clientId
+  const senderName = session.user.name || 'Someone'
+  sendPushToUser(recipientId, {
+    title: `New message from ${senderName}`,
+    body: content.trim().slice(0, 100),
+    url: `/dashboard/${session.user.id === booking.clientId ? 'chef' : 'client'}/messages`,
+  }).catch(() => {}) // Fire-and-forget
 
   return NextResponse.json({
     id: message.id,

@@ -515,7 +515,14 @@
     "passkeyAdded": "Passkey succesvol geregistreerd!",
     "passkeyAddFailed": "Passkey registreren mislukt",
     "passkeyDeleted": "Passkey verwijderd",
-    "passkeyDeleteFailed": "Passkey verwijderen mislukt"
+    "passkeyDeleteFailed": "Passkey verwijderen mislukt",
+    "pushNotifications": "Pushmeldingen",
+    "pushEnabledDesc": "Je ontvangt meldingen voor nieuwe berichten, boekingen en sollicitaties.",
+    "pushDisabledDesc": "Schakel pushmeldingen in om op de hoogte te blijven van berichten en boekingen.",
+    "pushUnsupported": "Pushmeldingen worden niet ondersteund in je browser.",
+    "pushDenied": "Meldingen zijn geblokkeerd. Sta ze toe in je browserinstellingen.",
+    "enablePush": "Meldingen inschakelen",
+    "disablePush": "Meldingen uitschakelen"
   },
 
   "errorPages": {

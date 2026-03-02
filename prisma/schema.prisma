@@ -33,6 +33,7 @@ model User {
   sentMessages     Message[]
   twoFactors       TwoFactor[]
   passkeys         Passkey[]
+  pushSubscriptions PushSubscription[]
 
   @@map("user")
 }
@@ -314,4 +315,20 @@ model Payment {
   createdAt        DateTime @default(now())
 
   @@map("payment")
+}
+
+// ============================================================
+// Push Notifications
+// ============================================================
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("push_subscription")
 }

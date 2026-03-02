@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { authClient, useSession } from '@/lib/auth-client'
+import { usePushNotifications } from '@/hooks/use-push-notifications'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
@@ -18,6 +19,9 @@ import {
   Fingerprint,
   Trash2,
   Plus,
+  Bell,
+  BellOff,
+  Loader2,
 } from 'lucide-react'
 
 type Step = 'overview' | 'enable-password' | 'enable-qr' | 'enable-verify' | 'backup-codes' | 'disable'
@@ -367,6 +371,9 @@ export default function SecuritySettingsPage() {
               </div>
             )}
           </div>
+
+          {/* Push Notifications Card */}
+          <PushNotificationCard />
         </div>
       )}
 
@@ -600,6 +607,97 @@ export default function SecuritySettingsPage() {
               </Button>
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function PushNotificationCard() {
+  const t = useTranslations('security')
+  const { status, subscribe, unsubscribe } = usePushNotifications()
+  const [loading, setLoading] = useState(false)
+
+  const isSubscribed = status === 'subscribed'
+  const isUnsupported = status === 'unsupported'
+  const isDenied = status === 'denied'
+
+  async function handleToggle() {
+    setLoading(true)
+    if (isSubscribed) {
+      await unsubscribe()
+    } else {
+      await subscribe()
+    }
+    setLoading(false)
+  }
+
+  return (
+    <div
+      className="rounded-2xl border p-6"
+      style={{ borderColor: 'var(--border)', background: 'white' }}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div
+            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+            style={{
+              background: isSubscribed
+                ? 'linear-gradient(135deg, #059669 0%, #10B981 100%)'
+                : 'linear-gradient(135deg, #C8892A20, #E8C47A15)',
+              border: isSubscribed ? 'none' : '1px solid #C8892A30',
+            }}
+          >
+            {isSubscribed ? (
+              <Bell className="w-6 h-6 text-white" />
+            ) : (
+              <BellOff className="w-6 h-6" style={{ color: 'var(--gold)' }} />
+            )}
+          </div>
+          <div>
+            <h3 className="font-semibold text-base" style={{ color: 'var(--ink)' }}>
+              {t('pushNotifications')}
+            </h3>
+            <p className="text-sm mt-0.5" style={{ color: 'var(--warm-stone)' }}>
+              {isUnsupported
+                ? t('pushUnsupported')
+                : isDenied
+                  ? t('pushDenied')
+                  : isSubscribed
+                    ? t('pushEnabledDesc')
+                    : t('pushDisabledDesc')}
+            </p>
+          </div>
+        </div>
+        <span
+          className="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full shrink-0"
+          style={{
+            background: isSubscribed ? '#05966915' : '#DC262615',
+            color: isSubscribed ? '#059669' : '#DC2626',
+          }}
+        >
+          {isSubscribed ? t('active') : t('inactive')}
+        </span>
+      </div>
+
+      {!isUnsupported && !isDenied && (
+        <div className="mt-5 pt-5 border-t" style={{ borderColor: 'var(--border)' }}>
+          <Button
+            size="sm"
+            variant={isSubscribed ? 'outline' : 'default'}
+            className={isSubscribed ? '' : 'bg-[#0C0907] hover:bg-[#1A1208] text-white border-0'}
+            onClick={handleToggle}
+            disabled={loading || status === 'loading'}
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : isSubscribed ? (
+              <BellOff className="w-4 h-4" />
+            ) : (
+              <Bell className="w-4 h-4" />
+            )}
+            {isSubscribed ? t('disablePush') : t('enablePush')}
+          </Button>
         </div>
       )}
     </div>

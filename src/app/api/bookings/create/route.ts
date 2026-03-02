@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { stripe, COMMISSION_PCT } from '@/lib/stripe'
 import { sendBookingConfirmedEmail } from '@/lib/email'
+import { sendPushToUser } from '@/lib/push'
 
 export async function POST(request: NextRequest) {
   const body = await request.json()
@@ -100,6 +101,13 @@ export async function POST(request: NextRequest) {
         new Date(event.date).toLocaleDateString()
       )
     } catch (e) { console.error(e) }
+
+    // Push notification to chef
+    sendPushToUser(chef.userId, {
+      title: 'New Booking Confirmed!',
+      body: `You've been hired for "${event.title}"`,
+      url: '/dashboard/chef/bookings',
+    }).catch(() => {})
 
     return NextResponse.json({ checkoutUrl: stripeSession.url, bookingId: booking.id })
   } catch (err: any) {
