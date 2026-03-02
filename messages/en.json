@@ -518,6 +518,16 @@
     "passkeyDeleteFailed": "Failed to remove passkey"
   },
 
+  "errorPages": {
+    "404title": "Dish not found",
+    "404desc": "We couldn't find what you were looking for. The page may have been moved or no longer exists.",
+    "500title": "Something went wrong",
+    "500desc": "An unexpected error occurred in the kitchen. Our team has been notified. Please try again or return to the homepage.",
+    "backHome": "Back to Home",
+    "tryAgain": "Try Again",
+    "errorId": "Error ID"
+  },
+
   "installApp": {
     "title": "Install MyChef",
     "subtitle": "Get the full app experience. Install MyChef on your device for faster access, offline support, and push notifications.",

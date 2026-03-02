@@ -518,6 +518,16 @@
     "passkeyDeleteFailed": "Passkey verwijderen mislukt"
   },
 
+  "errorPages": {
+    "404title": "Gerecht niet gevonden",
+    "404desc": "We konden niet vinden wat u zocht. De pagina is mogelijk verplaatst of bestaat niet meer.",
+    "500title": "Er ging iets mis",
+    "500desc": "Er is een onverwachte fout opgetreden in de keuken. Ons team is op de hoogte gebracht. Probeer het opnieuw of ga terug naar de startpagina.",
+    "backHome": "Terug naar Home",
+    "tryAgain": "Opnieuw proberen",
+    "errorId": "Fout-ID"
+  },
+
   "installApp": {
     "title": "Installeer MyChef",
     "subtitle": "Krijg de volledige app-ervaring. Installeer MyChef op uw apparaat voor snellere toegang, offline ondersteuning en pushmeldingen.",
