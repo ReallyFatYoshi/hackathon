@@ -18,6 +18,9 @@ model User {
   role              String    @default("client") // client | chef | admin
   phone             String?
   twoFactorEnabled  Boolean?
+  banned            Boolean?  @default(false)
+  banReason         String?
+  banExpires        DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -331,4 +334,15 @@ model PushSubscription {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("push_subscription")
+}
+
+// ============================================================
+// Rate Limiting (OWASP A04 / A07)
+// ============================================================
+model RateLimit {
+  id        String   @id @default(cuid())
+  key       String?
+  count     Int
+  lastRequest Int
+  @@map("rateLimit")
 }

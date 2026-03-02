@@ -1,6 +1,8 @@
 import { Resend } from 'resend'
 
-export const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null
 
 export async function sendInterviewScheduledEmail(
   chefEmail: string,
@@ -17,6 +19,8 @@ export async function sendInterviewScheduledEmail(
     minute: '2-digit',
     timeZoneName: 'short',
   })
+
+  if (!resend) return
 
   await resend.emails.send({
     from: 'MyChef <noreply@mychef.app>',
@@ -54,6 +58,8 @@ export async function sendApplicationStatusEmail(
       ? `<p>Your application has been <strong>approved</strong>! You can now log in and start browsing events.</p>`
       : `<p>After careful review, we are unable to move forward with your application at this time. You're welcome to reapply in the future.</p>`
 
+  if (!resend) return
+
   await resend.emails.send({
     from: 'MyChef <noreply@mychef.app>',
     to: chefEmail,
@@ -76,6 +82,8 @@ export async function sendBookingConfirmedEmail(
   eventTitle: string,
   eventDate: string
 ) {
+  if (!resend) return
+
   await resend.emails.send({
     from: 'MyChef <noreply@mychef.app>',
     to: clientEmail,
